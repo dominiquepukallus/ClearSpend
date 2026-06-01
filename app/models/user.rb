@@ -4,6 +4,9 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  # validates :user_alias, :first_name, :last_name, :email, presence: true
-  # validates :user_alias, uniqueness: true, length: { minimum: 5 }
+  validates :user_alias, :first_name, :last_name, :email, presence: true
+  validates :user_alias, uniqueness: true, length: { minimum: 5 }
+
+  has_many :subscriptions, dependent: :destroy
+  has_many :insights, dependent: :destroy
 end

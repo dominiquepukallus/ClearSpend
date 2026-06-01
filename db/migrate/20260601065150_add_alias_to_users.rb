@@ -1,5 +1,7 @@
 class AddAliasToUsers < ActiveRecord::Migration[8.1]
   def change
-    add_column :alias
+    add_column :users, :alias, :string
+    add_column :users, :first_name, :string
+    add_column :users, :last_name, :string
   end
 end
