@@ -28,22 +28,7 @@
     <header>
       <%= render "shared/navbar" %>
     </header>
-    <% if notice %>
-      <div id="flash-message" class="flash flash-notice">
-        <%= notice %>
-      </div>
-      <script>
-        setTimeout(() => {
-          document.getElementById("flash-message").style.display = "none";
-        }, 5000);
-      </script>
-    <% end %>
-
-    <% if alert %>
-      <div class="flash flash-alert">
-        <%= alert %>
-      </div>
-    <% end %>
+    <%= render "shared/flashes" %>
     <div class="pt-10">
       <%= yield %>
     </div>
