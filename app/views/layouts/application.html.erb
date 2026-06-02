@@ -24,7 +24,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body class="overflow-y-auto">
     <header>
       <%= render "shared/navbar" %>
     </header>
@@ -44,6 +44,8 @@
         <%= alert %>
       </div>
     <% end %>
-    <%= yield %>
+    <div class="pt-10">
+      <%= yield %>
+    </div>
   </body>
 </html>
