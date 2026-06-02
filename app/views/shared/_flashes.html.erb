@@ -1,16 +1,45 @@
 <% if notice %>
-      <div id="flash-message" class="flash flash-notice">
-        <%= notice %>
-      </div>
-      <script>
-        setTimeout(() => {
-          document.getElementById("flash-message").style.display = "none";
-        }, 5000);
-      </script>
-    <% end %>
+  <div id="notice-flash" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-md bg-green-50 px-4 py-3 rounded-lg shadow-lg flex items-center gap-3">
+    <svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-green-400 flex-shrink-0">
+      <path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" fill-rule="evenodd" />
+    </svg>
 
-    <% if alert %>
-      <div class="flash flash-alert">
-        <%= alert %>
-      </div>
-    <% end %>
+    <span class="text-sm font-medium text-green-800 flex-1"><%= notice %></span>
+
+    <button onclick="document.getElementById('notice-flash').remove()" class="text-green-600 hover:text-green-800 transition-colors flex-shrink-0">
+      <svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+        <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+      </svg>
+    </button>
+  </div>
+
+  <script>
+    setTimeout(() => {
+      const flash = document.getElementById('notice-flash');
+      if (flash) flash.remove();
+    }, 5000);
+  </script>
+<% end %>
+
+<% if alert %>
+  <div id="alert-flash" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-md bg-red-50 px-4 py-3 rounded-lg shadow-lg flex items-center gap-3">
+    <svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-red-400 flex-shrink-0">
+      <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd" />
+    </svg>
+
+    <span class="text-sm font-medium text-red-800 flex-1"><%= alert %></span>
+
+    <button onclick="document.getElementById('alert-flash').remove()" class="text-red-600 hover:text-red-800 transition-colors flex-shrink-0">
+      <svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+        <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+      </svg>
+    </button>
+  </div>
+
+  <script>
+    setTimeout(() => {
+      const flash = document.getElementById('alert-flash');
+      if (flash) flash.remove();
+    }, 5000);
+  </script>
+<% end %>
