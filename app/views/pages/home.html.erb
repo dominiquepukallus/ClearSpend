@@ -1,11 +1,10 @@
-<div class="flex flex-row items-center justify-start gap-8 pt-20 px-10 w-full">
-  <div class="flex flex-col ml-20">
-    <h1>Pages#home</h1>
-    <p>Find me in app/views/pages/home.html.erb</p>
-  </div>
-  <div class="flex flex-col text-center gap-3">
-    <%= link_to "Current subscriptions", subscriptions_path, class:'bg-[#1B2B4B] text-white px-4 py-2 rounded hover:bg-[#85B7EB] no-underline hover:no-underline ml-130', style: 'text-decoration: none;' %>
-    <%= link_to "Analytics", subscriptions_path, class:'bg-[#1B2B4B] text-white px-4 py-2 rounded hover:bg-[#85B7EB] no-underline hover:no-underline ml-130', style: 'text-decoration: none;' %>
-    <%= link_to "Add a subscription", subscriptions_path, class:'bg-[#1B2B4B] text-white px-4 py-2 rounded hover:bg-[#85B7EB] no-underline hover:no-underline ml-130', style: 'text-decoration: none;' %>
+<div class="flex flex-col items-center pt-1 px-10 w-full pb-40">
+  <div class="flex flex-col items-center">
+    <%= image_tag "ClearSpend.svg", class: "w-[1000px] mr-40" %>
+    <div class="flex flex-col items-center gap-3 [&>a]:w-64 [&>a]:text-center">
+      <%= link_to "Current subscriptions", subscriptions_path, class:'bg-[#1B2B4B] text-white px-4 py-2 rounded hover:bg-[#85B7EB] no-underline hover:no-underline', style: 'text-decoration: none;' %>
+      <%= link_to "Analytics", dashboard_path, class:'bg-[#1B2B4B] text-white px-4 py-2 rounded hover:bg-[#85B7EB] no-underline hover:no-underline', style: 'text-decoration: none;' %>
+      <%= link_to "Add a subscription", new_subscription_path, class:'bg-[#1B2B4B] text-white px-4 py-2 rounded hover:bg-[#85B7EB] no-underline hover:no-underline', style: 'text-decoration: none;' %>
+    </div>
   </div>
 </div>
