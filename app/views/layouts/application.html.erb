@@ -24,10 +24,12 @@
   </head>
 
   <body>
+    <%= render "shared/flashes" %>
     <header>
       <%= render "shared/navbar" %>
     </header>
-      <%= render "shared/flashes" %>
-    <%= yield %>
+    <main class="container mx-auto mt-6 px-5">
+      <%= yield %>
+    </main>
   </body>
 </html>
