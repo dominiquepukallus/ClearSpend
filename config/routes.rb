@@ -17,5 +17,6 @@ Rails.application.routes.draw do
   resources :subscriptions do
     resources :shared_subscriptions
     resources :insights, only: [ :index ]
+    resources :dashboard, only: [ :index ]
   end
 end
