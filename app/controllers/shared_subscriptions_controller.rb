@@ -1,5 +1,4 @@
 class SharedSubscriptionsController < ApplicationController
-  # before_action :authenticate_user!
   before_action :set_shared_subscription, only: %i[show update destroy]
 
   def index
