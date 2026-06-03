@@ -1,6 +1,6 @@
+Subscription.destroy_all
 User.destroy_all
 Category.destroy_all
-Subscription.destroy_all
 
 demo_user = User.find_or_initialize_by(email: "demo@clearspend.test")
 demo_user.assign_attributes(

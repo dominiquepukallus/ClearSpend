@@ -14,7 +14,7 @@
 
     <!-- User dropdown -->
     <div class="flex items-center gap-4">
-      <%= link_to "Log out", destroy_user_session_path, data: { turbo_method: :delete }, class: "text-[#85B7EB] hover:text-white text-sm", style: "text-decoration: none;" %>
+      <%= link_to "Log out", destroy_user_session_path, data: { turbo_method: :delete }, class: "text-[#85B7EB] hover:text-white", style: "text-decoration: none;" %>
     </div>
   <% else %>
     <%= link_to "Login", new_user_session_path, class: "text-white hover:text-[#85B7EB]", style: "text-decoration: none;" %>
