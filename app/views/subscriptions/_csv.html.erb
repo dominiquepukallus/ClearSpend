@@ -1,5 +1,7 @@
 <div data-controller="csv-upload">
   <%= simple_form_for file upload do |f| %>
-    <%=  %>
+    <%= simple_form_for :csv,
+        url: parse_csv_subscriptions_path,
+        html: { data: { turbo_frame: "preview"} } do |f| %>
   <% end %>
 </div>
