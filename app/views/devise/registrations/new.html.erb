@@ -1,40 +1,52 @@
-<h2>Sign up</h2>
+<div class="flex flex-col items-center justify-center mt-10">
+  <div class="w-lg">
+    <div class="flex flex-col items-center justify-center">
+      <h2>Sign up to ClearSpend</h2>
+      <p class="text-gray-600 mt-3">Get started and take control of your subscriptions</p>
+    </div>
 
-<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= f.error_notification %>
+      <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+        <%= f.error_notification %>
 
-  <div class="form-inputs">
-    <%= f.input :first_name,
-                required: true,
-                autofocus: true,
-                input_html: { autocomplete: "First Name" }
-    %>
-    <%= f.input :last_name,
-                required: true,
-                autofocus: true,
-                input_html: { autocomplete: "Last Name" }
-    %>
-    <%= f.input :alias,
-                required: true,
-                autofocus: true,
-                input_html: { autocomplete: "User Alias" }
-    %>
-    <%= f.input :email,
-                required: true,
-                autofocus: true,
-                input_html: { autocomplete: "email" }%>
-    <%= f.input :password,
-                required: true,
-                hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
-                input_html: { autocomplete: "new-password" } %>
-    <%= f.input :password_confirmation,
-                required: true,
-                input_html: { autocomplete: "new-password" } %>
+        <div class="form-inputs">
+          <%= f.input :first_name,
+                      required: true,
+                      autofocus: true,
+                      input_html: { autocomplete: "First Name" }
+          %>
+          <%= f.input :last_name,
+                      required: true,
+                      autofocus: true,
+                      input_html: { autocomplete: "Last Name" }
+          %>
+          <%= f.input :alias,
+                      required: true,
+                      autofocus: true,
+                      hint: ("5 characters minimum"),
+                      input_html: { autocomplete: "User Alias" }
+          %>
+          <%= f.input :email,
+                      required: true,
+                      autofocus: true,
+                      input_html: { autocomplete: "email" }%>
+          <%= f.input :password,
+                      required: true,
+                      hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
+                      input_html: { autocomplete: "new-password" } %>
+          <%= f.input :password_confirmation,
+                      required: true,
+                      input_html: { autocomplete: "new-password" } %>
+        </div>
+
+        <div class="flex justify-center bg-[#1B2B4B] hover:bg-[#85B7EB] rounded mt-4">
+          <%= f.button :submit, "Sign up", class: "text-white px-4 py-2 w-full" %>
+        </div>
+      <% end %>
+
+      <%- if devise_mapping.authenticatable? && controller_name != 'sessions' %>
+        <div class="text-center mt-6 text-sm text-gray-600">
+          Have an account? <%= link_to "Log in", new_session_path(resource_name), class: "text-[#1B2B4B] hover:underline" %>
+        </div>
+      <% end %>
   </div>
-
-  <div class="form-actions">
-    <%= f.button :submit, "Sign up" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>>

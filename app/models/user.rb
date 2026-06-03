@@ -9,4 +9,8 @@ class User < ApplicationRecord
 
   has_many :subscriptions, dependent: :destroy
   has_many :insights, dependent: :destroy
+
+  def initials
+    "#{first_name.first.upcase}#{last_name.first.upcase}"
+  end
 end

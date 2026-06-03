@@ -24,26 +24,15 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body class="overflow-y-auto">
     <header>
       <%= render "shared/navbar" %>
     </header>
-    <% if notice %>
-      <div id="flash-message" class="flash flash-notice">
-        <%= notice %>
-      </div>
-      <script>
-        setTimeout(() => {
-          document.getElementById("flash-message").style.display = "none";
-        }, 5000);
-      </script>
-    <% end %>
 
-    <% if alert %>
-      <div class="flash flash-alert">
-        <%= alert %>
-      </div>
-    <% end %>
-    <%= yield %>
+    <%= render "shared/flashes" %>
+
+    <div class="pt-10 mt-8">
+      <%= yield %>
+    </div>
   </body>
 </html>

@@ -21,7 +21,7 @@
         <p>Hi, <%= current_user.first_name.presence || current_user.alias %>. Welcome back to ClearSpend Admin!</p>
       </div>
 
-      <%= form_with url: dashboard_index_path, method: :get, class: "dashboard-period-filter" do |form| %>
+      <%= form_with url: dashboard_path, method: :get, class: "dashboard-period-filter" do |form| %>
         <span class="dashboard-period-filter__icon">
           <i class="fa-regular fa-calendar"></i>
         </span>
@@ -69,9 +69,9 @@
         <h1>Subscriptions<br>breakdown</h1>
 
         <div class="subscriptions-breakdown-card__actions" aria-label="Subscriptions breakdown period">
-          <%= link_to "Month", dashboard_index_path(period: "month"), class: "period-toggle #{'period-toggle--active' if @selected_period == 'month'}" %>
-          <%= link_to "Year", dashboard_index_path(period: "year"), class: "period-toggle #{'period-toggle--active' if @selected_period == 'year'}" %>
-          <%= link_to dashboard_index_path(period: "all"), class: "calendar-button #{'calendar-button--active' if @selected_period == 'all'}", aria: { label: "Show all time" } do %>
+          <%= link_to "Month", dashboard_path(period: "month"), class: "period-toggle #{'period-toggle--active' if @selected_period == 'month'}" %>
+          <%= link_to "Year", dashboard_path(period: "year"), class: "period-toggle #{'period-toggle--active' if @selected_period == 'year'}" %>
+          <%= link_to dashboard_path(period: "all"), class: "calendar-button #{'calendar-button--active' if @selected_period == 'all'}", aria: { label: "Show all time" } do %>
             <i class="fa-regular fa-calendar"></i>
           <% end %>
         </div>
