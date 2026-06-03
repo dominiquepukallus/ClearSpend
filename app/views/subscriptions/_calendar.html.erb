@@ -4,6 +4,7 @@
   start_offset = (first_day.wday + 6) % 7
   grid_start = first_day - start_offset
   days = (0..41).map { |i| grid_start + i }
+  subscriptions_by_date = subscriptions.group_by { |s| s.date_recurrence.to_date }
 %>
 
 <div class="lg:flex lg:h-full lg:flex-col">
@@ -106,6 +107,15 @@
               datetime="<%= day.strftime('%Y-%m-%d') %>"
               class="relative group-not-data-is-current-month:opacity-75 in-data-is-today:flex in-data-is-today:size-6 in-data-is-today:items-center in-data-is-today:justify-center in-data-is-today:rounded-full in-data-is-today:bg-indigo-600 in-data-is-today:font-semibold in-data-is-today:text-white dark:in-data-is-today:bg-indigo-500"
             ><%= day.day %></time>
+            <% if subscriptions_by_date[day] %>
+              <ol class="mt-2">
+                <% subscriptions_by_date[day].each do |sub| %>
+                  <li>
+                    <p class="flex-auto truncate font-medium text-gray-900 text-xs"><%= sub.name %></p>
+                  </li>
+                <% end %>
+              </ol>
+            <% end %>
           </div>
         <% end %>
       </div>
@@ -123,6 +133,15 @@
               datetime="<%= day.strftime('%Y-%m-%d') %>"
               class="ml-auto group-not-data-is-current-month:opacity-75 in-data-is-selected:flex in-data-is-selected:size-6 in-data-is-selected:items-center in-data-is-selected:justify-center in-data-is-selected:rounded-full in-data-is-selected:not-in-data-is-today:bg-gray-900 in-data-is-selected:in-data-is-today:bg-indigo-600 dark:in-data-is-selected:not-in-data-is-today:bg-white dark:in-data-is-selected:not-in-data-is-today:text-gray-900 dark:in-data-is-selected:in-data-is-today:bg-indigo-500"
             ><%= day.day %></time>
+            <% if subscriptions_by_date[day] %>
+              <ol class="mt-2">
+                <% subscriptions_by_date[day].each do |sub| %>
+                  <li>
+                    <p class="flex-auto truncate font-medium text-gray-900 text-xs"><%= sub.name %></p>
+                  </li>
+                <% end %>
+              </ol>
+            <% end %>
           </button>
         <% end %>
       </div>
