@@ -21,90 +21,82 @@
         <p>Hi, <%= current_user.first_name.presence || current_user.alias %>. Welcome back to ClearSpend Admin!</p>
       </div>
 
-      <%= form_with url: dashboard_path, method: :get, class: "dashboard-period-filter" do |form| %>
-        <span class="dashboard-period-filter__icon">
+      <%= form_with url: dashboard_path, method: :get, class: "dashboard-month-filter" do |form| %>
+        <span class="dashboard-month-filter__icon">
           <i class="fa-regular fa-calendar"></i>
         </span>
-        <label for="period">
-          <strong>Filter Period</strong>
-          <small><%= @period_range.first.strftime("%d %B %Y") %> - <%= @period_range.last.strftime("%d %B %Y") %></small>
+        <label for="month">
+          <strong>Filter month</strong>
+          <small><%= @month_range.first.strftime("%d %B %Y") %> - <%= @month_range.last.strftime("%d %B %Y") %></small>
         </label>
-        <%= form.select :period,
-          options_for_select([["This month", "month"], ["This year", "year"], ["All time", "all"]], @selected_period),
-          {},
-          id: "period",
-          onchange: "this.form.requestSubmit()"
-        %>
+        <%= form.month_field :month, value: @selected_month.strftime("%Y-%m"), class: "dashboard-month-filter__input" %>
+        <%= form.submit "Apply", class: "dashboard-month-filter__submit" %>
       <% end %>
     </header>
 
-    <section class="dashboard-stats" aria-label="Subscription summary">
-      <article class="dashboard-stat-card">
-        <strong><%= number_to_currency(@monthly_spend, precision: 0) %></strong>
-        <span>Monthly spend</span>
-      </article>
+    <div class="dashboard-grid">
+      <div class="dashboard-main">
+        <section class="dashboard-stats" aria-label="Subscription summary">
+          <article class="dashboard-stat-card">
+            <span>Monthly spend</span>
+            <strong><%= number_to_currency(@monthly_spend, precision: 0) %></strong>
+          </article>
 
-      <article class="dashboard-stat-card">
-        <strong><%= number_to_currency(@yearly_spend, precision: 0) %></strong>
-        <span>Yearly spend</span>
-      </article>
+          <article class="dashboard-stat-card">
+            <span>Yearly spend</span>
+            <strong><%= number_to_currency(@yearly_spend, precision: 0) %></strong>
+          </article>
 
-      <article class="dashboard-stat-card">
-        <strong><%= @total_subscriptions %></strong>
-        <span>Total subscription</span>
-      </article>
-    </section>
+          <article class="dashboard-stat-card dashboard-stat-card--cancelled">
+            <span>Cancelled this month</span>
+            <strong><%= number_to_currency(@canceled_subscriptions, precision: 0) %></strong>
+          </article>
+        </section>
 
-    <section class="dashboard-savings-card" aria-label="Savings from canceled subscriptions">
-      <div>
-        <strong>Saved this month</strong>
-        <span>based on canceled subscriptions</span>
-      </div>
-
-      <p><%= number_to_currency(@canceled_subscriptions, precision: 0) %> <i class="fa-solid fa-arrow-up"></i></p>
-    </section>
-
-    <section class="subscriptions-breakdown-card">
-      <div class="subscriptions-breakdown-card__header">
-        <h1>Subscriptions<br>breakdown</h1>
-
-        <div class="subscriptions-breakdown-card__actions" aria-label="Subscriptions breakdown period">
-          <%= link_to "Month", dashboard_path(period: "month"), class: "period-toggle #{'period-toggle--active' if @selected_period == 'month'}" %>
-          <%= link_to "Year", dashboard_path(period: "year"), class: "period-toggle #{'period-toggle--active' if @selected_period == 'year'}" %>
-          <%= link_to dashboard_path(period: "all"), class: "calendar-button #{'calendar-button--active' if @selected_period == 'all'}", aria: { label: "Show all time" } do %>
-            <i class="fa-regular fa-calendar"></i>
-          <% end %>
-        </div>
-      </div>
-
-      <div
-        class="subscriptions-chart"
-        data-controller="subscriptions-breakdown-chart"
-        data-subscriptions-breakdown-chart-labels-value="<%= json_escape(breakdown_labels.to_json) %>"
-        data-subscriptions-breakdown-chart-values-value="<%= json_escape(breakdown_values.to_json) %>"
-        data-subscriptions-breakdown-chart-colors-value="<%= json_escape(breakdown_colors.to_json) %>"
-        data-subscriptions-breakdown-chart-total-value="<%= @subscription_breakdown_total.to_f %>"
-      >
-        <canvas data-subscriptions-breakdown-chart-target="canvas" aria-label="Subscriptions breakdown by category"></canvas>
-      </div>
-
-      <div class="subscriptions-breakdown-legend">
-        <% if @subscription_breakdown.any? %>
-          <% breakdown_rows.each_with_index do |(category, amount), index| %>
-            <div class="legend-item">
-              <span class="legend-dot" style="--legend-color: <%= breakdown_colors[index] %>"></span>
-              <span class="legend-label"><%= category %></span>
-              <strong><%= number_to_currency(amount, precision: 0) %></strong>
-            </div>
-          <% end %>
-        <% else %>
-          <div class="legend-item legend-item--empty">
-            <span class="legend-dot"></span>
-            <span class="legend-label">No subscriptions yet</span>
-            <strong><%= number_to_currency(0, precision: 0) %></strong>
+        <section class="subscriptions-breakdown-card">
+          <div class="subscriptions-breakdown-card__header">
+            <h1>Subscriptions breakdown</h1>
           </div>
-        <% end %>
+
+          <div
+            class="subscriptions-chart"
+            data-controller="subscriptions-breakdown-chart"
+            data-subscriptions-breakdown-chart-labels-value="<%= json_escape(breakdown_labels.to_json) %>"
+            data-subscriptions-breakdown-chart-values-value="<%= json_escape(breakdown_values.to_json) %>"
+            data-subscriptions-breakdown-chart-colors-value="<%= json_escape(breakdown_colors.to_json) %>"
+            data-subscriptions-breakdown-chart-total-value="<%= @subscription_breakdown_total.to_f %>"
+          >
+            <canvas data-subscriptions-breakdown-chart-target="canvas" aria-label="Subscriptions breakdown by category"></canvas>
+          </div>
+
+          <div class="subscriptions-breakdown-legend">
+            <% if @subscription_breakdown.any? %>
+              <% breakdown_rows.each_with_index do |(category, amount), index| %>
+                <div class="legend-item">
+                  <span class="legend-dot" style="--legend-color: <%= breakdown_colors[index] %>"></span>
+                  <span class="legend-label"><%= category %></span>
+                  <strong><%= number_to_currency(amount, precision: 0) %></strong>
+                </div>
+              <% end %>
+            <% else %>
+              <div class="legend-item legend-item--empty">
+                <span class="legend-dot"></span>
+                <span class="legend-label">No subscriptions yet</span>
+                <strong><%= number_to_currency(0, precision: 0) %></strong>
+              </div>
+            <% end %>
+          </div>
+        </section>
       </div>
-    </section>
+
+      <aside class="dashboard-side">
+        <section class="dashboard-ai-card">
+          <div class="dashboard-ai-card__header">
+            <h2>AI Insights</h2>
+          </div>
+          <div class="dashboard-ai-card__empty"></div>
+        </section>
+      </aside>
+    </div>
   </div>
 </main>
