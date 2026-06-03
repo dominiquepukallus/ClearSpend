@@ -1,0 +1,110 @@
+<% category_colors = {
+  "Entertainment" => "#7C3AED",
+  "Well-being" => "#4CAF7D",
+  "News & Information" => "#1E3A5F",
+  "Food & Delivery / Meal kits" => "#F97316",
+  "Software & Productivity" => "#2563EB",
+  "Shopping & Retail" => "#EC4899",
+  "Customized" => "#4B5563"
+} %>
+<% fallback_colors = ["#5b7cf6", "#7be3a6", "#ffc45c", "#ff7888", "#9b8cff", "#4fd1c5"] %>
+<% breakdown_rows = @subscription_breakdown.sort_by { |category, _amount| category_colors.keys.index(category) || category_colors.length } %>
+<% breakdown_labels = breakdown_rows.map(&:first) %>
+<% breakdown_values = breakdown_rows.map { |_category, amount| amount.to_f } %>
+<% breakdown_colors = breakdown_labels.each_with_index.map { |category, index| category_colors.fetch(category, fallback_colors[index % fallback_colors.length]) } %>
+
+<main class="dashboard-page">
+  <div class="dashboard-shell">
+    <header class="dashboard-header">
+      <div>
+        <h1>Dashboard</h1>
+        <p>Hi, <%= current_user.first_name.presence || current_user.alias %>. Welcome back to ClearSpend Admin!</p>
+      </div>
+
+      <%= form_with url: dashboard_path, method: :get, class: "dashboard-period-filter" do |form| %>
+        <span class="dashboard-period-filter__icon">
+          <i class="fa-regular fa-calendar"></i>
+        </span>
+        <label for="period">
+          <strong>Filter Period</strong>
+          <small><%= @period_range.first.strftime("%d %B %Y") %> - <%= @period_range.last.strftime("%d %B %Y") %></small>
+        </label>
+        <%= form.select :period,
+          options_for_select([["This month", "month"], ["This year", "year"], ["All time", "all"]], @selected_period),
+          {},
+          id: "period",
+          onchange: "this.form.requestSubmit()"
+        %>
+      <% end %>
+    </header>
+
+    <section class="dashboard-stats" aria-label="Subscription summary">
+      <article class="dashboard-stat-card">
+        <strong><%= number_to_currency(@monthly_spend, precision: 0) %></strong>
+        <span>Monthly spend</span>
+      </article>
+
+      <article class="dashboard-stat-card">
+        <strong><%= number_to_currency(@yearly_spend, precision: 0) %></strong>
+        <span>Yearly spend</span>
+      </article>
+
+      <article class="dashboard-stat-card">
+        <strong><%= @total_subscriptions %></strong>
+        <span>Total subscription</span>
+      </article>
+    </section>
+
+    <section class="dashboard-savings-card" aria-label="Savings from canceled subscriptions">
+      <div>
+        <strong>Saved this month</strong>
+        <span>based on canceled subscriptions</span>
+      </div>
+
+      <p><%= number_to_currency(@canceled_subscriptions, precision: 0) %> <i class="fa-solid fa-arrow-up"></i></p>
+    </section>
+
+    <section class="subscriptions-breakdown-card">
+      <div class="subscriptions-breakdown-card__header">
+        <h1>Subscriptions<br>breakdown</h1>
+
+        <div class="subscriptions-breakdown-card__actions" aria-label="Subscriptions breakdown period">
+          <%= link_to "Month", dashboard_path(period: "month"), class: "period-toggle #{'period-toggle--active' if @selected_period == 'month'}" %>
+          <%= link_to "Year", dashboard_path(period: "year"), class: "period-toggle #{'period-toggle--active' if @selected_period == 'year'}" %>
+          <%= link_to dashboard_path(period: "all"), class: "calendar-button #{'calendar-button--active' if @selected_period == 'all'}", aria: { label: "Show all time" } do %>
+            <i class="fa-regular fa-calendar"></i>
+          <% end %>
+        </div>
+      </div>
+
+      <div
+        class="subscriptions-chart"
+        data-controller="subscriptions-breakdown-chart"
+        data-subscriptions-breakdown-chart-labels-value="<%= json_escape(breakdown_labels.to_json) %>"
+        data-subscriptions-breakdown-chart-values-value="<%= json_escape(breakdown_values.to_json) %>"
+        data-subscriptions-breakdown-chart-colors-value="<%= json_escape(breakdown_colors.to_json) %>"
+        data-subscriptions-breakdown-chart-total-value="<%= @subscription_breakdown_total.to_f %>"
+      >
+        <canvas data-subscriptions-breakdown-chart-target="canvas" aria-label="Subscriptions breakdown by category"></canvas>
+      </div>
+
+      <div class="subscriptions-breakdown-legend">
+        <% if @subscription_breakdown.any? %>
+          <% breakdown_rows.each_with_index do |(category, amount), index| %>
+            <div class="legend-item">
+              <span class="legend-dot" style="--legend-color: <%= breakdown_colors[index] %>"></span>
+              <span class="legend-label"><%= category %></span>
+              <strong><%= number_to_currency(amount, precision: 0) %></strong>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="legend-item legend-item--empty">
+            <span class="legend-dot"></span>
+            <span class="legend-label">No subscriptions yet</span>
+            <strong><%= number_to_currency(0, precision: 0) %></strong>
+          </div>
+        <% end %>
+      </div>
+    </section>
+  </div>
+</main>
