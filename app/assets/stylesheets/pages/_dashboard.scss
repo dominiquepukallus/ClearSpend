@@ -6,7 +6,8 @@
 
 .dashboard-shell {
   width: 100%;
-  max-width: 760px;
+  max-width: 1060px;
+  margin: 0 auto;
 }
 
 .dashboard-header {
@@ -15,13 +16,13 @@
   justify-content: space-between;
   gap: 24px;
   width: 100%;
-  margin-bottom: 18px;
+  margin-bottom: 22px;
 }
 
 .dashboard-header h1 {
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   color: #1e245f;
-  font-size: 30px;
+  font-size: 32px;
   font-weight: 800;
   line-height: 1;
 }
@@ -32,219 +33,149 @@
   font-size: 13px;
 }
 
-.dashboard-period-filter {
+.dashboard-month-filter {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 12px;
-  min-width: 250px;
+  width: 100%;
+  max-width: 520px;
   padding: 12px 14px;
   background: #ffffff;
   border-radius: 8px;
   box-shadow: 0 8px 22px rgba(33, 37, 41, 0.08);
 }
 
-.dashboard-period-filter__icon {
+.dashboard-month-filter__icon {
   display: inline-grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   color: #229be8;
   background: #e8f5ff;
   border-radius: 8px;
   font-size: 18px;
 }
 
-.dashboard-period-filter label {
+.dashboard-month-filter label {
   display: grid;
   min-width: 0;
 }
 
-.dashboard-period-filter strong {
+.dashboard-month-filter strong {
   color: #1f2328;
   font-size: 13px;
   line-height: 1.2;
 }
 
-.dashboard-period-filter small {
+.dashboard-month-filter small {
   overflow: hidden;
   color: #7d83a6;
-  font-size: 9px;
+  font-size: 10px;
   line-height: 1.3;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.dashboard-period-filter select {
-  width: 20px;
+.dashboard-month-filter__input {
+  width: 132px;
+  padding: 7px 8px;
+  border: 1px solid #d8deea;
+  border-radius: 6px;
+  color: #1f2328;
+  background: #ffffff;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.dashboard-month-filter__submit {
+  padding: 8px 12px;
   border: 0;
-  color: transparent;
-  background: transparent;
+  border-radius: 6px;
+  color: #ffffff;
+  background: #1b2b4b;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
   cursor: pointer;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+.dashboard-main,
+.dashboard-side {
+  display: grid;
+  gap: 18px;
 }
 
 .dashboard-stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
-  width: 100%;
-  max-width: 426px;
-  margin-bottom: 16px;
+  gap: 18px;
+}
+
+.dashboard-stat-card,
+.subscriptions-breakdown-card,
+.dashboard-ai-card {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 8px 22px rgba(33, 37, 41, 0.08);
 }
 
 .dashboard-stat-card {
   display: grid;
-  place-items: center;
-  min-height: 72px;
-  padding: 12px;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 8px 22px rgba(33, 37, 41, 0.08);
-  text-align: center;
-}
-
-.dashboard-stat-card strong {
-  color: #1f2328;
-  font-size: 22px;
-  font-weight: 800;
-  line-height: 1.05;
+  gap: 8px;
+  min-height: 116px;
+  padding: 22px;
+  align-content: center;
 }
 
 .dashboard-stat-card span {
   color: #7d83a6;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.2;
 }
 
-.dashboard-savings-card {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  width: 100%;
-  max-width: 426px;
-  min-height: 62px;
-  margin-bottom: 16px;
-  padding: 14px 20px 17px;
-  overflow: hidden;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 8px 22px rgba(33, 37, 41, 0.08);
-}
-
-.dashboard-savings-card::after {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 58px;
-  height: 3px;
-  background: #7be3a6;
-  content: "";
-}
-
-.dashboard-savings-card strong {
-  display: block;
+.dashboard-stat-card strong {
   color: #1f2328;
-  font-size: 13px;
+  font-size: 28px;
   font-weight: 800;
-  line-height: 1.2;
+  line-height: 1;
 }
 
-.dashboard-savings-card span {
-  color: #7d83a6;
-  font-size: 10px;
-  line-height: 1.2;
-}
-
-.dashboard-savings-card p {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin: 0;
-  color: #1f2328;
-  font-size: 14px;
-  font-weight: 800;
-  white-space: nowrap;
-}
-
-.dashboard-savings-card i {
-  color: #4CAF7D;
-  font-size: 10px;
+.dashboard-stat-card--cancelled strong {
+  color: #1b2b4b;
 }
 
 .subscriptions-breakdown-card {
-  width: 100%;
-  max-width: 426px;
-  padding: 20px;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 8px 22px rgba(33, 37, 41, 0.08);
+  padding: 22px;
 }
 
 .subscriptions-breakdown-card__header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
 }
 
-.subscriptions-breakdown-card__header h1 {
+.subscriptions-breakdown-card__header h1,
+.dashboard-ai-card__header h2 {
   margin: 0;
   color: #1f2328;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.55;
-}
-
-.subscriptions-breakdown-card__actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.period-toggle,
-.calendar-button {
-  display: inline-grid;
-  place-items: center;
-  height: 30px;
-  border: 0;
-  background: transparent;
-  color: #596175;
-  font-size: 11px;
-}
-
-.period-toggle {
-  text-decoration: none;
-  min-width: 58px;
-  padding: 0 14px;
-  border-radius: 6px;
-}
-
-.period-toggle--active {
-  border: 1px solid #eceff4;
-  background: #ffffff;
-  color: #161a22;
-  box-shadow: 0 1px 2px rgba(31, 35, 40, 0.04);
-}
-
-.calendar-button {
-  text-decoration: none;
-  width: 30px;
-  border-radius: 6px;
-  background: #f3f4f8;
-  color: #7d83a6;
-}
-
-.calendar-button--active {
-  color: #161a22;
-  background: #e8f5ff;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.25;
 }
 
 .subscriptions-chart {
-  width: 210px;
-  height: 178px;
-  margin: 14px auto 18px;
+  width: 240px;
+  height: 206px;
+  margin: 18px auto 20px;
 }
 
 .subscriptions-breakdown-legend {
@@ -260,7 +191,7 @@
   gap: 9px;
   min-width: 0;
   color: #222833;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.2;
 }
 
@@ -280,7 +211,7 @@
 
 .legend-item strong {
   color: #1d2129;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
 }
 
@@ -288,61 +219,68 @@
   grid-column: 1 / -1;
 }
 
-@media (max-width: 520px) {
-  .dashboard-page {
-    padding: 16px;
+.dashboard-ai-card {
+  min-height: 260px;
+  padding: 22px;
+}
+
+.dashboard-ai-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dashboard-ai-card__empty {
+  min-height: 178px;
+  margin-top: 18px;
+  border: 1px dashed #d8deea;
+  border-radius: 8px;
+  background: #fafbfc;
+}
+
+@media (max-width: 900px) {
+  .dashboard-header,
+  .dashboard-grid {
+    grid-template-columns: 1fr;
   }
 
   .dashboard-header {
     align-items: stretch;
     flex-direction: column;
-    gap: 14px;
+  }
+
+  .dashboard-month-filter {
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .dashboard-page {
+    padding: 16px;
   }
 
   .dashboard-header h1 {
     font-size: 26px;
   }
 
-  .dashboard-period-filter {
-    min-width: 0;
-  }
-
-  .dashboard-stats {
-    gap: 10px;
-  }
-
-  .dashboard-stat-card {
-    min-height: 64px;
-    padding: 10px 6px;
-  }
-
-  .dashboard-stat-card strong {
-    font-size: 18px;
-  }
-
-  .dashboard-savings-card {
-    padding-right: 16px;
-    padding-left: 16px;
-  }
-
-  .dashboard-savings-card::after {
-    left: 42px;
-  }
-
-  .subscriptions-breakdown-card {
-    padding: 18px;
-  }
-
-  .subscriptions-breakdown-card__header {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .subscriptions-breakdown-card__actions {
-    justify-content: flex-end;
-  }
-
+  .dashboard-month-filter,
+  .dashboard-stats,
   .subscriptions-breakdown-legend {
     grid-template-columns: 1fr;
+  }
+
+  .dashboard-month-filter__icon {
+    display: none;
+  }
+
+  .dashboard-month-filter__input,
+  .dashboard-month-filter__submit {
+    width: 100%;
+  }
+
+  .dashboard-stat-card,
+  .subscriptions-breakdown-card,
+  .dashboard-ai-card {
+    padding: 18px;
   }
 }

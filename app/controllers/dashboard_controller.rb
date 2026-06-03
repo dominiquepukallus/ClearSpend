@@ -4,43 +4,40 @@ class DashboardController < ApplicationController
   def index
     # Get the data of subscriptions from database
     @subscriptions = current_user.subscriptions.includes(:category)
-    @selected_period = selected_period
-    @period_range = dashboard_period_range(@selected_period)
-    active_subscriptions = period_filtered(@subscriptions.where(status: "active"), :date_recurrence)
-    canceled_this_month = @subscriptions.where(
-      status: "cancelled",
-      cancelled_at: Time.current.all_month
-    )
+    @selected_month = selected_month
+    @month_range = @selected_month.all_month
+    @month_time_range = @month_range.first.beginning_of_day..@month_range.last.end_of_day
+    active_subscriptions = active_in_period(@subscriptions)
+    canceled_subscriptions = canceled_in_period(@subscriptions)
 
     @monthly_spend = normalized_monthly_spend(active_subscriptions)
     @yearly_spend = @monthly_spend * 12
-    @total_subscriptions = active_subscriptions.count
-    @canceled_subscriptions = normalized_monthly_spend(canceled_this_month)
-    @subscription_breakdown = active_subscriptions.joins(:category).group("categories.name").sum(:amount)
+    @canceled_subscriptions = normalized_monthly_spend(canceled_subscriptions)
+    @subscription_breakdown = normalized_spend_by_category(active_subscriptions)
     @subscription_breakdown_total = @subscription_breakdown.values.sum
   end
 
   private
 
-  def selected_period
-    params.fetch(:period, "month")
+  def selected_month
+    return Date.current.beginning_of_month if params[:month].blank?
+
+    Date.strptime(params[:month], "%Y-%m").beginning_of_month
+  rescue ArgumentError
+    Date.current.beginning_of_month
   end
 
-  def dashboard_period_range(period)
-    case period
-    when "year"
-      Date.current.all_year
-    when "all"
-      Date.new(2000, 1, 1)..Date.current
-    else
-      Date.current.all_month
-    end
+  def active_in_period(subscriptions)
+    subscriptions
+      .where.not(status: "paused")
+      .where(date_recurrence: @month_range)
+      .where("status = ? OR cancelled_at IS NULL OR cancelled_at > ?", "active", @month_time_range.last)
   end
 
-  def period_filtered(subscriptions, column)
-    return subscriptions if @selected_period == "all"
-
-    subscriptions.where(column => @period_range)
+  def canceled_in_period(subscriptions)
+    subscriptions
+      .where(status: "cancelled")
+      .where(cancelled_at: @month_time_range)
   end
 
   def normalized_monthly_spend(subscriptions)
@@ -49,5 +46,26 @@ class DashboardController < ApplicationController
     weekly_spend = subscriptions.where(billing_cycle: "weekly").sum(:amount) * 52 / 12
 
     monthly_spend + yearly_spend + weekly_spend
+  end
+
+  def normalized_spend_by_category(subscriptions)
+    subscriptions
+      .joins(:category)
+      .group("categories.name", :billing_cycle)
+      .sum(:amount)
+      .each_with_object(Hash.new(0)) do |((category, billing_cycle), amount), totals|
+        totals[category] += normalize_monthly_amount(amount, billing_cycle)
+      end
+  end
+
+  def normalize_monthly_amount(amount, billing_cycle)
+    case billing_cycle
+    when "yearly"
+      amount / 12
+    when "weekly"
+      amount * 52 / 12
+    else
+      amount
+    end
   end
 end
