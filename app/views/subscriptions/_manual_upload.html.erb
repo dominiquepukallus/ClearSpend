@@ -1,0 +1,31 @@
+<%= simple_form_for @subscription do |f| %>
+  <%= f.error_notification %>
+
+  <%= f.input :name,
+      label: "Name of Subscription",
+      placeholder: "Netflix.." %>
+
+  <%= f.input :amount,
+      label: "Subscription amount per billing cycle",
+      as: :decimal,
+      placeholder: "$20.00" %>
+
+  <%= f.input :billing_cycle,
+      label: "Billing Cycle",
+      prompt: "Select Billing Cycle",
+      collection: ["weekly", "monthly", "yearly"] %>
+
+  <%= f.input :date_recurrence,
+      label: "Next Billing Date",
+      as: :date %>
+
+  <%= f.association :category,
+      label: "Category",
+      prompt: "Select Category" %>
+
+  <%= f.input :status, as: :hidden, input_html: { value: "active" }  %>
+
+  <div class="flex justify-center bg-[#1B2B4B] hover:bg-[#85B7EB] rounded mt-4">
+    <%= f.button :submit, "Submit subscription", class: "text-white px-4 py-2 w-full" %>
+  </div>
+<% end %>

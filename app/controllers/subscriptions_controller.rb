@@ -9,15 +9,16 @@ class SubscriptionsController < ApplicationController
 
   def new
     @subscription = Subscription.new
+    @mode = params[:mode] || "manual"
   end
 
   def create
-    @subscription = Subscription.new(subscription_params)
-    @subscription.user = current_user
+    @subscription = current_user.subscriptions.new(subscription_params)
     if @subscription.save
       redirect_to subscriptions_path, notice: "Subscription created"
     else
-      render "subscriptions/new", status: unprocessable_entity
+      @mode = "manual"
+      render "subscriptions/new", status: :unprocessable_entity, alert: "Failed to add subscription"
     end
   end
 
@@ -40,9 +41,30 @@ class SubscriptionsController < ApplicationController
     redirect_to subscriptions_path
   end
 
+  def parse_csv
+    csv_file = params[:csv_file]
+    csv_content = csv_file.read
+    parser = AiCsvParser.new(csv_content)
+    @subscription = parser.parse
+    ai_turbo_stream
+  rescue StandardError => e
+    render turbo_stream: turbo_stream.replace(
+      "preview",
+      html: "<div class='bg-red-100 text-red-700 p-4 rounded'>Error parsing CSV: #{e.message}</div>"
+    )
+  end
+
   private
 
   def subscription_params
-    params.require(:subscription).permit(:name, :date_recurrence, :amount, :billing_cycle, :status)
+    params.require(:subscription).permit(:name, :date_recurrence, :amount, :billing_cycle, :status, :category)
+  end
+
+  def ai_turbo_stream
+    render turbo_stream: turbo_stream.replace(
+      "preview",
+      partial: "preview_table",
+      locals: { subscriptions: @subscriptions }
+    )
   end
 end

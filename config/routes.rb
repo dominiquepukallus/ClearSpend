@@ -13,10 +13,14 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
   root "pages#home"
-  
+
   resources :subscriptions do
     resources :shared_subscriptions
     resources :insights, only: [ :index ]
+    collection do
+      post :parse_csv # Handles CSV uploads
+      post :bulk_create # Saves multiple subscriptions
+    end
   end
 
   get "dashboard", to: "dashboard#index", as: :dashboard

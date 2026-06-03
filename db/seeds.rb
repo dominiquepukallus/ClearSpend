@@ -1,3 +1,7 @@
+User.destroy_all
+Category.destroy_all
+Subscription.destroy_all
+
 demo_user = User.find_or_initialize_by(email: "demo@clearspend.test")
 demo_user.assign_attributes(
   first_name: "Demo",
@@ -8,6 +12,8 @@ demo_user.assign_attributes(
 )
 demo_user.save!
 
+puts "User saved"
+
 categories = [
   "Entertainment",
   "Well-being",
@@ -17,6 +23,8 @@ categories = [
   "Shopping & Retail",
   "Customized"
 ]
+
+puts "Category saved"
 
 category_records = categories.index_with do |category_name|
   Category.find_or_create_by!(name: category_name)
@@ -163,3 +171,5 @@ subscriptions.each do |subscription_attrs|
   )
   subscription.save!
 end
+
+puts "Subscriptions saved"
