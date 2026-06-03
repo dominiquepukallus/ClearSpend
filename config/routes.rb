@@ -18,4 +18,5 @@ Rails.application.routes.draw do
     resources :insights, only: [ :index ]
     resources :dashboard, only: [ :index ]
   end
+  resources :dashboard, only: [ :index ]
 end
