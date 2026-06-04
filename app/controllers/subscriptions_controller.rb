@@ -1,6 +1,7 @@
 class SubscriptionsController < ApplicationController
   def index
-    @subscriptions = current_user.subscriptions
+    @current_month = params[:month] ? Date.parse(params[:month]) : Date.today.beginning_of_month
+    @subscriptions = current_user.subscriptions.where(status: "active")
   end
 
   def show
