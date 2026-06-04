@@ -11,8 +11,9 @@ class DashboardController < ApplicationController
     canceled_subscriptions = canceled_in_period(@subscriptions)
 
     @monthly_spend = normalized_monthly_spend(active_subscriptions)
-    @yearly_spend = @monthly_spend * 12
     @canceled_subscriptions = normalized_monthly_spend(canceled_subscriptions)
+    @added_subscriptions = added_in_period(@subscriptions)
+    @canceled_subscription_details = canceled_subscriptions.includes(:category).order(:cancelled_at, :name)
     @subscription_breakdown = normalized_spend_by_category(active_subscriptions)
     @subscription_breakdown_total = @subscription_breakdown.values.sum
   end
@@ -38,6 +39,10 @@ class DashboardController < ApplicationController
     subscriptions
       .where(status: "cancelled")
       .where(cancelled_at: @month_time_range)
+  end
+
+  def added_in_period(subscriptions)
+    subscriptions.where(date_recurrence: @month_range).includes(:category).order(:date_recurrence, :name)
   end
 
   def normalized_monthly_spend(subscriptions)
