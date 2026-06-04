@@ -36,10 +36,6 @@ subscription_date = lambda do |month_offset, day|
   demo_month.advance(months: month_offset).change(day: day)
 end
 
-cancelled_at = lambda do |month_offset, day|
-  subscription_date.call(month_offset, day).midday
-end
-
 subscriptions = [
   {
     name: "Netflix",
@@ -192,7 +188,7 @@ subscriptions = [
     billing_cycle: "monthly",
     date_recurrence: subscription_date.call(0, 16),
     status: "cancelled",
-    cancelled_at: cancelled_at.call(0, 16)
+    cancelled_at: Date.new(2026, 6, 16)
   },
   {
     name: "Netflix - last month",
@@ -255,7 +251,7 @@ subscriptions = [
     billing_cycle: "monthly",
     date_recurrence: subscription_date.call(-1, 22),
     status: "cancelled",
-    cancelled_at: cancelled_at.call(-1, 22)
+    cancelled_at: Date.new(2026, 5, 22)
   },
   {
     name: "Hulu - two months ago",
@@ -309,7 +305,7 @@ subscriptions = [
     billing_cycle: "yearly",
     date_recurrence: subscription_date.call(-2, 26),
     status: "cancelled",
-    cancelled_at: cancelled_at.call(-2, 26)
+    cancelled_at: Date.new(2026, 4, 26)
   },
   {
     name: "Paramount Plus - three months ago",
@@ -319,6 +315,15 @@ subscriptions = [
     date_recurrence: subscription_date.call(-3, 6),
     status: "active",
     cancelled_at: nil
+  },
+  {
+    name: "Netflix - cancelled in March",
+    category: "Entertainment",
+    amount: 22,
+    billing_cycle: "monthly",
+    date_recurrence: subscription_date.call(-3, 8),
+    status: "cancelled",
+    cancelled_at: Date.new(2026, 3, 19)
   },
   {
     name: "Calm - three months ago",
@@ -345,7 +350,7 @@ subscriptions = [
     billing_cycle: "monthly",
     date_recurrence: subscription_date.call(-3, 28),
     status: "cancelled",
-    cancelled_at: cancelled_at.call(-3, 28)
+    cancelled_at: Date.new(2026, 3, 28)
   }
 ]
 
