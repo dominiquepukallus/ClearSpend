@@ -7,7 +7,8 @@
         data: { turbo_frame: "upload_form" } %>
       <%= link_to "CSV Upload", new_subscription_path(mode: "csv"),
         data: { turbo_frame: "upload_form" } %>
-
+      <%= link_to "Bulk Entry", new_subscription_path(mode: "bulk_upload"),
+        data: { turbo_frame: "upload_form"} %>
     <%= render partial: @mode || :manual_upload  %>
     <% end %>
   </div>

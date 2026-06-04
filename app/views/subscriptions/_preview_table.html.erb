@@ -1,13 +1,19 @@
-<%= subscriptions.count %>
+<% if subscriptions&.any? %>
+  <h4 class="font-bold mb-4"><%= subscriptions.count %> subscriptions found</h4>
 
-<% if subscriptions.any? %>
-  <%= subscriptions.each do |sub| %>
+  <% subscriptions.each do |sub| %>
     <%= sub[:name] %>
     <%= sub[:amount] %>
     <%= sub[:billing_cycle] %>
     <%= sub[:date_recurrence] %>
-    <%= sub[:category] %>
+    <%= sub[:category_id] %>
   <% end %>
-  <% else %>
-  <p>No subscription found</p>
+
+  <%= form_with url: import_csv_subscriptions_path, method: :post, data: { turbo_frame: "_top" } do |f| %>
+    <%= f.hidden_field :parsed_data, value: subscriptions.to_json %>
+    <%= f.submit "Submit Subscriptions",
+        class: "bg-[#1B2B4B] hover:bg-[#85B7EB] text-white px-4 py-2 w-full rounded" %>
+  <% end %>
+<% else %>
+  <p class="text-gray-500">No subscriptions found</p>
 <% end %>

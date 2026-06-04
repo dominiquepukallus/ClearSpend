@@ -43,7 +43,6 @@ class SubscriptionsController < ApplicationController
   end
 
   def parse_csv
-    puts "CSV SCAN DEBUG"
     csv_file = params[:csv_file]
     if csv_file.nil?
       render turbo_stream: turbo_stream.replace(
@@ -54,8 +53,50 @@ class SubscriptionsController < ApplicationController
     end
     csv_content = csv_file.read
     parser = AiCsvParser.new(csv_content)
-    @subscriptions = parser.parse
+    @parsed_subscriptions = parser.parse
     ai_turbo_stream
+  end
+
+  def import_csv
+    parsed_data = JSON.parse(params[:parsed_data])
+    parsed_data.each do |sub_data|
+      if sub_data["category"].present?
+        category = Category.find_by_name_case_insensitive(sub_data["category"])
+        sub_data["category_id"] = category&.id
+        sub_data.delete("category")
+      end
+      sub_data["status"] = "active"
+      current_user.subscriptions.create!(sub_data)
+    end
+    redirect_to subscriptions_path, notice: "Subscriptions imported successfully"
+  end
+
+  def bulk_create
+    subscription_params = params[:subscriptions]
+    created = []
+    errors = []
+
+    subscription_params.each do |index, sub_params|
+      subscription = current_user.subscriptions.new(
+        name: sub_params[:name],
+        amount: sub_params[:amount],
+        billing_cycle: sub_params[:billing_cycle],
+        date_recurrence: sub_params[:date_recurrence],
+        category_id: sub_params[:category_id],
+        status: "active"
+      )
+      if subscription.save
+        created << subscription
+      else
+        errors << "Subscription #{index.to_i + 1}: #{subscription.errors.full_messages.join(', ')}"
+      end
+    end
+    if errors.empty?
+      redirect_to subscriptions_path, notice: "##{created.count}: subscriptions added!"
+    else
+      redirect_to new_subscription_path(mode: "bulk_upload"),
+      alert: "Failed to add subscription. Errors: #{errors.join(', ')}"
+    end
   end
 
   private
@@ -68,7 +109,7 @@ class SubscriptionsController < ApplicationController
     render turbo_stream: turbo_stream.replace(
       "preview",
       partial: "preview_table",
-      locals: { subscriptions: @subscriptions }
+      locals: { subscriptions: @parsed_subscriptions }
     )
   rescue StandardError => e
     render turbo_stream: turbo_stream.replace(
