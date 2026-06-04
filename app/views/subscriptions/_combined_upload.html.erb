@@ -1,21 +1,51 @@
-<div class="flex items-center grid grid-cols gap-8">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+  <!-- Left Column: CSV Upload (top) + Bulk Upload (bottom) -->
   <div class="space-y-8">
+
+    <!-- CSV Upload Section -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h3 class="text-2xl font-bold mb-4 text-gray-800">📄 Upload CSV</h3>
+
+      <%= form_with url: parse_csv_subscriptions_path,
+          method: :post,
+          multipart: true,
+          data: { turbo_frame: "preview" } do |f| %>
+
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 mb-6 bg-gray-50 hover:bg-gray-100 transition-colors">
+          <%= f.label :csv_file, class: "block mb-4 cursor-pointer" do %>
+            <div class="text-4xl mb-2 text-center">📄</div>
+            <div class="text-gray-700 font-semibold text-center">Choose CSV File</div>
+            <div class="text-sm text-gray-500 mt-2 text-center">AI will categorize your subscriptions</div>
+          <% end %>
+
+          <%= f.file_field :csv_file,
+              accept: ".csv",
+              class: "block w-full mt-4" %>
+        </div>
+
+        <%= f.submit "Upload and Parse",
+            class: "w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg cursor-pointer transition-colors" %>
+      <% end %>
+    </div>
+
+    <!-- Bulk Upload Section -->
     <div class="bg-white rounded-lg shadow-md p-6" data-controller="bulk-subscriptions">
-      <h3 class="text-2xl font-bold mb-4 text-gray-800">Manual Entry</h3>
-      <p class="text-gray-600 mb-6">Add one or multiple subscriptions</p>
+      <h3 class="text-2xl font-bold mb-4 text-gray-800">✏️ Bulk Entry</h3>
+      <p class="text-gray-600 mb-6">Add multiple subscriptions at once</p>
 
       <%= form_with url: bulk_create_subscriptions_path, method: :post, data: { turbo_frame: "_top" } do |f| %>
 
         <div data-bulk-subscriptions-target="container" class="space-y-4">
 
-
+          <!-- First subscription row -->
           <div data-bulk-subscription-row class="border border-gray-200 rounded-lg p-5 bg-gray-50">
             <div class="flex justify-between items-center mb-4">
               <h4 class="font-semibold text-gray-700 text-lg">Subscription #1</h4>
               <button type="button"
                       data-action="bulk-subscriptions#removeRow"
                       class="text-red-500 hover:text-red-700 font-medium text-sm transition-colors">
-                Remove
+                🗑️ Remove
               </button>
             </div>
 
@@ -23,20 +53,20 @@
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
                 <input type="text"
-                        name="subscriptions[0][name]"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Netflix"
-                        required>
+                       name="subscriptions[0][name]"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                       placeholder="Netflix"
+                       required>
               </div>
 
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Amount</label>
                 <input type="number"
-                        name="subscriptions[0][amount]"
-                        step="0.01"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="19.99"
-                        required>
+                       name="subscriptions[0][amount]"
+                       step="0.01"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                       placeholder="19.99"
+                       required>
               </div>
 
               <div>
@@ -54,9 +84,9 @@
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Next Billing Date</label>
                 <input type="date"
-                        name="subscriptions[0][date_recurrence]"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        required>
+                       name="subscriptions[0][date_recurrence]"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                       required>
               </div>
 
               <div class="md:col-span-2">
@@ -79,7 +109,7 @@
           <button type="button"
                   data-action="bulk-subscriptions#addRow"
                   class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-3 rounded-lg transition-colors">
-            Add Another Subscription
+            ➕ Add Another Subscription
           </button>
 
           <%= f.submit "Create All Subscriptions",
@@ -96,7 +126,7 @@
             <button type="button"
                     data-action="bulk-subscriptions#removeRow"
                     class="text-red-500 hover:text-red-700 font-medium text-sm transition-colors">
-              Remove
+              🗑️ Remove
             </button>
           </div>
 
@@ -104,20 +134,20 @@
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
               <input type="text"
-                      name="subscriptions[INDEX][name]"
-                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Netflix"
-                      required>
+                     name="subscriptions[INDEX][name]"
+                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                     placeholder="Netflix"
+                     required>
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Amount</label>
               <input type="number"
-                      name="subscriptions[INDEX][amount]"
-                      step="0.01"
-                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="19.99"
-                      required>
+                     name="subscriptions[INDEX][amount]"
+                     step="0.01"
+                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                     placeholder="19.99"
+                     required>
             </div>
 
             <div>
@@ -135,9 +165,9 @@
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Next Billing Date</label>
               <input type="date"
-                      name="subscriptions[INDEX][date_recurrence]"
-                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      required>
+                     name="subscriptions[INDEX][date_recurrence]"
+                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                     required>
             </div>
 
             <div class="md:col-span-2">
@@ -155,5 +185,22 @@
         </div>
       </template>
     </div>
+
   </div>
+
+  <!-- Right Column: Preview (Sticky) -->
+  <div class="lg:sticky lg:top-4 lg:self-start">
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h3 class="text-2xl font-bold mb-4 text-gray-800">📊 Preview</h3>
+
+      <%= turbo_frame_tag "preview" do %>
+        <div class="text-gray-500 text-center p-12 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
+          <div class="text-4xl mb-3">👀</div>
+          <p class="font-medium mb-2">Preview will appear here</p>
+          <p class="text-sm">Upload a CSV to see your subscriptions</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
 </div>

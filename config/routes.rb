@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   resources :subscriptions do
     collection do
       post :parse_csv # Handles CSV uploads
+      post :import_csv
       post :bulk_create # Saves multiple subscriptions
     end
     resources :shared_subscriptions

@@ -1,14 +1,54 @@
-<div class="flex flex-col items-center justify-center mt-10">
-  <div class="w-lg">
-    <h1>New Subscription Upload</h1>
-
-    <%= turbo_frame_tag "upload_form" do %>
-      <%= link_to "Manual Entry", new_subscription_path(mode: "manual_upload"),
-        data: { turbo_frame: "upload_form" } %>
-      <%= link_to "CSV Upload", new_subscription_path(mode: "csv"),
-        data: { turbo_frame: "upload_form" } %>
-
-    <%= render partial: @mode || :manual_upload  %>
-    <% end %>
+<div class="max-w-6xl mx-auto px-4 py-10">
+  <div class="text-center mb-10">
+    <h1 class="text-3xl font-bold mb-2">Add Subscriptions</h1>
+    <p class="text-gray-600">Choose how you'd like to add your subscriptions</p>
   </div>
+
+  <%= turbo_frame_tag "upload_flow" do %>
+    <% if @mode.nil? %>
+      <!-- Step 1: Method Selection (Landing) -->
+      <div class="grid grid-cols-2 md:grid-cols gap-6 max-w-4xl mx-auto">
+
+        <%= link_to new_subscription_path(mode: "manual_upload"),
+            data: { turbo_frame: "upload_flow" },
+            class: "group block p-8 bg-white border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:shadow-lg transition-all cursor-pointer" do %>
+          <div class="text-center">
+            <div class="flex justify-center align-center mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-12">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Manual Entry</h3>
+            <p class="text-gray-600 text-sm mb-4">Manually add one or more subscriptions at a time</p>
+            <div class="text-blue-500 font-medium group-hover:underline">Get started →</div>
+          </div>
+        <% end %>
+        
+        <%= link_to new_subscription_path(mode: "csv"),
+            data: { turbo_frame: "upload_flow" },
+            class: "group block p-8 bg-white border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:shadow-lg transition-all cursor-pointer" do %>
+          <div class="text-center">
+            <div class="flex justify-center align-center mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-12">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Upload CSV</h3>
+            <p class="text-gray-600 text-sm mb-4">Import from your bank statement or existing budget spreadsheets</p>
+            <div class="text-blue-500 font-medium group-hover:underline">Get started →</div>
+          </div>
+        <% end %>
+      </div>
+
+    <% else %>
+      <!-- Step 2: Show Selected Form with Back Button -->
+      <div class="max-w-4xl mx-auto">
+        <%= link_to "← Back to options", new_subscription_path,
+            data: { turbo_frame: "upload_flow" },
+            class: "inline-flex items-center text-gray-600 hover:text-gray-900 mb-6" %>
+
+        <%= render partial: @mode %>
+      </div>
+    <% end %>
+  <% end %>
 </div>
