@@ -9,7 +9,7 @@ class SubscriptionsController < ApplicationController
 
   def new
     @subscription = Subscription.new
-    @mode = params[:mode] || "manual_upload"
+    @mode = params[:mode]
   end
 
   def create

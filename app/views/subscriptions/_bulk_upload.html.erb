@@ -1,23 +1,64 @@
-<%# app/views/subscriptions/_bulk_upload.html.erb %>
-<div data-controller="bulk-subscriptions">
-  <h3>Add Multiple Subscriptions</h3>
+<div class="flex flex-col items-center justify-center mt-10">
+  <div data-controller="bulk-subscriptions">
+    <h3>Add Multiple Subscriptions</h3>
 
-  <%= form_with url: bulk_create_subscriptions_path, method: :post, data: { turbo_frame: "_top" } do |f| %>
+    <%= form_with url: bulk_create_subscriptions_path, method: :post, data: { turbo_frame: "_top" } do |f| %>
 
-    <div data-bulk-subscriptions-target="container">
+      <div data-bulk-subscriptions-target="container">
+        <div data-bulk-subscription-row>
+          <h4>Subscription #1</h4>
+          <div>
+            <label>Name</label>
+            <input type="text" name="subscriptions[0][name]" required>
+          </div>
+          <div>
+            <label>Amount</label>
+            <input type="number" name="subscriptions[0][amount]" step="0.01" required>
+          </div>
+          <div>
+            <label>Billing Cycle</label>
+            <select name="subscriptions[0][billing_cycle]" required>
+              <option value="">Select...</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+            </select>
+          </div>
+          <div>
+            <label>Next Billing Date</label>
+            <input type="date" name="subscriptions[0][date_recurrence]" required>
+          </div>
+          <div>
+            <label>Category</label>
+            <select name="subscriptions[0][category_id]" required>
+              <option value="">Select...</option>
+              <% Category.all.each do |category| %>
+                <option value="<%= category.id %>"><%= category.name %></option>
+              <% end %>
+            </select>
+          </div>
+          <button type="button" data-action="bulk-subscriptions#removeRow">Remove</button>
+        </div>
+      </div>
+      <button type="button" data-action="bulk-subscriptions#addRow">Add Another</button>
+      <%= f.submit "Create All" %>
+    <% end %>
+
+
+    <template data-bulk-subscriptions-target="template">
       <div data-bulk-subscription-row>
-        <h4>Subscription #1</h4>
+        <h4>Subscription NEW</h4>
         <div>
           <label>Name</label>
-          <input type="text" name="subscriptions[0][name]" required>
+          <input type="text" name="subscriptions[INDEX][name]" required>
         </div>
         <div>
           <label>Amount</label>
-          <input type="number" name="subscriptions[0][amount]" step="0.01" required>
+          <input type="number" name="subscriptions[INDEX][amount]" step="0.01" required>
         </div>
         <div>
           <label>Billing Cycle</label>
-          <select name="subscriptions[0][billing_cycle]" required>
+          <select name="subscriptions[INDEX][billing_cycle]" required>
             <option value="">Select...</option>
             <option value="weekly">Weekly</option>
             <option value="monthly">Monthly</option>
@@ -26,11 +67,11 @@
         </div>
         <div>
           <label>Next Billing Date</label>
-          <input type="date" name="subscriptions[0][date_recurrence]" required>
+          <input type="date" name="subscriptions[INDEX][date_recurrence]" required>
         </div>
         <div>
           <label>Category</label>
-          <select name="subscriptions[0][category_id]" required>
+          <select name="subscriptions[INDEX][category_id]" required>
             <option value="">Select...</option>
             <% Category.all.each do |category| %>
               <option value="<%= category.id %>"><%= category.name %></option>
@@ -39,46 +80,6 @@
         </div>
         <button type="button" data-action="bulk-subscriptions#removeRow">Remove</button>
       </div>
-    </div>
-    <button type="button" data-action="bulk-subscriptions#addRow">Add Another</button>
-    <%= f.submit "Create All" %>
-  <% end %>
-
-
-  <template data-bulk-subscriptions-target="template">
-    <div data-bulk-subscription-row>
-      <h4>Subscription NEW</h4>
-      <div>
-        <label>Name</label>
-        <input type="text" name="subscriptions[INDEX][name]" required>
-      </div>
-      <div>
-        <label>Amount</label>
-        <input type="number" name="subscriptions[INDEX][amount]" step="0.01" required>
-      </div>
-      <div>
-        <label>Billing Cycle</label>
-        <select name="subscriptions[INDEX][billing_cycle]" required>
-          <option value="">Select...</option>
-          <option value="weekly">Weekly</option>
-          <option value="monthly">Monthly</option>
-          <option value="yearly">Yearly</option>
-        </select>
-      </div>
-      <div>
-        <label>Next Billing Date</label>
-        <input type="date" name="subscriptions[INDEX][date_recurrence]" required>
-      </div>
-      <div>
-        <label>Category</label>
-        <select name="subscriptions[INDEX][category_id]" required>
-          <option value="">Select...</option>
-          <% Category.all.each do |category| %>
-            <option value="<%= category.id %>"><%= category.name %></option>
-          <% end %>
-        </select>
-      </div>
-      <button type="button" data-action="bulk-subscriptions#removeRow">Remove</button>
-    </div>
-  </template>
+    </template>
+  </div>
 </div>
