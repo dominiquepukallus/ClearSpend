@@ -15,12 +15,12 @@ Rails.application.routes.draw do
   root "pages#home"
 
   resources :subscriptions do
-    resources :shared_subscriptions
-    resources :insights, only: [ :index ]
     collection do
       post :parse_csv # Handles CSV uploads
       post :bulk_create # Saves multiple subscriptions
     end
+    resources :shared_subscriptions
+    resources :insights, only: [ :index ]
   end
 
   get "dashboard", to: "dashboard#index", as: :dashboard

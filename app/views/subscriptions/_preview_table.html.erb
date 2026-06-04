@@ -1,0 +1,13 @@
+<%= subscriptions.count %>
+
+<% if subscriptions.any? %>
+  <%= subscriptions.each do |sub| %>
+    <%= sub[:name] %>
+    <%= sub[:amount] %>
+    <%= sub[:billing_cycle] %>
+    <%= sub[:date_recurrence] %>
+    <%= sub[:category] %>
+  <% end %>
+  <% else %>
+  <p>No subscription found</p>
+<% end %>

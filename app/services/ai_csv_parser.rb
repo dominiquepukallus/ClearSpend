@@ -1,3 +1,4 @@
+# app/services/ai_csv_parser.rb
 class AiCsvParser
   def initialize(csv_content)
     @csv_content = csv_content
@@ -7,22 +8,19 @@ class AiCsvParser
   def parse
     ai_response = ai_to_parse
     JSON.parse(ai_response, symbolize_names: true)
-    parsed_data
   end
 
   private
 
   def ai_to_parse
-    client = RubyLLM::OpenAI.new
-    response = client.chat(
-      message: [
-        {
-          role: "user",
-          content: parse_prompt
-        }
-      ]
-    )
-    response.dig('choices', 0, 'message', 'content')
+    # Create a chat instance
+    llm = RubyLLM.chat
+
+    # Ask the question and get response
+    response = llm.ask(parse_prompt)
+
+    # Return the content
+    response.content
   end
 
   def parse_prompt
