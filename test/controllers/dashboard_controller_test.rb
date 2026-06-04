@@ -51,9 +51,12 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
     assert_dashboard_totals(
       month: "2026-05",
       monthly_spend: 20,
-      yearly_spend: 240,
       canceled_spend: 18,
-      breakdown_total: 20
+      breakdown_total: 20,
+      added_count: 3,
+      canceled_count: 1,
+      added_names: [ "Monthly Active", "Disney Plus", "Yearly Active" ],
+      canceled_names: [ "Disney Plus" ]
     )
   end
 
@@ -66,7 +69,16 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
 
   private
 
-  def assert_dashboard_totals(month:, monthly_spend:, yearly_spend:, canceled_spend:, breakdown_total:)
+  def assert_dashboard_totals(
+    month:,
+    monthly_spend:,
+    canceled_spend:,
+    breakdown_total:,
+    added_count:,
+    canceled_count:,
+    added_names:,
+    canceled_names:
+  )
     controller = DashboardController.new
     selected_month = Date.strptime(month, "%Y-%m").beginning_of_month
     controller.instance_variable_set(:@selected_month, selected_month)
@@ -78,14 +90,18 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
 
     active_subscriptions = controller.send(:active_in_period, @user.subscriptions)
     canceled_subscriptions = controller.send(:canceled_in_period, @user.subscriptions)
+    added_subscriptions = controller.send(:added_in_period, @user.subscriptions)
     breakdown = controller.send(:normalized_spend_by_category, active_subscriptions)
 
     calculated_monthly_spend = controller.send(:normalized_monthly_spend, active_subscriptions)
 
     assert_equal monthly_spend, calculated_monthly_spend
-    assert_equal yearly_spend, calculated_monthly_spend * 12
     assert_equal canceled_spend, controller.send(:normalized_monthly_spend, canceled_subscriptions)
     assert_equal breakdown_total, breakdown.values.sum
+    assert_equal added_count, added_subscriptions.count
+    assert_equal canceled_count, canceled_subscriptions.count
+    assert_equal added_names, added_subscriptions.map(&:name)
+    assert_equal canceled_names, canceled_subscriptions.order(:cancelled_at, :name).map(&:name)
   end
 
   def create_subscription(attributes)
