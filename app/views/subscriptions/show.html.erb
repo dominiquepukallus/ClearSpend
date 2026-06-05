@@ -1,0 +1,92 @@
+<div class="px-10 pt-6 pb-20">
+
+  <!-- Back link -->
+  <%= link_to "← Back to subscriptions", subscriptions_path, style: "text-decoration: none;", class: "text-sm text-gray-500 hover:text-[#1B2B4B]" %>
+
+  <div class="mt-6 flex gap-6">
+
+    <!-- Main card -->
+    <div class="flex-1 rounded-xl bg-white shadow-[0_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 overflow-hidden">
+
+      <!-- Header -->
+      <div class="<%= @subscription.category.color %> px-8 py-6 flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold text-white"><%= @subscription.name %></h1>
+          <%= link_to @subscription.category.name, categories_path, style: "text-decoration: none;", class: "mt-1 inline-block text-sm text-white underline hover:opacity-75" %>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold <%= @subscription.status == 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600' %>">
+            <%= @subscription.status.capitalize %>
+          </span>
+        </div>
+      </div>
+
+      <!-- Fields -->
+      <div class="px-8 py-6 grid grid-cols-2 gap-6">
+
+        <div>
+          <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Amount</p>
+          <p class="text-2xl font-bold text-[#1B2B4B]">$<%= @subscription.amount.to_i %></p>
+        </div>
+
+        <div>
+          <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Billing cycle</p>
+          <p class="text-lg font-semibold text-gray-700 capitalize"><%= @subscription.billing_cycle %></p>
+        </div>
+
+        <div>
+          <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Start date</p>
+          <p class="text-lg font-semibold text-gray-700"><%= @subscription.date_recurrence.strftime("%d %B %Y") %></p>
+        </div>
+
+        <div>
+          <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Next billing date</p>
+          <% next_date = @subscription.next_billing_date %>
+          <p class="text-lg font-semibold text-gray-700"><%= next_date ? next_date.strftime("%d %B %Y") : "—" %></p>
+        </div>
+
+        <% if @subscription.status == "cancelled" && @subscription.cancelled_at %>
+          <div>
+            <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Cancelled on</p>
+            <p class="text-lg font-semibold text-red-500"><%= @subscription.cancelled_at.strftime("%d %B %Y") %></p>
+          </div>
+        <% end %>
+
+      </div>
+
+      <!-- Total paid -->
+      <div class="px-8 py-4 border-t border-gray-100">
+        <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Total paid since start</p>
+        <% total = @subscription.billing_dates_up_to(Date.current).count * @subscription.amount.to_i %>
+        <p class="text-2xl font-bold text-[#1B2B4B]">$<%= total %></p>
+      </div>
+
+      <!-- Actions -->
+      <div class="px-8 py-4 mt-5 border-t border-gray-100 flex gap-3">
+        <%= link_to "Edit", edit_subscription_path(@subscription), style: "text-decoration: none;", class: "bg-[#1B2B4B] text-white font-semibold px-4 py-2 rounded-xl outline outline-1 outline-gray-400 hover:bg-[#B5D4F4] transition-all" %>
+        <%= link_to "Delete", subscription_path(@subscription), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, style: "text-decoration: none;", class: "bg-white text-red-500 font-semibold px-4 py-2 rounded-xl outline outline-1 outline-gray-400 hover:bg-red-50 transition-all" %>
+      </div>
+    </div>
+
+    <!-- Billing history -->
+    <div class="w-72 rounded-xl bg-white shadow-[0_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 overflow-hidden">
+      <div class="bg-[#1B2B4B] px-6 py-4">
+        <h2 class="text-base font-bold text-white">Billing history</h2>
+      </div>
+      <div class="overflow-y-auto" style="max-height: 400px;">
+        <% past_dates = @subscription.billing_dates_up_to(Date.current).reverse %>
+        <% if past_dates.any? %>
+          <% past_dates.each do |date| %>
+            <div class="flex items-center justify-between px-6 py-3 border-b border-gray-100 last:border-0">
+              <span class="text-sm text-gray-700"><%= date.strftime("%d %B %Y") %></span>
+              <span class="text-sm font-semibold text-[#1B2B4B]">$<%= @subscription.amount.to_i %></span>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="px-6 py-4 text-sm text-gray-400">No billing history yet.</p>
+        <% end %>
+      </div>
+    </div>
+
+  </div>
+</div>
