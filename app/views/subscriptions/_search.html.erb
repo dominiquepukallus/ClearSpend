@@ -1,6 +1,8 @@
 <div data-controller="search" class="flex flex-col h-full">
-  <div class="flex mb-4 px-6 w-full">
-    <%= form_with url: subscriptions_path, method: :get, data: { turbo_frame: "calendar" }, class: "w-full" do |f| %>
+
+  <!-- Search and filter -->
+  <div class="flex mb-4 px-6 gap-3 w-full">
+    <%= form_with url: subscriptions_path, method: :get, data: { turbo_frame: "calendar" }, class: "flex-1" do |f| %>
       <div class="relative w-full shadow-[0_2px_16px_#B5D4F4]">
 
         <!-- Search icon -->
@@ -25,10 +27,22 @@
         <% end %>
       </div>
     <% end %>
-  </div>
+
+      <!-- Category filter -->
+      <div class="w-40">
+        <%= form_with url: subscriptions_path, method: :get, data: { turbo_frame: "calendar" } do |f| %>
+          <%= f.hidden_field :query, value: params[:query] %>
+          <%= f.select :category_id,
+                options_from_collection_for_select(Category.all, :id, :name, params[:category_id]),
+                { include_blank: "All categories" },
+                class: "w-full rounded-md border-0 bg-white py-3 px-4 text-sm text-gray-900 shadow-[0_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 focus:outline-2 focus:outline-[#1B2B4B]",
+                onchange: "this.form.submit()" %>
+        <% end %>
+    </div>
+</div>
 
   <!-- Subscriptions list -->
-  <div class="mx-6 rounded-md bg-white shadow-[0_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 overflow-y-scroll" style="height: 554px;">
+  <div class="mx-6 rounded-md bg-white shadow-[0_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 overflow-y-scroll" style="max-height: 554px">
     <% subscriptions.each do |sub| %>
       <%= link_to subscription_path(sub), data: { turbo_frame: "_top", search_target: "item", name: sub.name }, class: "flex items-center justify-between px-4 py-3 text-sm text-gray-900 hover:bg-gray-50 border-b border-gray-100 last:border-0" do %>
         <div class="flex items-center gap-3">
