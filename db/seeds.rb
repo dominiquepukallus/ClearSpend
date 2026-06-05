@@ -11,7 +11,6 @@ demo_user.assign_attributes(
   password_confirmation: "password"
 )
 demo_user.save!
-
 puts "User saved"
 
 categories = [
@@ -24,25 +23,23 @@ categories = [
   "Customized"
 ]
 
-puts "Category saved"
-
 category_records = categories.index_with do |category_name|
   Category.find_or_create_by!(name: category_name)
 end
+puts "Categories saved"
 
-demo_month = Date.current.beginning_of_month
-
-subscription_date = lambda do |month_offset, day|
-  demo_month.advance(months: month_offset).change(day: day)
-end
+# date_recurrence = the anchor/start date of the subscription.
+# Recurring billing dates are computed from this in the app via billing_cycle.
+# Use a realistic past date so history is populated on first seed.
 
 subscriptions = [
+  # Entertainment
   {
     name: "Netflix",
     category: "Entertainment",
     amount: 22,
     billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(0, 8),
+    date_recurrence: Date.new(2025, 1, 8),
     status: "active",
     cancelled_at: nil
   },
@@ -51,7 +48,7 @@ subscriptions = [
     category: "Entertainment",
     amount: 13,
     billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(0, 14),
+    date_recurrence: Date.new(2025, 2, 14),
     status: "active",
     cancelled_at: nil
   },
@@ -60,16 +57,54 @@ subscriptions = [
     category: "Entertainment",
     amount: 140,
     billing_cycle: "yearly",
-    date_recurrence: subscription_date.call(0, 15),
+    date_recurrence: Date.new(2025, 6, 15),
     status: "active",
     cancelled_at: nil
   },
+  {
+    name: "Hulu",
+    category: "Entertainment",
+    amount: 18,
+    billing_cycle: "monthly",
+    date_recurrence: Date.new(2025, 3, 7),
+    status: "active",
+    cancelled_at: nil
+  },
+  {
+    name: "Paramount Plus",
+    category: "Entertainment",
+    amount: 12,
+    billing_cycle: "monthly",
+    date_recurrence: Date.new(2025, 3, 6),
+    status: "active",
+    cancelled_at: nil
+  },
+  {
+    name: "Audible",
+    category: "Entertainment",
+    amount: 16,
+    billing_cycle: "monthly",
+    date_recurrence: Date.new(2025, 4, 22),
+    status: "cancelled",
+    cancelled_at: Date.new(2026, 5, 22)
+  },
+  {
+    name: "YouTube Premium",
+    category: "Entertainment",
+    amount: 14,
+    billing_cycle: "monthly",
+    date_recurrence: Date.new(2025, 6, 28),
+    status: "cancelled",
+    cancelled_at: Date.new(2026, 3, 28)
+  },
+
+  # Well-being
   {
     name: "Headspace",
     category: "Well-being",
     amount: 16,
     billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(0, 5),
+    date_recurrence: Date.new(2025, 2, 5),
     status: "active",
     cancelled_at: nil
   },
@@ -78,16 +113,45 @@ subscriptions = [
     category: "Well-being",
     amount: 49,
     billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(0, 19),
+    date_recurrence: Date.new(2025, 4, 19),
     status: "active",
     cancelled_at: nil
   },
+  {
+    name: "Apple Fitness Plus",
+    category: "Well-being",
+    amount: 119,
+    billing_cycle: "yearly",
+    date_recurrence: Date.new(2025, 5, 4),
+    status: "active",
+    cancelled_at: nil
+  },
+  {
+    name: "Peloton App",
+    category: "Well-being",
+    amount: 24,
+    billing_cycle: "monthly",
+    date_recurrence: Date.new(2025, 3, 11),
+    status: "active",
+    cancelled_at: nil
+  },
+  {
+    name: "Calm",
+    category: "Well-being",
+    amount: 70,
+    billing_cycle: "yearly",
+    date_recurrence: Date.new(2025, 3, 13),
+    status: "active",
+    cancelled_at: nil
+  },
+
+  # News & Information
   {
     name: "The New York Times",
     category: "News & Information",
     amount: 12,
     billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(0, 3),
+    date_recurrence: Date.new(2025, 1, 3),
     status: "active",
     cancelled_at: nil
   },
@@ -96,16 +160,36 @@ subscriptions = [
     category: "News & Information",
     amount: 10,
     billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(0, 23),
+    date_recurrence: Date.new(2025, 2, 23),
     status: "active",
     cancelled_at: nil
   },
+  {
+    name: "The Economist",
+    category: "News & Information",
+    amount: 24,
+    billing_cycle: "monthly",
+    date_recurrence: Date.new(2025, 4, 9),
+    status: "active",
+    cancelled_at: nil
+  },
+  {
+    name: "Medium",
+    category: "News & Information",
+    amount: 60,
+    billing_cycle: "yearly",
+    date_recurrence: Date.new(2025, 4, 16),
+    status: "active",
+    cancelled_at: nil
+  },
+
+  # Food & Delivery / Meal kits
   {
     name: "HelloFresh",
     category: "Food & Delivery / Meal kits",
     amount: 72,
     billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(0, 10),
+    date_recurrence: Date.new(2025, 1, 10),
     status: "active",
     cancelled_at: nil
   },
@@ -114,16 +198,36 @@ subscriptions = [
     category: "Food & Delivery / Meal kits",
     amount: 10,
     billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(0, 17),
+    date_recurrence: Date.new(2025, 3, 17),
     status: "active",
     cancelled_at: nil
   },
+  {
+    name: "DoorDash DashPass",
+    category: "Food & Delivery / Meal kits",
+    amount: 96,
+    billing_cycle: "yearly",
+    date_recurrence: Date.new(2025, 5, 12),
+    status: "active",
+    cancelled_at: nil
+  },
+  {
+    name: "Blue Apron",
+    category: "Food & Delivery / Meal kits",
+    amount: 68,
+    billing_cycle: "monthly",
+    date_recurrence: Date.new(2025, 3, 20),
+    status: "active",
+    cancelled_at: nil
+  },
+
+  # Software & Productivity
   {
     name: "Notion",
     category: "Software & Productivity",
     amount: 12,
     billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(0, 2),
+    date_recurrence: Date.new(2025, 1, 2),
     status: "active",
     cancelled_at: nil
   },
@@ -132,7 +236,7 @@ subscriptions = [
     category: "Software & Productivity",
     amount: 19,
     billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(0, 21),
+    date_recurrence: Date.new(2025, 2, 21),
     status: "active",
     cancelled_at: nil
   },
@@ -141,43 +245,7 @@ subscriptions = [
     category: "Software & Productivity",
     amount: 120,
     billing_cycle: "yearly",
-    date_recurrence: subscription_date.call(0, 11),
-    status: "active",
-    cancelled_at: nil
-  },
-  {
-    name: "Amazon Prime",
-    category: "Shopping & Retail",
-    amount: 15,
-    billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(0, 12),
-    status: "active",
-    cancelled_at: nil
-  },
-  {
-    name: "Costco Membership",
-    category: "Shopping & Retail",
-    amount: 5,
-    billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(0, 27),
-    status: "active",
-    cancelled_at: nil
-  },
-  {
-    name: "Walmart Plus",
-    category: "Shopping & Retail",
-    amount: 98,
-    billing_cycle: "yearly",
-    date_recurrence: subscription_date.call(0, 18),
-    status: "active",
-    cancelled_at: nil
-  },
-  {
-    name: "Local Studio Membership",
-    category: "Customized",
-    amount: 28,
-    billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(0, 25),
+    date_recurrence: Date.new(2025, 6, 11),
     status: "active",
     cancelled_at: nil
   },
@@ -186,185 +254,99 @@ subscriptions = [
     category: "Software & Productivity",
     amount: 45,
     billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(0, 16),
+    date_recurrence: Date.new(2025, 1, 16),
     status: "cancelled",
     cancelled_at: Date.new(2026, 6, 16)
   },
   {
-    name: "Netflix - last month",
-    category: "Entertainment",
-    amount: 22,
-    billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(-1, 8),
-    status: "active",
-    cancelled_at: nil
-  },
-  {
-    name: "Disney Plus - last month",
-    category: "Entertainment",
-    amount: 140,
-    billing_cycle: "yearly",
-    date_recurrence: subscription_date.call(-1, 15),
-    status: "active",
-    cancelled_at: nil
-  },
-  {
-    name: "Apple Fitness Plus - last month",
-    category: "Well-being",
-    amount: 119,
-    billing_cycle: "yearly",
-    date_recurrence: subscription_date.call(-1, 4),
-    status: "active",
-    cancelled_at: nil
-  },
-  {
-    name: "The Economist - last month",
-    category: "News & Information",
-    amount: 24,
-    billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(-1, 9),
-    status: "active",
-    cancelled_at: nil
-  },
-  {
-    name: "DoorDash DashPass - last month",
-    category: "Food & Delivery / Meal kits",
-    amount: 96,
-    billing_cycle: "yearly",
-    date_recurrence: subscription_date.call(-1, 12),
-    status: "active",
-    cancelled_at: nil
-  },
-  {
-    name: "Figma - last month",
+    name: "Figma",
     category: "Software & Productivity",
     amount: 15,
     billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(-1, 19),
+    date_recurrence: Date.new(2025, 4, 19),
     status: "active",
     cancelled_at: nil
   },
   {
-    name: "Audible - last month",
-    category: "Entertainment",
-    amount: 16,
-    billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(-1, 22),
-    status: "cancelled",
-    cancelled_at: Date.new(2026, 5, 22)
-  },
-  {
-    name: "Hulu - two months ago",
-    category: "Entertainment",
-    amount: 18,
-    billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(-2, 7),
-    status: "active",
-    cancelled_at: nil
-  },
-  {
-    name: "Peloton App - two months ago",
-    category: "Well-being",
-    amount: 24,
-    billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(-2, 11),
-    status: "active",
-    cancelled_at: nil
-  },
-  {
-    name: "Medium - two months ago",
-    category: "News & Information",
-    amount: 60,
-    billing_cycle: "yearly",
-    date_recurrence: subscription_date.call(-2, 16),
-    status: "active",
-    cancelled_at: nil
-  },
-  {
-    name: "Blue Apron - two months ago",
-    category: "Food & Delivery / Meal kits",
-    amount: 68,
-    billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(-2, 20),
-    status: "active",
-    cancelled_at: nil
-  },
-  {
-    name: "Dropbox - two months ago",
+    name: "Dropbox",
     category: "Software & Productivity",
     amount: 120,
     billing_cycle: "yearly",
-    date_recurrence: subscription_date.call(-2, 24),
+    date_recurrence: Date.new(2025, 4, 24),
     status: "active",
     cancelled_at: nil
   },
   {
-    name: "Instacart Plus - two months ago",
-    category: "Shopping & Retail",
-    amount: 99,
-    billing_cycle: "yearly",
-    date_recurrence: subscription_date.call(-2, 26),
-    status: "cancelled",
-    cancelled_at: Date.new(2026, 4, 26)
-  },
-  {
-    name: "Paramount Plus - three months ago",
-    category: "Entertainment",
-    amount: 12,
-    billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(-3, 6),
-    status: "active",
-    cancelled_at: nil
-  },
-  {
-    name: "Netflix - cancelled in March",
-    category: "Entertainment",
-    amount: 22,
-    billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(-3, 8),
-    status: "cancelled",
-    cancelled_at: Date.new(2026, 3, 19)
-  },
-  {
-    name: "Calm - three months ago",
-    category: "Well-being",
-    amount: 70,
-    billing_cycle: "yearly",
-    date_recurrence: subscription_date.call(-3, 13),
-    status: "active",
-    cancelled_at: nil
-  },
-  {
-    name: "ChatGPT Plus - three months ago",
+    name: "ChatGPT Plus",
     category: "Software & Productivity",
     amount: 20,
     billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(-3, 18),
+    date_recurrence: Date.new(2025, 3, 18),
+    status: "active",
+    cancelled_at: nil
+  },
+
+  # Shopping & Retail
+  {
+    name: "Amazon Prime",
+    category: "Shopping & Retail",
+    amount: 15,
+    billing_cycle: "monthly",
+    date_recurrence: Date.new(2025, 1, 12),
     status: "active",
     cancelled_at: nil
   },
   {
-    name: "YouTube Premium - three months ago",
-    category: "Entertainment",
-    amount: 14,
+    name: "Costco Membership",
+    category: "Shopping & Retail",
+    amount: 5,
     billing_cycle: "monthly",
-    date_recurrence: subscription_date.call(-3, 28),
+    date_recurrence: Date.new(2025, 2, 27),
+    status: "active",
+    cancelled_at: nil
+  },
+  {
+    name: "Walmart Plus",
+    category: "Shopping & Retail",
+    amount: 98,
+    billing_cycle: "yearly",
+    date_recurrence: Date.new(2025, 6, 18),
+    status: "active",
+    cancelled_at: nil
+  },
+  {
+    name: "Instacart Plus",
+    category: "Shopping & Retail",
+    amount: 99,
+    billing_cycle: "yearly",
+    date_recurrence: Date.new(2025, 4, 26),
     status: "cancelled",
-    cancelled_at: Date.new(2026, 3, 28)
+    cancelled_at: Date.new(2026, 4, 26)
+  },
+
+  # Customized
+  {
+    name: "Local Studio Membership",
+    category: "Customized",
+    amount: 28,
+    billing_cycle: "monthly",
+    date_recurrence: Date.new(2025, 2, 25),
+    status: "active",
+    cancelled_at: nil
   }
 ]
 
-subscriptions.each do |subscription_attrs|
-  subscription = demo_user.subscriptions.find_or_initialize_by(name: subscription_attrs[:name])
+subscriptions.each do |attrs|
+  subscription = demo_user.subscriptions.find_or_initialize_by(name: attrs[:name])
   subscription.assign_attributes(
-    amount: subscription_attrs[:amount],
-    billing_cycle: subscription_attrs[:billing_cycle],
-    category: category_records.fetch(subscription_attrs[:category]),
-    date_recurrence: subscription_attrs[:date_recurrence],
-    status: subscription_attrs[:status],
-    cancelled_at: subscription_attrs[:cancelled_at]
+    amount: attrs[:amount],
+    billing_cycle: attrs[:billing_cycle],
+    category: category_records.fetch(attrs[:category]),
+    date_recurrence: attrs[:date_recurrence],
+    status: attrs[:status],
+    cancelled_at: attrs[:cancelled_at]
   )
   subscription.save!
 end
 
-puts "Subscriptions saved"
+puts "Subscriptions saved (#{subscriptions.length} total)"

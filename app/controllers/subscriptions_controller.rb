@@ -1,7 +1,8 @@
 class SubscriptionsController < ApplicationController
   def index
-    @current_month = params[:month] ? Date.parse(params[:month]) : Date.today.beginning_of_month
-    @subscriptions = current_user.subscriptions.where(status: "active")
+    current_month = params[:month] ? Date.parse(params[:month]).beginning_of_month : Date.current.beginning_of_month
+    @subscriptions = current_user.subscriptions
+    @current_month = current_month
   end
 
   def show
@@ -96,7 +97,7 @@ class SubscriptionsController < ApplicationController
       redirect_to subscriptions_path, notice: "##{created.count}: subscriptions added!"
     else
       redirect_to new_subscription_path(mode: "bulk_upload"),
-      alert: "Failed to add subscription. Errors: #{errors.join(', ')}"
+                  alert: "Failed to add subscription. Errors: #{errors.join(', ')}"
     end
   end
 
