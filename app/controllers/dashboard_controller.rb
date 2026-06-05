@@ -31,7 +31,7 @@ class DashboardController < ApplicationController
   def active_in_period(subscriptions)
     subscriptions
       .where.not(status: "paused")
-      .where(date_recurrence: @month_range)
+      .where("date_recurrence <= ?", @month_range.last)
       .where("status = ? OR cancelled_at IS NULL OR cancelled_at > ?", "active", @month_time_range.last)
   end
 
@@ -42,7 +42,10 @@ class DashboardController < ApplicationController
   end
 
   def added_in_period(subscriptions)
-    subscriptions.where(date_recurrence: @month_range).includes(:category).order(:date_recurrence, :name)
+    subscriptions
+      .where(date_recurrence: @month_range)
+      .includes(:category)
+      .order(:date_recurrence, :name)
   end
 
   def normalized_monthly_spend(subscriptions)
