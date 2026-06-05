@@ -24,5 +24,6 @@ Rails.application.routes.draw do
   end
   resources :insights, only: [ :index ]
 
+  resources :categories
   get "dashboard", to: "dashboard#index", as: :dashboard
 end

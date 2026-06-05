@@ -1,0 +1,59 @@
+<div data-controller="search" class="flex flex-col h-full">
+
+  <!-- Search and filter -->
+  <div class="flex mb-4 px-6 gap-3 w-full">
+    <%= form_with url: subscriptions_path, method: :get, data: { turbo_frame: "calendar" }, class: "flex-1" do |f| %>
+      <div class="relative w-full shadow-[0_2px_16px_#B5D4F4]">
+
+        <!-- Search icon -->
+        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+          <svg class="size-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z" clip-rule="evenodd" />
+          </svg>
+        </div>
+
+        <%= f.search_field :query,
+              value: params[:query],
+              placeholder: "Search subscriptions...",
+              data: { search_target: "input", action: "input->search#filter" },
+              class: "block w-full rounded-md border-0 bg-white py-3 pl-10 pr-3 text-sm text-gray-900 shadow-sm outline outline-1 outline-gray-400 placeholder:text-gray-500 focus:outline-2 focus:outline-[#1B2B4B] dark:bg-white/10 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500" %>
+
+        <% if params[:query].present? %>
+          <%= link_to subscriptions_path, data: { turbo_frame: "calendar" }, class: "absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" do %>
+            <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+            </svg>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
+      <!-- Category filter -->
+      <div class="w-40">
+        <%= form_with url: subscriptions_path, method: :get, data: { turbo_frame: "calendar" } do |f| %>
+          <%= f.hidden_field :query, value: params[:query] %>
+          <%= f.select :category_id,
+                options_from_collection_for_select(Category.all, :id, :name, params[:category_id]),
+                { include_blank: "All categories" },
+                class: "w-full rounded-md border-0 bg-white py-3 px-4 text-sm text-gray-900 shadow-[0_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 focus:outline-2 focus:outline-[#1B2B4B]",
+                onchange: "this.form.submit()" %>
+        <% end %>
+    </div>
+</div>
+
+  <!-- Subscriptions list -->
+  <div class="mx-6 rounded-md bg-white shadow-[0_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 overflow-y-scroll" style="max-height: 554px">
+    <% subscriptions.each do |sub| %>
+      <%= link_to subscription_path(sub), data: { turbo_frame: "_top", search_target: "item", name: sub.name }, class: "flex items-center justify-between px-4 py-3 text-sm text-gray-900 hover:bg-gray-50 border-b border-gray-100 last:border-0" do %>
+        <div class="flex items-center gap-3">
+          <span class="inline-block size-2 rounded-full <%= sub.category.color.split.first %>"></span>
+          <span class="font-medium"><%= sub.name %></span>
+        </div>
+        <div class="flex items-center gap-3 text-gray-500">
+          <span>$<%= sub.amount.to_i %></span>
+          <span class="text-xs"><%= sub.billing_cycle %></span>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
