@@ -1,11 +1,11 @@
-<div class="flex px-10 pt-3">
+<div class="flex px-10 pt-3 items-stretch">
   <div class="w-[45%]">
     <%= turbo_frame_tag "calendar" do %>
       <%= render "subscriptions/calendar", subscriptions: @subscriptions %>
     <% end %>
   </div>
 
-  <div class="flex-1 pl-6 mt-5 ml-4">
-    <%= render "subscriptions/search" %>
+  <div class="flex-1 pl-6 pt-3 flex flex-col">
+    <%= render "subscriptions/search", subscriptions: @subscriptions %>
   </div>
 </div>
