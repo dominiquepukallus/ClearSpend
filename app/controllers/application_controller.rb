@@ -13,4 +13,10 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:sign_up, keys: %i[first_name last_name alias])
     devise_parameter_sanitizer.permit(:account_update, keys: %i[first_name last_name alias])
   end
+
+  protected
+
+  def after_sign_in_path_for(resources)
+    root_path
+  end
 end
