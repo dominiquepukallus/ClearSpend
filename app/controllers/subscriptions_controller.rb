@@ -1,7 +1,8 @@
 class SubscriptionsController < ApplicationController
   def index
     current_month = params[:month] ? Date.parse(params[:month]).beginning_of_month : Date.current.beginning_of_month
-    @subscriptions = current_user.subscriptions
+    @subscriptions = current_user.subscriptions.order(:name)
+    @subscriptions = @subscriptions.where("name ILIKE ?", "%#{params[:query]}%") if params[:query].present?
     @current_month = current_month
   end
 
