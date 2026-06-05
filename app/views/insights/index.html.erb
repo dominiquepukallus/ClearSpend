@@ -1,1 +1,20 @@
-<h1><%= @current_user %>Insights</h1>
+<div class="max-w-6xl mx-auto py-10">
+  <div class="insights-container">
+    <h1 class="text-3xl font-bold mb-2">Insights</h1>
+
+    <div class="category-buttons grid grid-cols-8 text-sm flex align-center justify-center">
+      <% @categories.each do |category| %>
+        <%= link_to category.name, insights_path(category_id: category.id), class: "group block p-8 bg-white border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:shadow-lg transition-all cursor-pointer" %>
+      <% end %>
+    </div>
+
+    <% if @selected_category %>
+      <%= render 'category_insight', category: @selected_category %>
+    <% end %>
+  </div>
+
+</div>
+
+<%# <p>Debug: Found <%= @insights.count %>
+<%# <p>Categories: <%= @categories.count %>
+<%# <p>User has <%= current_user.subscriptions.count %>

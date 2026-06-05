@@ -21,8 +21,8 @@ Rails.application.routes.draw do
       post :bulk_create
     end
     resources :shared_subscriptions
-    resources :insights, only: [ :index ]
   end
+  resources :insights, only: [ :index ]
 
   get "dashboard", to: "dashboard#index", as: :dashboard
 end

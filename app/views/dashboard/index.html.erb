@@ -85,12 +85,33 @@
       </div>
 
       <aside class="dashboard-side">
-        <section class="dashboard-ai-card">
-          <div class="dashboard-ai-card__header">
-            <h2>AI Insights</h2>
-          </div>
-          <div class="dashboard-ai-card__empty"></div>
-        </section>
+        <% if @insights.any? %>
+          <% insight = @insights.last %>
+          <%= link_to insights_path(category_id: insight.category_id), class: "dashboard-ai-card" do %>
+            <div class="dashboard-ai-card__header">
+              <h2 class="mb-6">AI Insight</h2>
+              <span class="insight-badge text-sm"><%= insight.category.name %></span>
+            </div>
+            <div class="dashboard-ai-card__content">
+              <div class="insight-subscription ">
+                <span class="sub-name"><%= insight.subscription.name %></span>
+                <span class="sub-amount">$<%= insight.subscription.amount %></span>
+              </div>
+              <p class="insight-text text-sm mt-3 mb-3"><%= insight.insight_text %></p>
+              <span class="view-more ">View all insights →</span>
+            </div>
+          <% end %>
+        <% else %>
+          <section class="dashboard-ai-card">
+            <div class="dashboard-ai-card__header">
+              <h2>AI Insights</h2>
+            </div>
+            <div class="dashboard-ai-card__content">
+              <p>No insights yet.</p>
+            </div>
+          </section>
+        <% end %>
+
 
         <section class="dashboard-analytics-card">
           <div class="dashboard-analytics-card__header">
