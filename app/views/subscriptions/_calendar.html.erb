@@ -13,7 +13,7 @@
   next_month = first_day + 1.month
 %>
 
-<div class="lg:flex lg:h-full lg:flex-col">
+<div class="lg:flex lg:h-auto lg:flex-col">
   <header class="flex items-center gap-4 border-b border-gray-200 py-4 lg:flex-none dark:border-white/10 dark:bg-gray-800/50">
     <h1 class="min-w-0 text-base !text-3xl font-semibold text-gray-900 dark:text-white">
       <% month_name = current_month.strftime('%B').length > 6 ? current_month.strftime('%b') : current_month.strftime('%B') %>
@@ -88,10 +88,10 @@
       <div class="flex justify-center bg-white py-2 dark:bg-gray-900"><span>S</span><span class="sr-only sm:not-sr-only">un</span></div>
     </div>
 
-    <div class="flex bg-gray-200 text-xs/6 text-gray-700 lg:flex-auto dark:bg-white/10 dark:text-gray-300">
+    <div class="flex bg-gray-200 text-xs/6 text-gray-700 dark:bg-white/10 dark:text-gray-300">
 
       <%# Desktop grid %>
-      <div class="hidden w-full lg:grid lg:grid-cols-7 lg:grid-rows-5 lg:gap-px">
+      <div class="hidden w-full lg:grid lg:grid-cols-7 lg:grid-rows-none lg:gap-px">
         <% days.each do |day| %>
           <div
             <%= 'data-is-current-month' if day.month == today.month %>
