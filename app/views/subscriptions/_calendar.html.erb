@@ -5,7 +5,10 @@
   start_offset = (first_day.wday + 6) % 7
   grid_start = first_day - start_offset
   days = (0..34).map { |i| grid_start + i }
-  subscriptions_by_date = subscriptions.group_by { |s| s.date_recurrence.to_date }
+  subscriptions_by_date = subscriptions.each_with_object(Hash.new { |h, k| h[k] = [] }) do |sub, hash|
+    date = sub.billing_date_in(current_month)
+    hash[date] << sub if date
+  end
   prev_month = first_day - 1.month
   next_month = first_day + 1.month
 %>
