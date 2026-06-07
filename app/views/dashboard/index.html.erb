@@ -86,19 +86,15 @@
 
       <aside class="dashboard-side">
         <% if @insights.any? %>
-          <% insight = @insights.last %>
+          <% insight = @insights.sample %>
           <%= link_to insights_path(category_id: insight.category_id), class: "dashboard-ai-card" do %>
             <div class="dashboard-ai-card__header">
-              <h2 class="mb-6">AI Insight</h2>
-              <span class="insight-badge text-sm"><%= insight.category.name %></span>
+              <h2>AI Insight</h2>
             </div>
             <div class="dashboard-ai-card__content">
-              <div class="insight-subscription ">
-                <span class="sub-name"><%= insight.subscription.name %></span>
-                <span class="sub-amount">$<%= insight.subscription.amount %></span>
-              </div>
-              <p class="insight-text text-sm mt-3 mb-3"><%= insight.insight_text %></p>
-              <span class="view-more ">View all insights →</span>
+              <span class="dashboard-ai-card__badge"><%= insight.category.name %></span>
+              <p class="dashboard-ai-card__text"><%= truncate(insight.insight_text, length: 200, separator: ' ') %></p>
+              <span class="dashboard-ai-card__cta">View all insights →</span>
             </div>
           <% end %>
         <% else %>

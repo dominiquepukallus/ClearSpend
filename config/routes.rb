@@ -23,6 +23,7 @@ Rails.application.routes.draw do
     resources :shared_subscriptions
   end
   resources :insights, only: [ :index ]
+  resources :users, only: [ :show ]
 
   resources :categories
   get "dashboard", to: "dashboard#index", as: :dashboard
