@@ -1,0 +1,41 @@
+<% category_colors = {
+  "Entertainment" => "#7C3AED",
+  "Well-being" => "#4CAF7D",
+  "News & Information" => "#0F766E",
+  "Food & Delivery / Meal kits" => "#F97316",
+  "Software & Productivity" => "#2563EB",
+  "Shopping & Retail" => "#EC4899",
+  "Customized" => "#4B5563"
+} %>
+
+<% user_subs = current_user.subscriptions.where(category: category) %>
+<% insight = current_user.insights.find_by(category: category) %>
+<% total = user_subs.sum(:amount) %>
+
+<div class="insights-detail" style="--category-color: <%= category_colors[category.name] %>" >
+  <div class="insights-detail__header">
+    <h2><%= category.name %></h2>
+    <p>You're paying <%= number_to_currency(total, precision: 0) %> each month</p>
+  </div>
+
+  <% if insight %>
+    <div class="insights-ai-card">
+      <div class="insights-ai-card__icon">
+        <i class="fa-solid fa-sparkles"></i>
+      </div>
+      <p><%= insight.insight_text %></p>
+    </div>
+
+    <div class="insights-subscriptions">
+      <h3>Your subscriptions</h3>
+      <div class="insights-subscription-list">
+        <% user_subs.each do |sub| %>
+          <article class="insights-subscription-item">
+            <strong><%= sub.name %></strong>
+            <span><%= number_to_currency(sub.amount, precision: 0) %></span>
+          </article>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

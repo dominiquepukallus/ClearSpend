@@ -16,6 +16,7 @@ class DashboardController < ApplicationController
     @canceled_subscription_details = canceled_subscriptions.includes(:category).order(:cancelled_at, :name)
     @subscription_breakdown = normalized_spend_by_category(active_subscriptions)
     @subscription_breakdown_total = @subscription_breakdown.values.sum
+    @insights = current_user.insights.order(created_at: :desc)
   end
 
   private
