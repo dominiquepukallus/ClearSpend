@@ -29,7 +29,7 @@
           <strong>Filter month</strong>
           <small><%= @month_range.first.strftime("%d %B %Y") %> - <%= @month_range.last.strftime("%d %B %Y") %></small>
         </label>
-        <%= form.month_field :month, value: @selected_month.strftime("%Y-%m"), class: "dashboard-month-filter__input" %>
+        <%= form.select :month, (Date.new(2025,1)..Date.current).map { |d| [d.strftime("%B %Y"), d.strftime("%Y-%m")] }.uniq, { selected: @selected_month.strftime("%Y-%m") } %>
         <%= form.submit "Apply", class: "dashboard-month-filter__submit" %>
       <% end %>
     </header>
