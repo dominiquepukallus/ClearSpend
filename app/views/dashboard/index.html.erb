@@ -12,6 +12,9 @@
 <% breakdown_labels = breakdown_rows.map(&:first) %>
 <% breakdown_values = breakdown_rows.map { |_category, amount| amount.to_f } %>
 <% breakdown_colors = breakdown_labels.each_with_index.map { |category, index| category_colors.fetch(category, fallback_colors[index % fallback_colors.length]) } %>
+<% monthly_spend_labels = @monthly_spend_trend.map { |month| month[:label] } %>
+<% monthly_spend_full_labels = @monthly_spend_trend.map { |month| month[:full_label] } %>
+<% monthly_spend_values = @monthly_spend_trend.map { |month| month[:value] } %>
 
 <main class="dashboard-page" data-controller="dashboard-activity-modal" data-action="keydown.esc@window->dashboard-activity-modal#closeWithKeyboard">
   <div class="dashboard-shell">
@@ -43,7 +46,10 @@
           </article>
 
           <article class="dashboard-stat-card dashboard-stat-card--cancelled">
-            <span>Cancelled this month</span>
+            <div class="dashboard-stat-card__header">
+              <span>Cancelled this month</span>
+                <button type="button" data-dashboard-activity-modal-view-param="cancelled" data-action="dashboard-activity-modal#open">View Cancelled</button>
+            </div>
             <strong><%= number_to_currency(@canceled_subscriptions, precision: 0) %></strong>
           </article>
         </section>
@@ -82,26 +88,32 @@
             <% end %>
           </div>
         </section>
+
       </div>
 
       <aside class="dashboard-side">
         <%= render "ai_insights_card", insights: @insights, return_to: request.fullpath %>
-
-
-        <section class="dashboard-analytics-card">
-          <div class="dashboard-analytics-card__header">
-            <h2>Analytics</h2>
-            <button type="button" data-action="dashboard-activity-modal#open">View Analytics</button>
-          </div>
-          <p>
-            <%= @added_subscriptions.count %> added
-            <span><%= @canceled_subscription_details.count %> cancelled</span>
-          </p>
-          <svg viewBox="0 0 280 72" role="img" aria-label="Monthly subscription activity trend">
-            <polyline points="0,50 54,36 108,44 162,64 216,40 280,38" />
-          </svg>
-        </section>
       </aside>
+
+      <section class="dashboard-analytics-card">
+        <div class="dashboard-analytics-card__header">
+          <h2>Analytics</h2>
+          <button type="button" data-action="dashboard-activity-modal#open">View Analytics</button>
+        </div>
+        <p>
+          <%= @added_subscriptions.count %> added
+          <span><%= @canceled_subscription_details.count %> cancelled</span>
+        </p>
+        <div
+          class="dashboard-monthly-spend-chart"
+          data-controller="monthly-spend-chart"
+          data-monthly-spend-chart-labels-value="<%= json_escape(monthly_spend_labels.to_json) %>"
+          data-monthly-spend-chart-full-labels-value="<%= json_escape(monthly_spend_full_labels.to_json) %>"
+          data-monthly-spend-chart-values-value="<%= json_escape(monthly_spend_values.to_json) %>"
+        >
+          <canvas data-monthly-spend-chart-target="canvas" aria-label="Monthly spend trend"></canvas>
+        </div>
+      </section>
     </div>
   </div>
 
@@ -117,14 +129,14 @@
     <section class="dashboard-modal__panel">
       <header class="dashboard-modal__header">
         <div>
-          <h2 id="monthly-activity-title">Monthly activity</h2>
+          <h2 id="monthly-activity-title" data-dashboard-activity-modal-target="title">Monthly activity</h2>
           <p><%= @selected_month.strftime("%B %Y") %></p>
         </div>
         <button type="button" aria-label="Close monthly activity" data-action="dashboard-activity-modal#close">Close</button>
       </header>
 
-      <div class="dashboard-activity-grid">
-        <section>
+      <div class="dashboard-activity-grid" data-dashboard-activity-modal-target="activityGrid">
+        <section data-dashboard-activity-modal-target="addedSection">
           <h3>Added subscriptions</h3>
           <% if @added_subscriptions.any? %>
             <div class="dashboard-activity-list">
@@ -153,7 +165,7 @@
                     <strong><%= subscription.name %></strong>
                     <span>Cancelled <%= subscription.cancelled_at.strftime("%d %b") %> · <%= subscription.category.name %></span>
                   </div>
-                  <span><%= number_to_currency(subscription.amount, precision: 0) %></span>
+                  <span class="dashboard-activity-item__price"><%= subscription_billing_amount_label(subscription) %></span>
                 </article>
               <% end %>
             </div>
