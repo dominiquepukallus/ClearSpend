@@ -10,6 +10,9 @@ class Subscription < ApplicationRecord
   validates :billing_cycle, presence: true, inclusion: { in: %w[weekly monthly yearly] }
   validates :status, presence: true, inclusion: { in: %w[active cancelled paused] }
 
+  def shared?
+    shared_subscriptions.exists?
+  end
   # app/models/subscription.rb
 
   def billing_dates_up_to(end_date = Date.current)

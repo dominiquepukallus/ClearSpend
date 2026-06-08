@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_05_044243) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_08_010054) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -35,12 +35,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_05_044243) do
   create_table "shared_subscriptions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "permission"
+    t.decimal "share_percentage"
     t.string "shared_with"
     t.integer "shared_with_user_id"
     t.string "status"
     t.bigint "subscription_id", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
     t.index ["subscription_id"], name: "index_shared_subscriptions_on_subscription_id"
+    t.index ["user_id"], name: "index_shared_subscriptions_on_user_id"
   end
 
   create_table "solid_cable_messages", force: :cascade do |t|
@@ -219,6 +222,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_05_044243) do
   add_foreign_key "insights", "subscriptions"
   add_foreign_key "insights", "users"
   add_foreign_key "shared_subscriptions", "subscriptions"
+  add_foreign_key "shared_subscriptions", "users"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

@@ -89,17 +89,34 @@ class SubscriptionsController < ApplicationController
         category_id: sub_params[:category_id],
         status: "active"
       )
+
       if subscription.save
         created << subscription
+
+        # Create shared subscription if user selected someone
+        if sub_params[:shared_with_user_id].present? && sub_params[:share_percentage].present?
+          shared_subscription = SharedSubscription.new(
+            subscription: subscription,
+            user_id: sub_params[:shared_with_user_id],
+            share_percentage: sub_params[:share_percentage],
+            status: 'pending',
+            permission: 'read'
+          )
+
+          unless shared_subscription.save
+            errors << "Subscription #{index.to_i + 1} created but sharing failed: #{shared_subscription.errors.full_messages.join(', ')}"
+          end
+        end
       else
         errors << "Subscription #{index.to_i + 1}: #{subscription.errors.full_messages.join(', ')}"
       end
     end
+
     if errors.empty?
-      redirect_to subscriptions_path, notice: "##{created.count}: subscriptions added!"
+      redirect_to subscriptions_path, notice: "#{created.count} subscription(s) added!"
     else
       redirect_to new_subscription_path(mode: "bulk_upload"),
-                  alert: "Failed to add subscription. Errors: #{errors.join(', ')}"
+                  alert: "Some issues occurred: #{errors.join('; ')}"
     end
   end
 

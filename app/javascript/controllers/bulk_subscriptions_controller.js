@@ -25,4 +25,15 @@ export default class extends Controller {
       alert("You need at least one subscription!")
     }
   }
+
+  toggleSharing(event) {
+    const checkbox = event.target
+    const index = checkbox.dataset.index
+    const sharingFields = document.getElementById(`sharing_fields_${index}`)
+    if (checkbox.checked) {
+      sharingFields.classList.remove('hidden')
+    } else {
+      sharingFields.classList.add('hidden')
+    }
+  }
 }

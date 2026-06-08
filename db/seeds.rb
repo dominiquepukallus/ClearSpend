@@ -11,6 +11,16 @@ demo_user.assign_attributes(
   password_confirmation: "password"
 )
 demo_user.save!
+
+demo_shared_user = User.find_or_initialize_by(email: "share@clearspend.test")
+demo_shared_user.assign_attributes(
+  first_name: "Shared",
+  last_name: "User",
+  alias: "shared_user",
+  password: "password",
+  password_confirmation: "password"
+)
+demo_shared_user.save!
 puts "User saved"
 
 categories = [
