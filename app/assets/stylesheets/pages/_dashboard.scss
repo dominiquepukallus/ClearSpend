@@ -251,6 +251,40 @@
   line-height: 1.2;
 }
 
+.dashboard-ai-card__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: fit-content;
+  min-height: 36px;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 6px;
+  color: #ffffff;
+  background: #1b2b4b;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.dashboard-ai-card__button.is-loading {
+  opacity: 0.82;
+  cursor: wait;
+}
+
+.dashboard-ai-card__button.is-loading::before {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  content: "";
+  animation: insight-button-spin 0.8s linear infinite;
+}
+
 .dashboard-ai-card:hover .dashboard-ai-card__cta {
   text-decoration: underline;
 }
@@ -331,6 +365,11 @@
 .dashboard-ai-card {
   min-height: 260px;
   padding: 22px;
+}
+
+.dashboard-ai-frame {
+  display: grid;
+  gap: 18px;
 }
 
 .dashboard-ai-card__header {
