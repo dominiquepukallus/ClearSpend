@@ -40,6 +40,14 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
       cancelled_at: Time.zone.local(2026, 5, 15, 12)
     )
     create_subscription(
+      name: "Annual Design Tool",
+      amount: 120,
+      billing_cycle: "yearly",
+      status: "cancelled",
+      date_recurrence: Date.new(2026, 5, 2),
+      cancelled_at: Time.zone.local(2026, 5, 22, 12)
+    )
+    create_subscription(
       name: "Previous Canceled",
       amount: 30,
       billing_cycle: "monthly",
@@ -51,12 +59,13 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
     assert_dashboard_totals(
       month: "2026-05",
       monthly_spend: 20,
-      canceled_spend: 18,
+      canceled_spend: 138,
       breakdown_total: 20,
-      added_count: 3,
-      canceled_count: 1,
-      added_names: [ "Monthly Active", "Disney Plus", "Yearly Active" ],
-      canceled_names: [ "Disney Plus" ]
+      monthly_spend_trend: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20 ],
+      added_count: 4,
+      canceled_count: 2,
+      added_names: [ "Annual Design Tool", "Monthly Active", "Disney Plus", "Yearly Active" ],
+      canceled_names: [ "Disney Plus", "Annual Design Tool" ]
     )
   end
 
@@ -74,6 +83,7 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
     monthly_spend:,
     canceled_spend:,
     breakdown_total:,
+    monthly_spend_trend:,
     added_count:,
     canceled_count:,
     added_names:,
@@ -92,12 +102,14 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
     canceled_subscriptions = controller.send(:canceled_in_period, @user.subscriptions)
     added_subscriptions = controller.send(:added_in_period, @user.subscriptions)
     breakdown = controller.send(:normalized_spend_by_category, active_subscriptions)
+    trend = controller.send(:monthly_spend_trend, @user.subscriptions)
 
     calculated_monthly_spend = controller.send(:normalized_monthly_spend, active_subscriptions)
 
     assert_equal monthly_spend, calculated_monthly_spend
-    assert_equal canceled_spend, controller.send(:normalized_monthly_spend, canceled_subscriptions)
+    assert_equal canceled_spend, controller.send(:total_spend, canceled_subscriptions)
     assert_equal breakdown_total, breakdown.values.sum
+    assert_equal monthly_spend_trend, trend.map { |month| month[:value] }
     assert_equal added_count, added_subscriptions.count
     assert_equal canceled_count, canceled_subscriptions.count
     assert_equal added_names, added_subscriptions.map(&:name)
