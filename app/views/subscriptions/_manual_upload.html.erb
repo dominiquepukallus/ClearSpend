@@ -70,6 +70,41 @@
                   <% end %>
                 </select>
               </div>
+              <div class="md:col-span-2 mt-4 border-t border-gray-200 pt-4">
+                <div class="flex items-center mb-3">
+                  <input type="checkbox"
+                        id="share_subscription_0"
+                        data-action="change->bulk-subscriptions#toggleSharing"
+                        data-index="0"
+                        class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                  <label for="share_subscription_0" class="ml-2 text-sm font-medium text-gray-700">
+                    Share this subscription
+                  </label>
+                </div>
+
+                <div id="sharing_fields_0" class="hidden space-y-3 pl-6">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Share with User</label>
+                    <select name="subscriptions[0][shared_with_user_id]"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                      <option value="">Select user...</option>
+                      <% User.where.not(id: current_user.id).each do |user| %>
+                        <option value="<%= user.id %>"><%= user.email %></option>
+                      <% end %>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Their share (%)</label>
+                    <input type="number"
+                          name="subscriptions[0][share_percentage]"
+                          min="1"
+                          max="100"
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                          placeholder="50">
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -88,7 +123,6 @@
 
       <% end %>
 
-      <!-- Template for new rows -->
       <template data-bulk-subscriptions-target="template">
         <div data-bulk-subscription-row class="border border-gray-200 rounded-lg p-5 bg-gray-50">
           <div class="flex justify-between items-center mb-4">
@@ -150,6 +184,41 @@
                   <option value="<%= category.id %>"><%= category.name %></option>
                 <% end %>
               </select>
+            </div>
+            <div class="md:col-span-2 mt-4 border-t border-gray-200 pt-4">
+              <div class="flex items-center mb-3">
+                <input type="checkbox"
+                      id="share_subscription_INDEX"
+                      data-action="change->bulk-subscriptions#toggleSharing"
+                      data-index="INDEX"
+                      class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                <label for="share_subscription_INDEX" class="ml-2 text-sm font-medium text-gray-700">
+                  Share this subscription
+                </label>
+              </div>
+
+              <div id="sharing_fields_INDEX" class="hidden space-y-3 pl-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Share with User</label>
+                  <select name="subscriptions[INDEX][shared_with_user_id]"
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                    <option value="">Select user...</option>
+                    <% User.where.not(id: current_user.id).each do |user| %>
+                      <option value="<%= user.id %>"><%= user.email %></option>
+                    <% end %>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Their share (%)</label>
+                  <input type="number"
+                        name="subscriptions[INDEX][share_percentage]"
+                        min="1"
+                        max="100"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        placeholder="50">
+                </div>
+              </div>
             </div>
           </div>
         </div>
