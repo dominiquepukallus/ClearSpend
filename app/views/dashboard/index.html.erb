@@ -29,7 +29,7 @@
           <strong>Filter month</strong>
           <small><%= @month_range.first.strftime("%d %B %Y") %> - <%= @month_range.last.strftime("%d %B %Y") %></small>
         </label>
-        <%= form.month_field :month, value: @selected_month.strftime("%Y-%m"), class: "dashboard-month-filter__input" %>
+        <%= form.select :month, (Date.new(2025,1)..Date.current).map { |d| [d.strftime("%B %Y"), d.strftime("%Y-%m")] }.uniq, { selected: @selected_month.strftime("%Y-%m") } %>
         <%= form.submit "Apply", class: "dashboard-month-filter__submit" %>
       <% end %>
     </header>
@@ -85,28 +85,7 @@
       </div>
 
       <aside class="dashboard-side">
-        <% if @insights.any? %>
-          <% insight = @insights.sample %>
-          <%= link_to insights_path(category_id: insight.category_id), class: "dashboard-ai-card" do %>
-            <div class="dashboard-ai-card__header">
-              <h2>AI Insight</h2>
-            </div>
-            <div class="dashboard-ai-card__content">
-              <span class="dashboard-ai-card__badge"><%= insight.category.name %></span>
-              <p class="dashboard-ai-card__text"><%= truncate(insight.insight_text, length: 200, separator: ' ') %></p>
-              <span class="dashboard-ai-card__cta">View all insights →</span>
-            </div>
-          <% end %>
-        <% else %>
-          <section class="dashboard-ai-card">
-            <div class="dashboard-ai-card__header">
-              <h2>AI Insights</h2>
-            </div>
-            <div class="dashboard-ai-card__content">
-              <p>No insights yet.</p>
-            </div>
-          </section>
-        <% end %>
+        <%= render "ai_insights_card", insights: @insights, return_to: request.fullpath %>
 
 
         <section class="dashboard-analytics-card">
