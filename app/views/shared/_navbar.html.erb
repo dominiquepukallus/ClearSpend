@@ -14,8 +14,26 @@
 
     <!-- User dropdown -->
     <div class="flex items-center gap-4">
-      <%= link_to "Log out", destroy_user_session_path, data: { turbo_method: :delete }, class: "text-[#85B7EB] hover:text-white", style: "text-decoration: none;" %>
-      <%= link_to "user", user_path(current_user) %>
+      <el-dropdown class="inline-block">
+        <button class="inline-flex items-center justify-center">
+          <div class="w-10 h-10 rounded-full border-1 border-[#b5d4f4] bg-[#1B2B4B] flex items-center justify-center text-[#b5d4f4] text-sm font-semibold hover:bg-[#85B7EB] transition-colors">
+            <%= current_user.initials %>
+          </div>
+        </button>
+        <el-menu anchor="bottom end" popover class="w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg outline-1 outline-black/5 transition transition-discrete [--anchor-gap:--spacing(2)] data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in">
+          <div class="px-4 py-3">
+            <p class="text-sm text-gray-700">Signed in as</p>
+            <p class="truncate text-sm font-medium text-gray-900"><%= current_user.email %></p>
+          </div>
+          <div class="py-1">
+            <%= link_to "Your Profile", user_path(current_user), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900 focus:outline-hidden" %>
+            <%= link_to "Add New Subscriptions", new_subscription_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900 focus:outline-hidden" %>
+          </div>
+          <div class="py-1">
+            <%= button_to "Log out", destroy_user_session_path, method: :delete, class: "block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900 focus:outline-hidden" %>
+          </div>
+        </el-menu>
+      </el-dropdown>
     </div>
   <% else %>
     <%= link_to "Login", new_user_session_path, class: "text-white hover:text-[#85B7EB]", style: "text-decoration: none;" %>
