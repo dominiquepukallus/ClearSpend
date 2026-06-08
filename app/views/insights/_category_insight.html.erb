@@ -14,8 +14,17 @@
 
 <div class="insights-detail" style="--category-color: <%= category_colors[category.name] %>" >
   <div class="insights-detail__header">
-    <h2><%= category.name %></h2>
-    <p>You're paying <%= number_to_currency(total, precision: 0) %> each month</p>
+    <div>
+      <h2><%= category.name %></h2>
+      <p>You're paying <%= number_to_currency(total, precision: 0) %> each month</p>
+    </div>
+    <%= button_to insight ? "Regenerate" : "Generate",
+        regenerate_insights_path,
+        method: :post,
+        params: { category_id: category.id, return_to: request.fullpath },
+        class: "insights-action-button insights-action-button--secondary",
+        data: { loading_text: insight ? "Regenerating..." : "Generating..." },
+        form: { data: { controller: "loading-button", action: "turbo:submit-start->loading-button#start turbo:submit-end->loading-button#stop" } } %>
   </div>
 
   <% if insight %>
@@ -24,6 +33,25 @@
         <i class="fa-solid fa-sparkles"></i>
       </div>
       <p><%= insight.insight_text %></p>
+    </div>
+
+    <div class="insights-subscriptions">
+      <h3>Your subscriptions</h3>
+      <div class="insights-subscription-list">
+        <% user_subs.each do |sub| %>
+          <article class="insights-subscription-item">
+            <strong><%= sub.name %></strong>
+            <span><%= number_to_currency(sub.amount, precision: 0) %></span>
+          </article>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div class="insights-ai-card insights-ai-card--empty">
+      <div class="insights-ai-card__icon">
+        <i class="fa-solid fa-sparkles"></i>
+      </div>
+      <p>No insight generated for this category yet.</p>
     </div>
 
     <div class="insights-subscriptions">

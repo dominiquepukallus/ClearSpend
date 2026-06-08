@@ -12,6 +12,13 @@
   <div class="insights-shell">
     <header class="insights-header">
       <h1>AI Powered Insights</h1>
+      <%= button_to "Regenerate insights",
+          generate_insights_path,
+          method: :post,
+          params: { return_to: request.fullpath },
+          class: "insights-action-button",
+          data: { loading_text: "Regenerating..." },
+          form: { data: { controller: "loading-button", action: "turbo:submit-start->loading-button#start turbo:submit-end->loading-button#stop" } } %>
     </header>
 
     <div class="insights-category-grid">

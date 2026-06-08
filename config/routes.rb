@@ -22,7 +22,12 @@ Rails.application.routes.draw do
     end
     resources :shared_subscriptions
   end
-  resources :insights, only: [ :index ]
+  resources :insights, only: [ :index ] do
+    collection do
+      post :generate
+      post :regenerate
+    end
+  end
   resources :users, only: [ :show ]
 
   resources :categories
