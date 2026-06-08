@@ -1,4 +1,3 @@
-# app/services/ai_csv_parser.rb
 class AiCsvParser
   def initialize(csv_content)
     @csv_content = csv_content.force_encoding('UTF-8')

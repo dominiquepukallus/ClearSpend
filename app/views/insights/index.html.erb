@@ -1,1 +1,33 @@
-<h1><%= @current_user %>Insights</h1>
+<% category_colors = {
+  "Entertainment" => "#7C3AED",
+  "Well-being" => "#4CAF7D",
+  "News & Information" => "#0F766E",
+  "Food & Delivery / Meal kits" => "#F97316",
+  "Software & Productivity" => "#2563EB",
+  "Shopping & Retail" => "#EC4899",
+  "Customized" => "#4B5563"
+} %>
+
+<div class="insights-page">
+  <div class="insights-shell">
+    <header class="insights-header">
+      <h1>AI Powered Insights</h1>
+    </header>
+
+    <div class="insights-category-grid">
+      <% @categories.each do |category| %>
+        <%= link_to category.name, insights_path(category_id: category.id),
+            class: "insights-category-card #{'insights-category-card--active' if @selected_category == category}",
+            style: "--category-color: #{category_colors[category.name] || '#4B5563'}" %>
+      <% end %>
+    </div>
+
+    <% if @selected_category %>
+      <%= render 'category_insight', category: @selected_category %>
+    <% end %>
+  </div>
+</div>
+
+<%# <p>Debug: Found <%= @insights.count %>
+<%# <p>Categories: <%= @categories.count %>
+<%# <p>User has <%= current_user.subscriptions.count %>
