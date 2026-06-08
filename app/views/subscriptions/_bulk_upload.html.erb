@@ -37,6 +37,28 @@
               <% end %>
             </select>
           </div>
+          <div>
+            <input type="checkbox" id="share_subscription_0" data-action="change->bulk-subscriptions#toggleSharing" data-index="0">
+            <label for="share_subscriptions_0">Share this subscription</label>
+            <div id="sharing_fields_0" class="hidden">
+              <div>
+                <label>Share with User</label>
+                <select name="subscriptions[0][shared_with_user_id]">
+                  <option value="">Select user...</option>
+                  <% User.where.not(id: current_user.id).each do |user| %>
+                  <option value="<%= user.id %>"><%= user.email %></option>
+                  <% end %>
+                </select>
+              </div>
+              <div>
+                <label>Amount shared: (%)</label>
+                <input type="number" name="subscriptions[0][share_percentage]"
+                      min="1"
+                      max="100"
+                      placeholder="50">
+              </div>
+            </div>
+          </div>
           <button type="button" data-action="bulk-subscriptions#removeRow">Remove</button>
         </div>
       </div>
@@ -78,6 +100,28 @@
             <% end %>
           </select>
         </div>
+        <div>
+            <input type="checkbox" id="share_subscription_0" data-action="change->bulk-subscriptions#toggleSharing" data-index="0">
+            <label for="share_subscriptions_0">Share this subscription</label>
+            <div id="sharing_fields_0" class="hidden">
+              <div>
+                <label>Share with User</label>
+                <select name="subscriptions[0][shared_with_user_id]">
+                  <option value="">Select user...</option>
+                  <% User.where.not(id: current_user.id).each do |user| %>
+                  <option value="<%= user.id %>"><%= user.email %></option>
+                  <% end %>
+                </select>
+              </div>
+              <div>
+                <label>Amount shared: (%)</label>
+                <input type="number" name="subscriptions[0][share_percentage]"
+                      min="1"
+                      max="100"
+                      placeholder="50">
+              </div>
+            </div>
+          </div>
         <button type="button" data-action="bulk-subscriptions#removeRow">Remove</button>
       </div>
     </template>
