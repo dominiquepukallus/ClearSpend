@@ -5,11 +5,68 @@
   </div>
 
   <div class="grid grid-cols-3 gap-4 mb-6">
-    <h2>Shared with you</h2>
-    <% pending_count = @received_shares.where(status: 'pending').count %>
-    <% if pending_count > 0 %>
-      <span><%= pending_count %>pending</span>
-    <% end %>
+    <div class="bg-white border border-gray-300 rounded-lg p-6">
+      <h2>Shared with you</h2>
+      <% pending_count = @received_shares.where(status: 'pending').count %>
+      <% if pending_count > 0 %>
+        <span><%= pending_count %>pending</span>
+      <% end %>
+    </div>
 
+    <div>
+      <% if @received_shares.any? %>
+        <div>
+          <% @received_shares.each do |shared| %>
+            <div class="border border-gray-300 rounded-lg p-4 <%= 'bg-yellow-50 border-yellow-300' if shared.status == 'pending' %>">
+              <h3><%= shared.subscription.name %></h3>
+              <p><%= shared.subscription.amount.to_i %><%= shared.subscription.billing_cycle %></p>
+            </div>
+
+            <div class="border border-gray-300 rounded-lg p-4 <%= 'bg-lime-50 border-lime-300' if shared.status == 'accepted' %>">
+              <h3><%= shared.status.capitalize %></h3>
+            </div>
+
+            <div>
+              <div>
+                <span><%= shared.subscription.user.first_name.first.upcase %><%= shared.subscription.user.last_name.first.upcase %></span>
+                <span><%= shared.subscription.user.email %></span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between pt-3 border-t border-gray-200">
+              <p class="text-sm font-medium">Your share: <%= shared.share_percentage.to_i %>%</p>
+                <% if shared.status == 'pending' %>
+                  <div>
+                    <%= button_to "Accept", accept_shared_subscription_path(shared),
+                        method: :patch,
+                        class: "px-3 py-1 bg-green-600 text-white text-sm font-semibold rounded hover:bg-green-700 transition-colors" %>
+                    <%= button_to "Reject", reject_shared_subscription_path(shared),
+                        method: :patch,
+                        data: { turbo_confirm: "Are you sure?" },
+                        class: "px-3 py-1 bg-red-600 text-white text-sm font-semibold rounded hover:bg-red-700 transition-colors" %>
+                  </div>
+                <% end %>
+            </div>
+          <% end %>
+        </div>
+        <% else %>
+        <div class="text-center py-12">
+          <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <p class="text-gray-600">No subscriptions shared with you yet</p>
+        </div>
+      <% end %>
+    </div>
   </div>
+    <div>
+      <div class="bg-white border border-gray-300 rounded-lg p-6">
+        <h2>Currently Sharing</h2>
+        <% if @outgoing_shares.any? %>
+        <div class="space-y-3">
+          <% @outgoing_shares.each do |sub| %>
+          
+          <% end %>
+        </div>
+      </div>
+    </div>
 </div>
