@@ -30,6 +30,13 @@ Rails.application.routes.draw do
   end
   resources :users, only: [ :show ]
 
+  resources :shared_subscriptions, only: [:index] do
+    member do
+      patch :accept
+      patch :reject
+    end
+  end
+
   resources :categories
   get "dashboard", to: "dashboard#index", as: :dashboard
 end

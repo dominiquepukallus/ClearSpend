@@ -8,15 +8,27 @@
   "Customized" => "#4B5563"
 } %>
 
-<% user_subs = current_user.subscriptions.where(category: category) %>
-<% insight = current_user.insights.find_by(category: category) %>
-<% total = user_subs.sum(:amount) %>
+
+<%
+  selected_month = params[:month]&.to_i || Date.current.month
+  selected_year = params[:year]&.to_i || Date.current.year
+  selected_date = Date.new(selected_year, selected_month, 1)
+
+  user_subs = current_user.subscriptions
+    .where(category: category)
+    .where("date_recurrence <= ?", selected_date.end_of_month)
+    .where("status = 'active' OR (status = 'cancelled' AND cancelled_at >= ?)", selected_date.beginning_of_month)
+
+  total = user_subs.sum { |sub| monthly_amount(sub) }
+
+  insight = current_user.insights.find_by(category: category)
+%>
 
 <div class="insights-detail" style="--category-color: <%= category_colors[category.name] %>" >
   <div class="insights-detail__header">
     <div>
       <h2><%= category.name %></h2>
-      <p>You're paying <%= number_to_currency(total, precision: 0) %> each month</p>
+      <p>You're paying <%= number_to_currency(total, precision: 0) %> in <%= Date::MONTHNAMES[selected_month] %> <%= selected_year %></p>
     </div>
     <%= button_to insight ? "Regenerate" : "Generate",
         regenerate_insights_path,
@@ -36,12 +48,12 @@
     </div>
 
     <div class="insights-subscriptions">
-      <h3>Current subscriptions</h3>
+      <h3>Active subscriptions in <%= Date::MONTHNAMES[selected_month] %></h3>
       <div class="insights-subscription-list">
         <% user_subs.each do |sub| %>
           <article class="insights-subscription-item">
             <strong><%= sub.name %></strong>
-            <span><%= number_to_currency(sub.amount, precision: 0) %>/<%= sub.billing_cycle %></span>
+            <span><%= subscription_billing_amount_label(sub) %></span>
           </article>
         <% end %>
       </div>
@@ -55,12 +67,12 @@
     </div>
 
     <div class="insights-subscriptions">
-      <h3>Your subscriptions</h3>
+      <h3>Your subscriptions in <%= Date::MONTHNAMES[selected_month] %></h3>
       <div class="insights-subscription-list">
         <% user_subs.each do |sub| %>
           <article class="insights-subscription-item">
             <strong><%= sub.name %></strong>
-            <span><%= number_to_currency(sub.amount, precision: 0) %></span>
+            <span><%= subscription_billing_amount_label(sub) %></span>
           </article>
         <% end %>
       </div>

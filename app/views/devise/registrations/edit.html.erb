@@ -1,39 +1,74 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<div class="flex flex-col items-center justify-center mt-10">
+  <div class="w-full max-w-md px-4">
+    <div class="flex flex-col items-center justify-center mb-8">
+      <h2 class="text-2xl font-bold text-gray-900">Edit Account</h2>
+      <p class="text-gray-600 mt-3 text-center">Update your profile information and password</p>
+    </div>
 
-<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= f.error_notification %>
+    <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+      <%= f.error_notification class: 'bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded mb-4' %>
 
-  <div class="form-inputs">
-    <%= f.input :email, required: true, autofocus: true %>
+      <div class="form-inputs">
+        <%= f.input :email,
+                    required: true,
+                    autofocus: true,
+                    input_html: { autocomplete: "email" } %>
 
-    <%= f.input :first_name, required: true %>
-    <%= f.input :last_name, required: true %>
-    <%= f.input :alias, required: true %>
+        <%= f.input :first_name,
+                    required: true,
+                    input_html: { autocomplete: "given-name" } %>
 
-    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-      <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
+        <%= f.input :last_name,
+                    required: true,
+                    input_html: { autocomplete: "family-name" } %>
+
+        <%= f.input :alias,
+                    required: true,
+                    label: "User Alias",
+                    input_html: { autocomplete: "username" } %>
+
+        <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+          <p class="text-sm text-amber-600 bg-amber-50 border border-amber-200 px-4 py-3 rounded mb-4">
+            Currently waiting confirmation for: <%= resource.unconfirmed_email %>
+          </p>
+        <% end %>
+
+        <div class="mt-6 pt-6 border-t border-gray-200">
+          <p class="text-sm text-gray-600 mb-4">Leave password fields blank if you don't want to change it</p>
+
+          <%= f.input :password,
+                      hint: "Leave blank if you don't want to change it",
+                      required: false,
+                      input_html: { autocomplete: "new-password" } %>
+
+          <%= f.input :password_confirmation,
+                      label: "Confirm New Password",
+                      required: false,
+                      input_html: { autocomplete: "new-password" } %>
+
+          <%= f.input :current_password,
+                      hint: "We need your current password to confirm changes",
+                      required: true,
+                      input_html: { autocomplete: "current-password" } %>
+        </div>
+      </div>
+
+      <%= f.button :submit, "Update",
+                   class: "w-full bg-[#1B2B4B] hover:bg-[#85B7EB] text-white px-4 py-2 rounded mt-6 transition-colors duration-200 font-medium" %>
     <% end %>
 
-    <%= f.input :password,
-                hint: "leave it blank if you don't want to change it",
-                required: false,
-                input_html: { autocomplete: "new-password" } %>
-    <%= f.input :password_confirmation,
-                required: false,
-                input_html: { autocomplete: "new-password" } %>
-    <%= f.input :current_password,
-                hint: "we need your current password to confirm your changes",
-                required: true,
-                input_html: { autocomplete: "current-password" } %>
+    <div class="mt-8 pt-8 border-t border-gray-200">
+      <h3 class="text-lg font-semibold text-gray-900 mb-3">Cancel Account</h3>
+      <p class="text-sm text-gray-600 mb-4">Once you delete your account, there is no going back. Please be certain.</p>
+      <%= button_to "Cancel my account",
+                    registration_path(resource_name),
+                    method: :delete,
+                    data: { confirm: "Are you sure? This action cannot be undone.", turbo_confirm: "Are you sure? This action cannot be undone." },
+                    class: "w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition-colors duration-200 font-medium" %>
+    </div>
+
+    <div class="text-center mt-6 text-sm text-gray-600">
+      <%= link_to "Back", :back, class: "text-[#1B2B4B] hover:underline font-medium hover:text-blue-600 dark:hover:text-blue-400" %>
+    </div>
   </div>
-
-  <div class="form-actions">
-    <%= f.button :submit, "Update" %>
-  </div>
-<% end %>
-
-<h3>Cancel my account</h3>
-
-<div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
-
-<%= link_to "Back", :back %>
+</div>

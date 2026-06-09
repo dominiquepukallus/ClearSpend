@@ -1,0 +1,15 @@
+<div class="max-w-6xl mx-auto px-5 py-10">
+  <div class="mb-6">
+    <h2 class="text-2xl font-bold mb-4">Shared Subscriptions</h2>
+    <p>Manage subscriptions shared with you and by you</p>
+  </div>
+
+  <div class="grid grid-cols-3 gap-4 mb-6">
+    <h2>Shared with you</h2>
+    <% pending_count = @received_shares.where(status: 'pending').count %>
+    <% if pending_count > 0 %>
+      <span><%= pending_count %>pending</span>
+    <% end %>
+
+  </div>
+</div>
