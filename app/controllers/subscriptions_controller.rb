@@ -2,9 +2,10 @@ class SubscriptionsController < ApplicationController
   def index
     current_month = params[:month] ? Date.parse(params[:month]).beginning_of_month : Date.current.beginning_of_month
     @current_month = current_month
-    @subscriptions = current_user.subscriptions.order(:name)
+    @subscriptions = current_user.subscriptions.where.not(status: "cancelled")
     @subscriptions = @subscriptions.where("name ILIKE ?", "%#{params[:query]}%") if params[:query].present?
     @subscriptions = @subscriptions.where(category_id: params[:category_id]) if params[:category_id].present?
+    @subscriptions = @subscriptions.sort_by { |sub| sub.next_billing_date || Date.new(9999, 12, 31) }
   end
 
   def show

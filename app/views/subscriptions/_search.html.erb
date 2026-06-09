@@ -12,6 +12,7 @@
           </svg>
         </div>
 
+        <!-- Search bar -->
         <%= f.search_field :query,
               value: params[:query],
               placeholder: "Search subscriptions...",
@@ -33,13 +34,15 @@
         <%= form_with url: subscriptions_path, method: :get, data: { turbo_frame: "calendar" } do |f| %>
           <%= f.hidden_field :query, value: params[:query] %>
           <%= f.select :category_id,
-                options_from_collection_for_select(Category.all, :id, :name, params[:category_id]),
-                { include_blank: "All categories" },
-                class: "w-full rounded-md border-0 bg-white py-3 px-4 text-sm text-gray-900 shadow-[0_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 focus:outline-2 focus:outline-[#1B2B4B]",
-                onchange: "this.form.submit()" %>
+          options_from_collection_for_select(Category.all, :id, :name, params[:category_id]),
+          { include_blank: "All categories" },
+          class: "category-select w-full rounded-md border-0 bg-white py-3 pl-4 pr-10 text-sm text-gray-900
+          shadow-[0_2px_16px_#B5D4F4] outline outline-1 outline-gray-400
+          focus:outline-2 focus:outline-[#1B2B4B] appearance-none",
+          onchange: "this.form.submit()" %>
         <% end %>
-    </div>
-</div>
+      </div>
+  </div>
 
   <!-- Subscriptions list -->
   <div class="mx-6 rounded-md bg-white shadow-[0_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 overflow-y-scroll" style="max-height: 554px">
@@ -51,10 +54,16 @@
         <%# </div> %>
         <div class="flex items-center gap-3">
           <% if (logo = subscription_logo_url(sub.name)) %>
-            <img src="<%= logo %>" alt="<%= sub.name %>" width="20" height="20" class="rounded object-contain">
+            <img src="<%= logo %>" alt="<%= sub.name %>" width="20" height="20" class="rounded border border-gray-200 object-contain">
           <% end %>
           <span class="inline-block size-2 rounded-full <%= sub.category.color.split.first %>"></span>
-          <span class="font-medium"><%= sub.name %></span>
+          <div>
+            <span class="font-medium"><%= sub.name %></span>
+            <% next_date = sub.next_billing_date %>
+            <% if next_date %>
+              <div class="text-xs text-gray-500"><%= next_date.strftime("%d %B %Y") %></div>
+            <% end %>
+          </div>
         </div>
         <div class="flex items-center gap-3 text-gray-500">
           <span>
@@ -64,8 +73,10 @@
               </svg>
             <% end %>
           </span>
-          <span>$<%= sub.amount.to_i %></span>
-          <span class="text-xs"><%= sub.billing_cycle %></span>
+          <div class="flex items-baseline gap-1">
+            <span>$<%= sub.amount.to_i %></span>
+            <span class="text-xs"><%= sub.billing_cycle %></span>
+          </div>
         </div>
       <% end %>
     <% end %>
