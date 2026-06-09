@@ -24,14 +24,20 @@ demo_shared_user.save!
 puts "User saved"
 
 categories = [
-  "Entertainment",
-  "Well-being",
-  "News & Information",
-  "Food & Delivery / Meal kits",
-  "Software & Productivity",
-  "Shopping & Retail",
-  "Customized"
+  { name: "Entertainment",              color: "bg-[#7C3AED] text-white" },
+  { name: "Well-being",                 color: "bg-[#4CAF7D] text-white" },
+  { name: "News & Information",         color: "bg-[#0F766E] text-white" },
+  { name: "Food & Delivery / Meal kits", color: "bg-[#F97316] text-white" },
+  { name: "Software & Productivity",    color: "bg-[#2563EB] text-white" },
+  { name: "Shopping & Retail",          color: "bg-[#EC4899] text-white" },
+  { name: "Customized",                 color: "bg-[#4B5563] text-white" }
 ]
+
+categories.each do |attrs|
+  Category.find_or_create_by(name: attrs[:name]) do |c|
+    c.color = attrs[:color]
+  end
+end
 
 category_records = categories.index_with do |category_name|
   Category.find_or_create_by!(name: category_name)

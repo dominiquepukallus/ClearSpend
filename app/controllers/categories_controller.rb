@@ -23,3 +23,9 @@ class CategoriesController < ApplicationController
     end
   end
 end
+
+private
+
+def category_params
+  params.require(:category).permit(:name, :color)
+end

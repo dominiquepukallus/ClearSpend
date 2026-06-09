@@ -1,0 +1,62 @@
+<div class="px-10 pt-8 max-w-lg">
+  <div class="mb-6">
+    <%= link_to categories_path, class: "inline-flex items-center gap-1 text-sm text-gray-400 hover:text-[#1B2B4B] transition-colors" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+      </svg>
+      Back to categories
+    <% end %>
+  </div>
+
+  <h1 class="text-2xl font-bold text-[#1B2B4B] mb-6">New category</h1>
+
+  <div class="bg-white rounded-xl shadow-[0_2px_16px_#B5D4F4] outline outline-1 outline-gray-200 px-6 py-6">
+    <%= form_with model: @category, class: "flex flex-col gap-4" do |f| %>
+      <% if @category.errors.any? %>
+        <div class="rounded-md bg-red-50 px-4 py-3 text-sm text-red-600">
+          <% @category.errors.full_messages.each do |msg| %>
+            <p><%= msg %></p>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div>
+        <%= f.label :name, class: "block text-sm font-medium text-[#1B2B4B] mb-1" %>
+        <%= f.text_field :name, placeholder: "e.g. Transport", class: "w-full rounded-md border-0 bg-white py-3 px-4 text-sm text-gray-900 shadow-sm outline outline-1 outline-gray-400 focus:outline-2 focus:outline-[#1B2B4B]" %>
+      </div>
+
+      <div>
+        <%= f.label :color, "Pick a color", class: "block text-sm font-medium text-[#1B2B4B] mb-2" %>
+        <div class="flex flex-wrap gap-3">
+          <%
+            color_options = [
+              { label: "Purple",  value: "bg-[#7C3AED] text-white" },
+              { label: "Green",   value: "bg-[#4CAF7D] text-white" },
+              { label: "Navy",    value: "bg-[#1E3A5F] text-white" },
+              { label: "Orange",  value: "bg-[#F97316] text-white" },
+              { label: "Blue",    value: "bg-[#2563EB] text-white" },
+              { label: "Pink",    value: "bg-[#EC4899] text-white" },
+              { label: "Gray",    value: "bg-[#4B5563] text-white" },
+              { label: "Red",     value: "bg-[#E24B4A] text-white" },
+              { label: "Teal",    value: "bg-[#0D9488] text-white" },
+              { label: "Yellow",  value: "bg-[#EAB308] text-white" },
+            ]
+          %>
+          <% color_options.each do |color| %>
+            <label class="cursor-pointer">
+              <%= f.radio_button :color, color[:value], class: "sr-only peer" %>
+              <span class="flex items-center justify-center size-8 rounded-full peer-checked:ring-2 peer-checked:ring-offset-2 peer-checked:ring-[#1B2B4B] transition-all <%= color[:value].split.first %>"
+                    title="<%= color[:label] %>">
+              </span>
+            </label>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="flex gap-3 pt-2">
+        <%= f.submit "Create category", class: "cursor-pointer rounded-md bg-[#1B2B4B] px-5 py-3 text-sm font-medium text-white hover:bg-[#2a3f6e] transition-colors" %>
+        <%= link_to "Cancel", categories_path, class: "rounded-md px-5 py-3 text-sm font-medium text-gray-500 hover:text-[#1B2B4B] transition-colors" %>
+      </div>
+    <% end %>
+  </div>
+</div>
