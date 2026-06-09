@@ -37,6 +37,13 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :notifications do
+    member do
+      patch :accept
+      patch :reject
+    end
+  end
+
   resources :categories
   get "dashboard", to: "dashboard#index", as: :dashboard
 end
