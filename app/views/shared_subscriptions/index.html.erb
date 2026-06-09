@@ -62,11 +62,36 @@
       <div class="bg-white border border-gray-300 rounded-lg p-6">
         <h2>Currently Sharing</h2>
         <% if @outgoing_shares.any? %>
-        <div class="space-y-3">
-          <% @outgoing_shares.each do |sub| %>
-          
+          <div class="space-y-3">
+            <% @outgoing_shares.each do |sub| %>
+              <div>
+                <h3 class="font-semibold text-base"><%= sub.name %></h3>
+                  <p class="text-sm text-gray-600">
+                    $<%= sub.amount.to_i %> / <%= sub.billing_cycle %>
+                  </p>
+              </div>
+              <div>
+                <% sub.shared_subscriptions.each do |shared| %>
+                  <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs font-semibold">
+                        <%= shared.user.first_name.first.upcase %><%= shared.user.last_name.first.upcase %>
+                      </div>
+                      <div>
+                        <p class="text-sm font-medium"><%= shared.user.email %></p>
+                        <p class="text-xs text-gray-600"><%= shared.share_percentage.to_i %>% share</p>
+                      </div>
+                    </div>
+                    <span class="px-2 py-1 rounded-full text-xs font-semibold <%= shared.status == 'accepted' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' %>">
+                      <%= shared.status.capitalize %>
+                    </span>
+                  </div>
+                <% end %>
+              </div>
+            </div>
           <% end %>
         </div>
       </div>
     </div>
+  </div>
 </div>
