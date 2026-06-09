@@ -48,15 +48,22 @@
   <div class="mx-6 rounded-md bg-white shadow-[0_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 overflow-y-scroll" style="max-height: 554px">
     <% subscriptions.each do |sub| %>
       <%= link_to subscription_path(sub), data: { turbo_frame: "_top", search_target: "item", name: sub.name }, class: "flex items-center justify-between px-4 py-3 text-sm text-gray-900 hover:bg-gray-50 border-b border-gray-100 last:border-0" do %>
+        <%# <div class="flex items-center gap-3"> %>
+        <%# <span class="inline-block size-2 rounded-full <%= sub.category.color.split.first %>
+        <%# <span class="font-medium"><%= sub.name %>
+        <%# </div> %>
         <div class="flex items-center gap-3">
-          <% next_date = sub.next_billing_date %>
-          <% if next_date %>
-            <div class="flex flex-col items-center justify-center rounded-md px-2 py-1 min-w-[2.5rem] text-white <%= next_date == Date.today ? 'bg-[#E24B4A]' : 'bg-[#85B7EB]' %>">
-              <span class="text-[10px] font-medium leading-none uppercase"><%= next_date.strftime("%b") %></span>
-              <span class="text-sm font-bold leading-tight"><%= next_date.day %></span>
-            </div>
+          <% if (logo = subscription_logo_url(sub.name)) %>
+            <img src="<%= logo %>" alt="<%= sub.name %>" width="20" height="20" class="rounded border border-gray-200 object-contain">
           <% end %>
-          <span class="font-medium"><%= sub.name %></span>
+          <span class="inline-block size-2 rounded-full <%= sub.category.color.split.first %>"></span>
+          <div>
+            <span class="font-medium"><%= sub.name %></span>
+            <% next_date = sub.next_billing_date %>
+            <% if next_date %>
+              <div class="text-xs text-gray-500"><%= next_date.strftime("%d %B %Y") %></div>
+            <% end %>
+          </div>
         </div>
         <div class="flex items-center gap-3 text-gray-500">
           <span>
