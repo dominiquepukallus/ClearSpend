@@ -7,20 +7,20 @@ class SharedSubscriptionsController < ApplicationController
   end
 
   def accept
-    if @shared_subscriptions.user_id == current_user.id && @shared_subscription.status == 'pending'
+    if @shared_subscription.user_id == current_user.id && @shared_subscription.status == 'pending'
       @shared_subscription.update(status: 'accepted')
-      redirect_to shared_subscription_path, notice: "Subscription accepted!"
+      redirect_to shared_subscriptions_path, notice: "Subscription accepted!"
     else
-      redirect_to shared_subscription_path, alert: "Unable to accept, please try again"
+      redirect_to shared_subscriptions_path, alert: "Unable to accept, please try again"
     end
   end
 
   def reject
-    if @shared_subscriptions.user_id == current_user.id && @shared_subscription.status == 'pending'
+    if @shared_subscription.user_id == current_user.id && @shared_subscription.status == 'pending'
       @shared_subscription.destroy
-    redirect_to shared_subscription_path, notice: "Shared Subscription rejected"
+    redirect_to shared_subscriptions_path, notice: "Shared Subscription rejected"
     else
-      redirect_to shared_subscription_path, alert: "Unable to reject, please try again"
+      redirect_to shared_subscriptions_path, alert: "Unable to reject, please try again"
     end
   end
 
@@ -28,6 +28,6 @@ class SharedSubscriptionsController < ApplicationController
 
 
   def set_shared_subscription
-    @shared_subscription = Subscription.find(params[:id])
+    @shared_subscription = SharedSubscription.find(params[:id])
   end
 end

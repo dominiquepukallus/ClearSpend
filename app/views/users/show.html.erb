@@ -22,7 +22,7 @@
       <p class="text-3xl font-bold text-red-600"><%= @cancelled_subscriptions_count %></p>
     </div>
 
-    <%= link_to "", class: "block" do %>
+    <%= link_to shared_subscriptions_path, class: "block" do %>
       <div class="bg-white border border-gray-300 rounded-lg p-5 hover:border-blue-500 transition-colors">
         <p class="text-sm text-gray-600 mb-2">Pending Shares</p>
         <p class="text-3xl font-bold text-blue-600"><%= @pending_shares_count %></p>
@@ -31,7 +31,7 @@
   </div>
 
   <div class="mt-6 flex gap-3">
-    <%= link_to "View Shared Subscriptions", "", class: "px-5 py-2 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition-colors" %>
+    <%= link_to "View Shared Subscriptions", shared_subscriptions_path, class: "px-5 py-2 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition-colors" %>
   </div>
 
 </div>
