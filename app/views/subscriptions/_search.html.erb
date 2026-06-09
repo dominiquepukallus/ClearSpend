@@ -53,7 +53,7 @@
         <%# <span class="font-medium"><%= sub.name %>
         <%# </div> %>
         <div class="flex items-center gap-3">
-          <% if (logo = subscription_logo_url(sub.name)) %>
+          <% if (logo = subscription_logo_url(sub)) %>
             <img src="<%= logo %>" alt="<%= sub.name %>" width="20" height="20" class="rounded border border-gray-200 object-contain">
           <% end %>
           <span class="inline-block size-2 rounded-full <%= sub.category.color.split.first %>"></span>
