@@ -10,6 +10,7 @@ class AiCsvParser
 
     parsed.map do |subscription|
       subscription[:category] = find_category(subscription[:category])
+      subscription[:domain_name] = normalize_domain_name(subscription[:domain_name])
       subscription
     end
   end
@@ -43,7 +44,8 @@ class AiCsvParser
           "amount": 22.99,
           "billing_cycle": "monthly",
           "date_recurrence": "2024-06-15",
-          "category": "Entertainment"
+          "category": "Entertainment",
+          "domain_name": "netflix.com"
         }
       ]
 
@@ -51,6 +53,8 @@ class AiCsvParser
       - billing_cycle must be EXACTLY: "weekly", "monthly", or "yearly" (lowercase)
       - date_recurrence must be YYYY-MM-DD format
       - category must match EXACTLY one from the list above (including capitalization)
+      - domain_name must be the subscription company's root domain only, like "netflix.com", "spotify.com", or "openai.com"
+      - domain_name must not include https://, www., paths, or query strings
       - amount must be a number (no dollar signs)
       - If you can't find a value, make your best guess based on the subscription name
       - Only include items that are clearly recurring subscriptions (ignore one-time purchases)
@@ -96,5 +100,21 @@ class AiCsvParser
     else
       "Customized"
     end
+  end
+
+  def normalize_domain_name(domain_name)
+    return nil if domain_name.blank?
+
+    domain_name
+      .to_s
+      .downcase
+      .sub(/\Ahttps?:\/\//, "")
+      .sub(/\Awww\./, "")
+      .split("/")
+      .first
+      .to_s
+      .split("?")
+      .first
+      .presence
   end
 end
