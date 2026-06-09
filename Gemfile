@@ -75,3 +75,6 @@ end
 
 gem "tailwindcss-rails", "~> 4.4"
 gem "ruby_llm"
+
+
+gem "noticed", "~> 3.0"
