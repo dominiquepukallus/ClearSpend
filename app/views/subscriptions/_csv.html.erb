@@ -6,7 +6,7 @@
       <%= form_with url: parse_csv_subscriptions_path,
           method: :post,
           multipart: true,
-          data: { turbo_frame: "preview" } do |f| %>
+          data: { turbo_frame: "preview", controller: "file-upload", action:"submit->file-upload#startLoading" } do |f| %>
 
         <div data-controller="file-upload" class="border-2 border-dashed border-gray-300 rounded-lg p-8 mb-6 bg-gray-50 hover:bg-gray-100 transition-colors">
           <%= f.label :csv_file, class: "block mb-4 cursor-pointer" do %>
@@ -22,12 +22,12 @@
 
           <%= f.file_field :csv_file,
               accept: ".csv",
-              class: "hidden block w-full mt-4",
               data: { action: "change->file-upload#showFilename"},
               class: "hidden" %>
         </div>
 
         <%= f.submit "Upload and Parse",
+            data: { file_upload_target: "submit", loading_text: "Parsing.." },
             class: "w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg cursor-pointer transition-colors" %>
       <% end %>
     </div>

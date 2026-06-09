@@ -1,30 +1,61 @@
-<div data-controller="csv">
-  <ul role="list" class="divide-y divide-gray-100 dark:divide-white/5"
-      data-csv-target="container">
-    <% if subscriptions&.any? %>
-      <h4 class="font-bold mb-4"><%= subscriptions.count %> subscriptions found</h4>
+<div data-controller="csv" class="p-6 bg-white rounded-lg shadow-[0_8px_22px_rgba(33,37,41,0.08)]">
+  <% if subscriptions&.any? %>
+    <div class="mb-6 pb-4 border-b border-gray-200">
+      <h4 class="text-xl font-bold text-gray-900">
+        <%= subscriptions.count %> subscriptions ready to import
+      </h4>
+      <p class="text-sm text-gray-500 mt-1">Review and remove any you don't want to add</p>
+    </div>
+
+    <div data-csv-target="container" class="space-y-3 mb-6">
       <% subscriptions.each do |sub| %>
-        <li data-preview-table-row class="flex items-center justify-between gap-x-6 py-5">
-          <%= sub[:name] %>
-          <%= sub[:amount] %>
-          <%= sub[:billing_cycle] %>
-          <%= sub[:date_recurrence] %>
-          <%= sub[:category] %>
-          <button type="button"
+        <div data-preview-table-row class="p-4 border-2 border-gray-200 rounded-xl bg-gray-50 hover:border-blue-300 hover:bg-blue-50/50 transition-all">
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="inline-block size-3 rounded-full bg-blue-400"></span>
+                <h5 class="text-lg font-bold text-gray-900"><%= sub[:name] %></h5>
+              </div>
+              <div class="flex items-center gap-4 text-sm text-gray-600">
+                <span class="flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <%= sub[:date_recurrence] %>
+                </span>
+                <span class="px-2 py-1 bg-white border border-gray-300 rounded text-xs font-medium">
+                  <%= sub[:category] %>
+                </span>
+              </div>
+            </div>
+
+            <div class="flex flex-col items-end gap-2">
+              <div class="text-right">
+                <div class="text-lg font-bold text-gray-900">$<%= sub[:amount] %></div>
+                <div class="text-xs text-gray-500 capitalize"><%= sub[:billing_cycle] %></div>
+              </div>
+              <button type="button"
                       data-action="csv#removeRow"
-                      class="text-red-500 hover:text-red-700 font-medium text-sm transition-colors">
+                      class="text-red-600 hover:text-red-700 hover:bg-red-50 font-medium text-sm px-3 py-1 rounded transition-all">
                 Remove
               </button>
-        </li>
+            </div>
+          </div>
+        </div>
       <% end %>
+    </div>
 
-      <%= form_with url: import_csv_subscriptions_path, method: :post, data: { turbo_frame: "_top" } do |f| %>
-        <%= f.hidden_field :parsed_data, value: subscriptions.to_json %>
-        <%= f.submit "Submit Subscriptions",
-            class: "bg-[#1B2B4B] hover:bg-[#85B7EB] text-white px-4 py-2 w-full rounded" %>
-      <% end %>
-    <% else %>
-      <p class="text-gray-500">No subscriptions found</p>
+    <%= form_with url: import_csv_subscriptions_path, method: :post, data: { turbo_frame: "_top" } do |f| %>
+      <%= f.hidden_field :parsed_data, value: subscriptions.to_json %>
+      <%= f.submit "Import #{subscriptions.count} Subscriptions",
+          class: "w-full bg-[#1B2B4B] hover:bg-[#85B7EB] text-white font-bold px-6 py-4 rounded-xl transition-colors text-lg shadow-md" %>
     <% end %>
-  </ul>
+  <% else %>
+    <div class="text-center py-12">
+      <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+      <p class="text-gray-500">No subscriptions found</p>
+    </div>
+  <% end %>
 </div>

@@ -1,0 +1,37 @@
+<!-- app/views/users/show.html.erb -->
+<div class="max-w-4xl mx-auto px-5 py-10">
+
+  <div class="bg-white border border-gray-300 rounded-lg p-6 mb-6">
+    <div class="grid grid-cols-2 gap-5">
+      <h2 class="text-2xl font-bold mb-4">Profile</h2>
+       <%= link_to "Edit Profile", edit_user_registration_path, class: "px-5 py-2 bg-white text-[#1B2B4B] rounded-md font-semibold border border-[#1B2B4B] hover:bg-gray-50 transition-colors" %>
+    </div>
+    <h3>First name <%= @user.first_name %></h3>
+    <h3>Last name <%= @user.last_name %></h3>
+    <h3>User Alias <%= @user.alias %></h3>
+  </div>
+
+  <div class="grid grid-cols-3 gap-4 mb-6">
+    <div class="bg-white border border-gray-300 rounded-lg p-5">
+      <p class="text-sm text-gray-600 mb-2">Active Subscriptions</p>
+      <p class="text-3xl font-bold text-green-600"><%= @active_subscriptions_count %></p>
+    </div>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-5">
+      <p class="text-sm text-gray-600 mb-2">Cancelled Subscriptions</p>
+      <p class="text-3xl font-bold text-red-600"><%= @cancelled_subscriptions_count %></p>
+    </div>
+
+    <%= link_to shared_subscriptions_path, class: "block" do %>
+      <div class="bg-white border border-gray-300 rounded-lg p-5 hover:border-blue-500 transition-colors">
+        <p class="text-sm text-gray-600 mb-2">Pending Shares</p>
+        <p class="text-3xl font-bold text-blue-600"><%= @pending_shares_count %></p>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mt-6 flex gap-3">
+    <%= link_to "View Shared Subscriptions", shared_subscriptions_path, class: "px-5 py-2 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition-colors" %>
+  </div>
+
+</div>

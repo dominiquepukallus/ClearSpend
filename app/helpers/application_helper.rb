@@ -45,13 +45,26 @@ module ApplicationHelper
   def monthly_equivalent(subscription, amount)
     case subscription.billing_cycle
     when "yearly"
+      monthly_amount = subscription.amount / 12
+      "#{amount}/year • #{number_to_currency(monthly_amount, precision: currency_precision(monthly_amount))}/month"
       monthly = number_to_currency(subscription.amount / 12, precision: 0)
       "#{amount} /year • #{monthly} /month"
     when "weekly"
       monthly = number_to_currency(subscription.amount * 52 / 12, precision: 0)
       "#{amount} weekly • #{monthly}/month"
     else
-      "#{amount} /month"
+      "#{amount}/month"
+    end
+  end
+
+  def monthly_amount(subscription)
+    case subscription.billing_cycle
+    when "yearly"
+      subscription.amount / 12.0
+    when "weekly"
+      subscription.amount * 52 / 12.0
+    else
+      subscription.amount
     end
   end
 
