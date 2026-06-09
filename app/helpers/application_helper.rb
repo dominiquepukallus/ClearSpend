@@ -21,10 +21,13 @@ module ApplicationHelper
     monthly_equivalent(subscription, amount)
   end
 
-  def subscription_logo_url(name)
-    return nil if SUBSCRIPTION_DOMAINS[name].nil? && SUBSCRIPTION_DOMAINS.key?(name)
+  def subscription_logo_url(subscription_or_name)
+    name = subscription_or_name.respond_to?(:name) ? subscription_or_name.name : subscription_or_name
+    domain_name = subscription_or_name.respond_to?(:domain_name) ? subscription_or_name.domain_name : nil
 
-    domain = SUBSCRIPTION_DOMAINS[name] || name_to_domain(name)
+    return nil if domain_name.blank? && SUBSCRIPTION_DOMAINS[name].nil? && SUBSCRIPTION_DOMAINS.key?(name)
+
+    domain = domain_name.presence || SUBSCRIPTION_DOMAINS[name] || name_to_domain(name)
     "https://cdn.brandfetch.io/#{domain}/w/40/h/40"
   end
 

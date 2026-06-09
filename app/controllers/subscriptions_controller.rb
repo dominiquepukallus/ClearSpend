@@ -63,6 +63,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def import_csv
+    Subscription.reset_column_information
     parsed_data = JSON.parse(params[:parsed_data])
     parsed_data.each do |sub_data|
       if sub_data["category"].present?
@@ -71,6 +72,7 @@ class SubscriptionsController < ApplicationController
         sub_data.delete("category")
       end
       sub_data["status"] = "active"
+      sub_data = sub_data.slice(*Subscription.column_names)
       current_user.subscriptions.create!(sub_data)
     end
     redirect_to subscriptions_path, notice: "Subscriptions imported successfully"
@@ -124,7 +126,7 @@ class SubscriptionsController < ApplicationController
   private
 
   def subscription_params
-    params.require(:subscription).permit(:name, :date_recurrence, :amount, :billing_cycle, :status, :category_id)
+    params.require(:subscription).permit(:name, :date_recurrence, :amount, :billing_cycle, :status, :category_id, :domain_name)
   end
 
   def ai_turbo_stream

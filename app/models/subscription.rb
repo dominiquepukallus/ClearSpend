@@ -5,6 +5,8 @@ class Subscription < ApplicationRecord
   has_many :shared_subscriptions, dependent: :destroy
   has_many :insights, dependent: :destroy
 
+  before_validation :normalize_domain_name
+
   validates :name, :date_recurrence, presence: true
   validates :amount, presence: true, numericality: { greater_than: 0 }
   validates :billing_cycle, presence: true, inclusion: { in: %w[weekly monthly yearly] }
@@ -65,5 +67,24 @@ class Subscription < ApplicationRecord
     end
 
     nil
+  end
+
+  private
+
+  def normalize_domain_name
+    return unless has_attribute?(:domain_name)
+    return if domain_name.blank?
+
+    self.domain_name = domain_name
+                       .to_s
+                       .downcase
+                       .sub(/\Ahttps?:\/\//, "")
+                       .sub(/\Awww\./, "")
+                       .split("/")
+                       .first
+                       .to_s
+                       .split("?")
+                       .first
+                       .presence
   end
 end
