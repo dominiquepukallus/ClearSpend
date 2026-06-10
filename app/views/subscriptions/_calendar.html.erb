@@ -13,7 +13,7 @@
   next_month = first_day + 1.month
 %>
 
-<div class="lg:flex lg:h-auto lg:flex-col"
+<div class="lg:flex lg:h-full lg:flex-col"
   data-controller="calendar-scroll"
   data-calendar-scroll-prev-value="<%= subscriptions_path(month: prev_month.strftime('%Y-%m-%d')) %>"
   data-calendar-scroll-next-value="<%= subscriptions_path(month: next_month.strftime('%Y-%m-%d')) %>">
@@ -66,7 +66,7 @@
 
 
 <!-- Inside of calendar -->
-  <div class="shadow-[0_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 rounded-md overflow-hidden lg:flex lg:flex-col">
+  <div class="shadow-[4px_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 rounded-md overflow-hidden lg:flex lg:flex-col max-h-[480px]">
     <div class="grid grid-cols-7 gap-px border-b border-gray-300 bg-gray-200 text-center text-sm/6 font-semibold text-gray-700 lg:flex-none dark:border-white/5 dark:bg-white/15 dark:text-gray-300">
       <div class="flex justify-center bg-white py-2 dark:bg-gray-900"><span>M</span><span class="sr-only sm:not-sr-only">on</span></div>
       <div class="flex justify-center bg-white py-2 dark:bg-gray-900"><span>T</span><span class="sr-only sm:not-sr-only">ue</span></div>
@@ -92,13 +92,13 @@
               class="relative group-not-data-is-current-month:opacity-75 in-data-is-today:flex in-data-is-today:size-6 in-data-is-today:items-center in-data-is-today:justify-center in-data-is-today:rounded-full in-data-is-today:bg-[#1B2B4B] in-data-is-today:font-semibold in-data-is-today:text-white dark:in-data-is-today:bg-indigo-500"
             ><%= day.day %></time>
             <% if subscriptions_by_date[day] %>
-              <ol class="mt-2">
+              <ol class="mt-2 space-y-1">
                 <% subscriptions_by_date[day].each do |sub| %>
-                  <li class="leading-tight">
-                  <%= link_to sub.name, subscription_path(sub), data: { turbo_frame: "_top" },
-                      style: "color: #{sub.category.hex_color}; background-color: #{sub.category.hex_color}52; padding: 1px 4px; border-radius: 4px; -webkit-box-decoration-break: clone; box-decoration-break: clone;",
-                      class: "font-medium text-xs" %>
-                </li>
+                  <li class="leading-snug">
+                    <%= link_to sub.name, subscription_path(sub), data: { turbo_frame: "_top" },
+                        style: "color: #{sub.category.hex_color}; background-color: #{sub.category.hex_color}52; padding: 2px 4px; border-radius: 4px; -webkit-box-decoration-break: clone; box-decoration-break: clone; line-height: 1.6;",
+                        class: "font-medium text-xs" %>
+                  </li>
                 <% end %>
               </ol>
             <% end %>
@@ -109,7 +109,7 @@
   </div>
 
   <!-- Category filter -->
-  <div class="mt-3 shadow-[0_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 rounded-md overflow-hidden">
+  <div class="mt-3 flex-1 shadow-[4px_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 rounded-md overflow-hidden flex flex-col">
     <%= link_to subscriptions_path(month: params[:month], query: params[:query], sort: params[:sort]),
         data: { turbo_frame: "calendar" },
         class: "flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-colors #{params[:category_id].blank? ? 'bg-[#85B7EB] text-white' : 'text-gray-600 hover:bg-gray-100'}" do %>
@@ -120,7 +120,7 @@
       <% Category.where.not(name: "Customized").each do |category| %>
         <%= link_to subscriptions_path(month: params[:month], query: params[:query], sort: params[:sort], category_id: category.id),
             data: { turbo_frame: "calendar" },
-            class: "flex items-center gap-2 px-3 py-1.5 text-xs font-medium transition-colors #{params[:category_id].to_s == category.id.to_s ? 'text-white' : 'text-gray-600 hover:bg-gray-100'}",
+            class: "flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-colors #{params[:category_id].to_s == category.id.to_s ? 'text-white' : 'text-gray-600 hover:bg-gray-100'}",
             style: params[:category_id].to_s == category.id.to_s ? "background-color: #{category.hex_color};" : "" do %>
           <span class="inline-block size-2 rounded-full" style="background-color: <%= category.hex_color %>;"></span>
           <%= category.name %>
@@ -130,13 +130,21 @@
 
     <% customized = Category.find_by(name: "Customized") %>
     <% if customized %>
-      <%= link_to subscriptions_path(month: params[:month], query: params[:query], sort: params[:sort], category_id: customized.id),
-          data: { turbo_frame: "calendar" },
-          class: "flex mb-2 items-center gap-2 px-3 py-1.5 text-xs font-medium transition-colors #{params[:category_id].to_s == customized.id.to_s ? 'text-white' : 'text-gray-600 hover:bg-gray-100'}",
-          style: params[:category_id].to_s == customized.id.to_s ? "background-color: #{customized.hex_color};" : "" do %>
-        <span class="inline-block size-2 rounded-full" style="background-color: <%= customized.hex_color %>;"></span>
-        Customized
-      <% end %>
+      <div class="flex items-center justify-between mb-2">
+        <%= link_to subscriptions_path(month: params[:month], query: params[:query], sort: params[:sort], category_id: customized.id),
+            data: { turbo_frame: "calendar" },
+            class: "flex flex-1 items-center gap-2 px-3 py-1.5 text-sm font-medium transition-colors #{params[:category_id].to_s == customized.id.to_s ? 'text-white' : 'text-gray-600 hover:bg-gray-100'}",
+            style: params[:category_id].to_s == customized.id.to_s ? "background-color: #{customized.hex_color};" : "" do %>
+          <span class="inline-block size-2 rounded-full" style="background-color: <%= customized.hex_color %>;"></span>
+          Customized
+        <% end %>
+        <%= link_to new_category_path, data: { turbo_frame: "_top" }, class: "flex items-center gap-1 px-3 py-1.5 text-xs text-gray-500 hover:text-[#1B2B4B] transition-colors" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-3">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          Add
+        <% end %>
+      </div>
     <% end %>
   </div>
 </div>

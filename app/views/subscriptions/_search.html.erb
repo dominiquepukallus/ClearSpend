@@ -3,7 +3,7 @@
   <!-- Search and filter -->
   <div class="flex mb-4 px-6 gap-3 w-full">
     <%= form_with url: subscriptions_path, method: :get, data: { turbo_frame: "calendar" }, class: "flex-1" do |f| %>
-      <div class="relative w-full shadow-[0_2px_16px_#B5D4F4]">
+      <div class="relative w-full shadow-[4px_2px_16px_#B5D4F4]">
 
         <!-- Search icon -->
         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -51,7 +51,7 @@
       <!-- Upcoming subs filter -->
       <div class="relative">
         <%= link_to subscriptions_path(query: params[:query], category_id: params[:category_id], upcoming_week: true),
-          class: "flex items-center gap-2 rounded-md px-4 py-3 text-sm font-semibold outline outline-1 outline-[#F9E9E9] #{params[:upcoming_week].present? ? 'bg-[#E24B4A] text-white' : 'bg-[#F9E9E9] text-gray-900'}" do %>
+          class: "flex items-center gap-2 rounded-md px-4 py-3 text-sm font-semibold outline outline-1 outline-[#F9E9E9] #{params[:upcoming_week].present? ? 'bg-[#E24B4A] text-white' : 'bg-[#F8C8C8] text-gray-900'}" do %>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
           </svg>
@@ -71,7 +71,7 @@
     </div>
 
   <!-- Subscriptions list -->
-  <div class="mx-6 rounded-md bg-white shadow-[0_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 overflow-y-scroll" style="max-height: 650px">
+  <div class="mx-6 rounded-md bg-white shadow-[4px_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 overflow-y-scroll" style="max-height: 650px">
     <% subscriptions.each do |sub| %>
       <%= link_to subscription_path(sub), data: { turbo_frame: "_top", search_target: "item", name: sub.name }, class: "flex items-center justify-between px-4 py-3 text-sm text-gray-900 hover:bg-gray-50 border-b border-gray-100 last:border-0" do %>
         <div class="flex items-center gap-3">
