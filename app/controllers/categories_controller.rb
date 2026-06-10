@@ -12,14 +12,21 @@ class CategoriesController < ApplicationController
     @category = Category.new
   end
 
+  def destroy
+    @category = Category.find(params[:id])
+    @category.destroy
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.remove("category_#{@category.id}") }
+      format.html { redirect_to categories_path }
+    end
+  end
+
   def create
-    @category = current_user.categories.new(category_params)
+    @category = Category.new(category_params)
     if @category.save
-      redirect_to categories_path, notice: "category created"
+      redirect_to categories_path, notice: "Category created!"
     else
-      @mode = "manual"
-      flash.now[:alert] = "Failed to add category"
-      render "categories/new", status: :unprocessable_entity
+      render :new, status: :unprocessable_entity
     end
   end
 end

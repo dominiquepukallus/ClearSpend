@@ -18,7 +18,8 @@ class Category < ApplicationRecord
     when "Software & Productivity" then "bg-[#2563EB] text-white"
     when "Shopping & Retail" then "bg-[#EC4899] text-white"
     when "Customized" then "bg-[#4B5563] text-white"
-    else "bg-gray-100 text-gray-700"
+    else
+      self[:color].present? ? self[:color] : "bg-gray-100 text-gray-700"
     end
   end
 
@@ -31,7 +32,9 @@ class Category < ApplicationRecord
     when "Software & Productivity" then "#2563EB"
     when "Shopping & Retail" then "#EC4899"
     when "Customized" then "#4B5563"
-    else "#9CA3AF"
+    else
+      match = self[:color].to_s.match(/#([A-Fa-f0-9]{6})/)
+      match ? match[0] : "#9CA3AF"
     end
   end
 end
