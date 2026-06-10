@@ -21,7 +21,7 @@
     <header class="dashboard-header">
       <div>
         <h1>Dashboard</h1>
-        <p>Hi, <%= current_user.first_name.presence || current_user.alias %>. Welcome back to ClearSpend Admin!</p>
+        <p>Hi, <%= current_user.first_name.presence || current_user.alias %>. Welcome back to ClearSpend!</p>
       </div>
 
       <%= form_with url: dashboard_path, method: :get, class: "dashboard-month-filter" do |form| %>
