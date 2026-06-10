@@ -12,6 +12,8 @@ class Subscription < ApplicationRecord
   validates :billing_cycle, presence: true, inclusion: { in: %w[weekly monthly yearly] }
   validates :status, presence: true, inclusion: { in: %w[active cancelled paused] }
 
+  scope :active, -> {where(cancelled_at: nil)}
+
   def shared?
     shared_subscriptions.exists?
   end

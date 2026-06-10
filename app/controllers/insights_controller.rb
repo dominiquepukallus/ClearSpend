@@ -3,6 +3,11 @@ class InsightsController < ApplicationController
     @categories = Category.joins(:subscriptions).where(subscriptions: {user: current_user}).distinct.includes(:subscriptions)
     @selected_category = params[:category_id] ? Category.find_by(id: params[:category_id]) : nil
     @insights = current_user.insights.includes(:category, :subscription)
+    if params[:category_id].present?
+      @selected_category = @categories.find_by(id: params[:category_id])
+    else
+      @selected_category = @categories.first
+    end
   end
 
   def generate

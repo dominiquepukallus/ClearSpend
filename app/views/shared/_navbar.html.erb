@@ -14,14 +14,15 @@
 
     <!-- User dropdown -->
     <div class="flex items-center gap-4">
+      <%= link_to "CHAT", chats_path, class: "font-medium hover:text-gray-600", style: "font-family: 'Londrina Solid', sans-serif; letter-spacing: 0.02em; font-size: 1.2rem;" %>
         <div class="relative">
           <details class="notifications-dropdown">
             <summary class="notification-bell-button list-none cursor-pointer">
-              <div class="w-10 h-10 rounded-full flex items-center justify-center border border-transparent hover:border-[#b5d4f4] transition-colors cursor-pointer">
+              <div class="relative w-10 h-10 rounded-full flex items-center justify-center border border-transparent hover:border-[#b5d4f4] transition-colors cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="size-6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
                 </svg>
-                <% unread_count = current_user.notifications.where(type: 'SharedSubscriptionNotifier').unread.count %>
+                <% unread_count = current_user.notifications.where(type: 'SharedSubscription::Notification').unread.count %>
                 <% if unread_count > 0 %>
                   <span class="absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-600 rounded-full border-2 border-white">
                     <%= unread_count %>

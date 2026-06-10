@@ -1,0 +1,47 @@
+<div class="
+  flex
+  min-h-[220px]
+  min-w-[220px]
+  flex-col
+  justify-between
+  rounded-2xl
+  border
+  border-gray-200
+  bg-white
+  p-4
+  shadow-sm
+">
+
+  <div>
+    <div class="mb-2">
+      <h3 class="font-semibold text-gray-900">
+        <%= suggestion["name"] %>
+      </h3>
+
+      <p class="text-sm text-gray-500">
+        $<%= suggestion["amount"] %>/month
+      </p>
+    </div>
+
+    <% if suggestion["next_billing_date"].present? %>
+      <p class="text-sm text-gray-600">
+        Next bill: <%= Date.parse(suggestion["next_billing_date"]).strftime("%b %d") %>
+      </p>
+    <% end %>
+  </div>
+
+  <div class="mt-4 flex gap-2">
+    <%= link_to "View",
+        suggestion["url"],
+        class: "flex-1 rounded-xl bg-black px-3 py-2 text-center text-sm font-medium text-white transition hover:bg-gray-800" %>
+
+    <% if suggestion["id"].present? %>
+      <%= link_to subscription_path(suggestion["id"]),
+          class: "rounded-xl border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+        </svg>
+      <% end %>
+    <% end %>
+  </div>
+</div>
