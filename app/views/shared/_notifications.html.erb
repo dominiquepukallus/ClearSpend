@@ -3,7 +3,7 @@
     <h3 class="text-lg font-semibold text-gray-900">Notifications</h3>
   </div>
   <div>
-    <% notifications = current_user.notifications %>
+    <% notifications = current_user.notifications.where(type: 'SharedSubscriptionNotifier::Notification')%>
     <% if notifications.any? %>
       <% notifications.each do |notification| %>
         <div class="p-4 hover:bg-gray-50 transition-colors <%= 'bg-blue-50' unless notification.read? %>">

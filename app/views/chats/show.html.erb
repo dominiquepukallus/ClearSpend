@@ -1,0 +1,54 @@
+<div class="max-w-2xl mx-auto mt-10 px-4">
+  <div class="grid grid-cols 2">
+    <h1 class="mb-6 text-center uppercase"
+        style="font-family: 'Londrina Solid', sans-serif; font-size: 1.6rem;">
+      ClearSpend Assistant
+    </h1>
+    <div>
+      <%= link_to "Back to Dashboard", dashboard_path %>
+    </div>
+  </div>
+
+  <div class="space-y-8 mb-6" id="messages">
+    <% @chat.messages.order(:created_at).each do |message| %>
+      <div class="flex <%= message.role == 'user' ? 'justify-end' : 'justify-start' %>">
+        <div class="max-w-xl">
+          <div class="rounded-2xl px-4 py-3 <%= message.role == 'user' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-900' %>">
+            <% if message.role == 'assistant' %>
+              <!-- Convert markdown links inline -->
+              <p style="white-space: pre-line;"><%= raw message.content.gsub(/\[([^\]]+)\]\(([^)]+)\)/, '<a href="\2" class="text-blue-600 hover:underline">\1</a>') %></p>
+            <% else %>
+              <p><%= message.content %></p>
+            <% end %>
+          </div>
+
+          <% if message.role == "assistant" %>
+            <% suggestions = message.metadata&.dig("suggestions") || [] %>
+            <% if suggestions.any? %>
+              <div class="mt-3 flex gap-3 overflow-x-auto pb-2">
+                <% suggestions.each do |suggestion| %>
+                  <%= render "messages/suggestion", suggestion: suggestion, message: message %>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%= form_with model: [@chat, @message], data: { turbo: false } do |f| %>
+    <% if @message.errors.any? %>
+      <p class="text-red-500 mb-2"><%= @message.errors.full_messages.join(" | ") %></p>
+    <% end %>
+
+    <div class="mb-4">
+      <%= f.text_area :content,
+        placeholder: "Ask me about your subscriptions...",
+        rows: 2,
+        class: "w-full bg-white border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" %>
+    </div>
+
+    <%= f.submit "Send", class: "bg-black text-white px-6 py-2 rounded-xl hover:bg-gray-800 transition cursor-pointer" %>
+  <% end %>
+</div>

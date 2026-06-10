@@ -6,7 +6,7 @@ class NotificationsController < ApplicationController
     if @shared_subscription.user_id == current_user.id && @shared_subscription.status == 'pending'
       @shared_subscription.update(status: 'accepted')
       @notification.update(read_at: Time.current)
-      redirect_back(fallback_location: root_path, notice: "Subscription accepted!")
+      redirect_back(fallback_location: root_path, flash: { notice: "Subscription accepted!", subscription_id: @shared_subscription.id} )
     else
       redirect_back(fallback_location: root_path, alert: "Unable to accept, please try again")
     end

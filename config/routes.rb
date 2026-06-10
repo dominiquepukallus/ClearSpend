@@ -44,6 +44,10 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :chats do
+    resources :messages, only: [:create]
+  end
+
   resources :categories
   get "dashboard", to: "dashboard#index", as: :dashboard
 end
