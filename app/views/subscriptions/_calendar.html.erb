@@ -13,21 +13,26 @@
   next_month = first_day + 1.month
 %>
 
-<div class="lg:flex lg:h-auto lg:flex-col">
+<div class="lg:flex lg:h-auto lg:flex-col"
+  data-controller="calendar-scroll"
+  data-calendar-scroll-prev-value="<%= subscriptions_path(month: prev_month.strftime('%Y-%m-%d')) %>"
+  data-calendar-scroll-next-value="<%= subscriptions_path(month: next_month.strftime('%Y-%m-%d')) %>">
+
   <header class="flex items-center gap-4 border-b border-gray-200 py-4 lg:flex-none dark:border-white/10 dark:bg-gray-800/50">
     <h1 class="min-w-0 text-base !text-3xl font-semibold text-gray-900 dark:text-white">
       <% month_name = current_month.strftime('%B').length > 6 ? current_month.strftime('%b') : current_month.strftime('%B') %>
-      <time datetime="<%= current_month.strftime('%Y-%m') %>"><%= month_name %> <%= current_month.year %></time>
+      <%= link_to subscriptions_path(month: Date.today.strftime('%Y-%m-%d')), data: { turbo_frame: "calendar" }, class: "hover:text-[#85B7EB] transition-colors" do %>
+        <time datetime="<%= current_month.strftime('%Y-%m') %>"><%= month_name %> <%= current_month.year %></time>
+      <% end %>
     </h1>
 
 
-    <!-- Right side container -->
+    <!-- Top container -->
     <div class="flex items-center ml-auto">
 
 
       <!-- Previous Month/ Today/ Next Month selection -->
       <div class="relative flex items-center rounded-md bg-white shadow-xs outline -outline-offset-1 outline-gray-300 md:items-stretch dark:bg-white/10 dark:shadow-none dark:outline-white/5">
-
         <%= link_to subscriptions_path(month: prev_month.strftime('%Y-%m-%d')), data: { turbo_frame: "calendar" }, class: "self-center h-7 w-8 flex items-center justify-center rounded-l-md pr-1 text-gray-400 hover:text-gray-500 focus:relative md:w-8 md:pr-0 md:hover:bg-gray-50" do %>
           <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-4">
             <path d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" fill-rule="evenodd" />
@@ -49,27 +54,11 @@
             <path d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
           </svg>
         <% end %>
-
       </div>
 
 
-      <!-- View selection + Add event-->
-      <div class="hidden md:ml-4 md:flex md:items-center">
-        <el-dropdown class="relative">
-          <button type="button" class="flex items-center gap-x-1.5 !rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20">
-            Month view
-            <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="-mr-1 size-5 text-gray-400 dark:text-gray-500">
-              <path d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
-            </svg>
-          </button>
-          <el-menu anchor="bottom end" popover class="w-36 origin-top-right overflow-hidden rounded-md bg-white shadow-lg outline-1 outline-black/5 transition transition-discrete [--anchor-gap:--spacing(3)] data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in dark:bg-gray-800 dark:-outline-offset-1 dark:outline-white/10">
-            <div>
-              <a href="#" style="text-decoration: none;" class="block px-4 py-2 text-sm !text-gray-700 hover:font-bold focus:bg-gray-100 focus:text-gray-900 focus:outline-hidden dark:text-gray-300 dark:focus:bg-white/5 dark:focus:text-white">Week view</a>
-              <a href="#" style="text-decoration: none;" class="block px-4 py-2 text-sm !text-gray-700 hover:font-bold focus:bg-gray-100 focus:text-gray-900 focus:outline-hidden dark:text-gray-300 dark:focus:bg-white/5 dark:focus:text-white">Month view</a>
-            </div>
-          </el-menu>
-        </el-dropdown>
-        <div class="ml-3 h-6 w-px bg-gray-300 dark:bg-white/10"></div>
+      <!-- Add subs-->
+      <div class="hidden md:ml-2 md:flex md:items-center">
         <%= link_to "Add subscription", new_subscription_path, data: { turbo_frame: "_top" }, style: "text-decoration: none;", class: "whitespace-nowrap ml-3 rounded-md bg-[#1B2B4B] px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-[#85B7EB] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:shadow-none dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500" %>
       </div>
     </div>
@@ -105,9 +94,11 @@
             <% if subscriptions_by_date[day] %>
               <ol class="mt-2">
                 <% subscriptions_by_date[day].each do |sub| %>
-                  <li>
-                    <%= link_to sub.name, subscription_path(sub), data: { turbo_frame: "_top" }, class: "inline-block w-full font-medium text-xs px-1 py-1 rounded #{sub.category.color}" %>
-                  </li>
+                  <li class="leading-tight">
+                  <%= link_to sub.name, subscription_path(sub), data: { turbo_frame: "_top" },
+                      style: "color: #{sub.category.hex_color}; background-color: #{sub.category.hex_color}52; padding: 1px 4px; border-radius: 4px; -webkit-box-decoration-break: clone; box-decoration-break: clone;",
+                      class: "font-medium text-xs" %>
+                </li>
                 <% end %>
               </ol>
             <% end %>
@@ -115,5 +106,37 @@
         <% end %>
       </div>
     </div>
+  </div>
+
+  <!-- Category filter -->
+  <div class="mt-3 shadow-[0_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 rounded-md overflow-hidden">
+    <%= link_to subscriptions_path(month: params[:month], query: params[:query], sort: params[:sort]),
+        data: { turbo_frame: "calendar" },
+        class: "flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-colors #{params[:category_id].blank? ? 'bg-[#85B7EB] text-white' : 'text-gray-600 hover:bg-gray-100'}" do %>
+      All categories
+    <% end %>
+
+    <div class="grid grid-cols-2 mt-2">
+      <% Category.where.not(name: "Customized").each do |category| %>
+        <%= link_to subscriptions_path(month: params[:month], query: params[:query], sort: params[:sort], category_id: category.id),
+            data: { turbo_frame: "calendar" },
+            class: "flex items-center gap-2 px-3 py-1.5 text-xs font-medium transition-colors #{params[:category_id].to_s == category.id.to_s ? 'text-white' : 'text-gray-600 hover:bg-gray-100'}",
+            style: params[:category_id].to_s == category.id.to_s ? "background-color: #{category.hex_color};" : "" do %>
+          <span class="inline-block size-2 rounded-full" style="background-color: <%= category.hex_color %>;"></span>
+          <%= category.name %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <% customized = Category.find_by(name: "Customized") %>
+    <% if customized %>
+      <%= link_to subscriptions_path(month: params[:month], query: params[:query], sort: params[:sort], category_id: customized.id),
+          data: { turbo_frame: "calendar" },
+          class: "flex mb-2 items-center gap-2 px-3 py-1.5 text-xs font-medium transition-colors #{params[:category_id].to_s == customized.id.to_s ? 'text-white' : 'text-gray-600 hover:bg-gray-100'}",
+          style: params[:category_id].to_s == customized.id.to_s ? "background-color: #{customized.hex_color};" : "" do %>
+        <span class="inline-block size-2 rounded-full" style="background-color: <%= customized.hex_color %>;"></span>
+        Customized
+      <% end %>
+    <% end %>
   </div>
 </div>
