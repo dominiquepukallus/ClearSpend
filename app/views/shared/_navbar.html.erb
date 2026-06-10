@@ -14,7 +14,14 @@
 
     <!-- User dropdown -->
     <div class="flex items-center gap-4">
-      <%= link_to "CHAT", chats_path, class: "font-medium hover:text-gray-600", style: "font-family: 'Londrina Solid', sans-serif; letter-spacing: 0.02em; font-size: 1.2rem;" %>
+      <div class="shrink-0">
+          <button type="button" class="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 dark:shadow-none">
+            <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="-ml-0.5 size-5">
+              <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
+            </svg>
+            <%= link_to "New Chat", chats_path %>
+          </button>
+        </div>
         <div class="relative">
           <details class="notifications-dropdown">
             <summary class="notification-bell-button list-none cursor-pointer">
