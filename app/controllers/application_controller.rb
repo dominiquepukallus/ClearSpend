@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
 
-  before_action :authenticate_user!
+  # before_action :authenticate_user!
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: %i[first_name last_name alias])
@@ -17,6 +17,6 @@ class ApplicationController < ActionController::Base
   protected
 
   def after_sign_in_path_for(resources)
-    root_path
+    home_path
   end
 end
