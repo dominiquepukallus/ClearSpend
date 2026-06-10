@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_09_081022) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_10_005308) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -19,6 +19,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_09_081022) do
     t.datetime "created_at", null: false
     t.string "name"
     t.datetime "updated_at", null: false
+  end
+
+  create_table "chats", force: :cascade do |t|
+    t.datetime "chat_date"
+    t.datetime "created_at", null: false
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_chats_on_user_id"
   end
 
   create_table "insights", force: :cascade do |t|
@@ -31,6 +40,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_09_081022) do
     t.index ["category_id"], name: "index_insights_on_category_id"
     t.index ["subscription_id"], name: "index_insights_on_subscription_id"
     t.index ["user_id"], name: "index_insights_on_user_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.bigint "chat_id", null: false
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.string "role"
+    t.datetime "updated_at", null: false
+    t.index ["chat_id"], name: "index_messages_on_chat_id"
   end
 
   create_table "noticed_events", force: :cascade do |t|
@@ -244,9 +263,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_09_081022) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "chats", "users"
   add_foreign_key "insights", "categories"
   add_foreign_key "insights", "subscriptions"
   add_foreign_key "insights", "users"
+  add_foreign_key "messages", "chats"
   add_foreign_key "shared_subscriptions", "subscriptions"
   add_foreign_key "shared_subscriptions", "users"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

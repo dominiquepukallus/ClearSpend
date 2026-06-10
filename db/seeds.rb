@@ -30,7 +30,6 @@ categories = [
   "Food & Delivery / Meal kits",
   "Software & Productivity",
   "Shopping & Retail",
-  "Customized"
 ]
 
 categories.each do |name|
@@ -89,9 +88,6 @@ subscriptions = [
   { name: "Costco Membership", domain_name: "costco.com", category: "Shopping & Retail", amount: 5, billing_cycle: "monthly", date_recurrence: Date.new(2025, 2, 27), status: "active", cancelled_at: nil },
   { name: "Walmart Plus", domain_name: "walmart.com", category: "Shopping & Retail", amount: 98, billing_cycle: "yearly", date_recurrence: Date.new(2025, 6, 18), status: "active", cancelled_at: nil },
   { name: "Instacart Plus", domain_name: "instacart.com", category: "Shopping & Retail", amount: 99, billing_cycle: "yearly", date_recurrence: Date.new(2025, 4, 26), status: "cancelled", cancelled_at: Date.new(2026, 4, 26) },
-
-  # Customized
-  { name: "Local Studio Membership", domain_name: "yourlocalstudio.com", category: "Customized", amount: 28, billing_cycle: "monthly", date_recurrence: Date.new(2025, 2, 25), status: "active", cancelled_at: nil }
 ]
 
 subscriptions.each do |attrs|
