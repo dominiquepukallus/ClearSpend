@@ -5,7 +5,22 @@ class SubscriptionsController < ApplicationController
     @subscriptions = current_user.subscriptions.where.not(status: "cancelled")
     @subscriptions = @subscriptions.where("name ILIKE ?", "%#{params[:query]}%") if params[:query].present?
     @subscriptions = @subscriptions.where(category_id: params[:category_id]) if params[:category_id].present?
-    @subscriptions = @subscriptions.sort_by { |sub| sub.next_billing_date || Date.new(9999, 12, 31) }
+    if params[:upcoming_week].present?
+      @subscriptions = @subscriptions.select do |sub|
+        next_date = sub.next_billing_date
+        next_date && next_date <= Date.today + 7.days
+      end
+    end
+    @subscriptions = case params[:sort]
+                     when "a_to_z"
+                       @subscriptions.sort_by { |sub| sub.name }
+                     when "most_expensive"
+                       @subscriptions.sort_by { |sub| -sub.amount }
+                     when "least_expensive"
+                       @subscriptions.sort_by { |sub| sub.amount }
+                     else
+                       @subscriptions.sort_by { |sub| sub.next_billing_date || Date.new(9999, 12, 31) }
+                     end
   end
 
   def show
@@ -126,7 +141,8 @@ class SubscriptionsController < ApplicationController
   private
 
   def subscription_params
-    params.require(:subscription).permit(:name, :date_recurrence, :amount, :billing_cycle, :status, :category_id, :domain_name)
+    params.require(:subscription).permit(:name, :date_recurrence, :amount, :billing_cycle, :status, :category_id,
+                                         :domain_name)
   end
 
   def ai_turbo_stream
