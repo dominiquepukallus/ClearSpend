@@ -1,23 +1,23 @@
 <%= turbo_frame_tag "dashboard-ai-insights", class: "dashboard-ai-frame" do %>
   <% if insights.any? %>
     <% insight = insights.sample %>
-    <%= link_to insights_path(category_id: insight.category_id), class: "dashboard-ai-card", data: { turbo_frame: "_top" } do %>
+    <div class="dashboard-ai-card">
       <div class="dashboard-ai-card__header">
         <h2>AI Insight</h2>
       </div>
       <div class="dashboard-ai-card__content">
         <span class="dashboard-ai-card__badge"><%= insight.category.name %></span>
         <p class="dashboard-ai-card__text"><%= truncate(insight.insight_text, length: 200, separator: ' ') %></p>
-        <span class="dashboard-ai-card__cta">View all insights -></span>
+        <%= link_to "View all insights →", insights_path(category_id: insight.category_id), class: "dashboard-ai-card__cta", data: { turbo_frame: "_top" } %>
       </div>
-    <% end %>
-    <%= button_to "Regenerate insights",
-        generate_insights_path,
-        method: :post,
-        params: { return_to: return_to },
-        class: "dashboard-ai-card__button",
-        data: { loading_text: "Regenerating..." },
-        form: { data: { controller: "loading-button", action: "turbo:submit-start->loading-button#start turbo:submit-end->loading-button#stop" } } %>
+      <%= button_to "Regenerate insights",
+          generate_insights_path,
+          method: :post,
+          params: { return_to: return_to },
+          class: "dashboard-ai-card__button",
+          data: { loading_text: "Regenerating..." },
+          form: { data: { controller: "loading-button", action: "turbo:submit-start->loading-button#start turbo:submit-end->loading-button#stop" } } %>
+    </div>
   <% else %>
     <section class="dashboard-ai-card">
       <div class="dashboard-ai-card__header">
