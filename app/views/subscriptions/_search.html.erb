@@ -81,14 +81,19 @@
 
       <!-- UPCOMING -->
       <% unless params[:status_filter] == 'cancelled' %>
-        <div class="relative">
-          <%= link_to subscriptions_path(query: params[:query], category_ids: params[:category_ids], upcoming_week: true, sort: params[:sort], status_filter: params[:status_filter], month: params[:month]),
-            class: "flex items-center gap-2 rounded-md px-4 py-3 text-sm font-semibold outline outline-1 outline-[#F9E9E9] #{params[:upcoming_week].present? ? 'bg-[#E24B4A] text-white' : 'bg-[#F8C8C8] text-gray-900'}" do %>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-            </svg>
-            Upcoming
-          <% end %>
+        <div class="relative group">
+            <%= link_to subscriptions_path(query: params[:query], category_ids: params[:category_ids], upcoming_week: true, sort: params[:sort], status_filter: params[:status_filter], month: params[:month]),
+                class: "flex items-center gap-2 rounded-md px-4 py-3 text-sm font-semibold outline outline-1 outline-[#F9E9E9] #{params[:upcoming_week].present? ? 'bg-[#E24B4A] text-white' : 'bg-[#F8C8C8] text-gray-900'}" do %>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+              </svg>
+              Upcoming
+            <% end %>
+            <% unless params[:upcoming_week].present? %>
+              <span class="absolute top-full mt-1 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                Next 7 days
+              </span>
+            <% end %>
 
           <% if params[:upcoming_week].present? %>
             <%= link_to subscriptions_path(query: params[:query], category_ids: params[:category_ids], sort: params[:sort], status_filter: params[:status_filter], month: params[:month]),
