@@ -16,6 +16,7 @@
 <% monthly_spend_full_labels = @monthly_spend_trend.map { |month| month[:full_label] } %>
 <% monthly_spend_values = @monthly_spend_trend.map { |month| month[:value] } %>
 
+
 <main class="dashboard-page" data-controller="dashboard-activity-modal" data-action="keydown.esc@window->dashboard-activity-modal#closeWithKeyboard">
   <div class="dashboard-shell">
     <header class="dashboard-header">

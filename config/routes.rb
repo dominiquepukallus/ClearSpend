@@ -12,8 +12,16 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  root "pages#landing"
-  get "/home", to: "pages#home", as: :home
+  # root "pages#landing"
+  # get "/home", to: "pages#home", as: :home
+
+  authenticated :user do
+    root to: 'dashboard#index', as: :authenticated_root
+  end
+
+  unauthenticated :user do
+    root to: "pages#landing", as: :unauthenticated_root
+  end
 
   resources :subscriptions do
     collection do
