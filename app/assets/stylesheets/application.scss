@@ -3,8 +3,8 @@
 @use "config/colors";
 
 // Your CSS partials
-@use "components/index";
-@use "pages/index";
+@use "components/index" as components;
+@use "pages/index" as pages;
 
 body {
   font-family: $body-font;
