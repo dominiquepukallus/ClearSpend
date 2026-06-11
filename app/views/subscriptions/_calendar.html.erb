@@ -95,7 +95,7 @@
               <ol class="mt-2 space-y-1">
                 <% subscriptions_by_date[day].each do |sub| %>
                   <li class="leading-snug">
-                    <%= link_to sub.name, subscription_path(sub), data: { turbo_frame: "_top" },
+                    <%= link_to sub.name, subscription_path(sub), data: { turbo_frame: "modal_content" },
                         style: "color: #{sub.category.hex_color}; background-color: #{sub.category.hex_color}52; padding: 2px 4px; border-radius: 4px; -webkit-box-decoration-break: clone; box-decoration-break: clone; line-height: 1.6;",
                         class: "font-medium text-xs" %>
                   </li>

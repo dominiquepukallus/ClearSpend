@@ -118,7 +118,7 @@
               <span class="text-xs font-semibold uppercase tracking-wide" style="color: <%= category.hex_color %>;"><%= category.name %></span>
             </div>
             <% subs.each_with_index do |sub, index| %>
-              <%= link_to subscription_path(sub), data: { turbo_frame: "_top" },
+              <%= link_to subscription_path(sub), data: { turbo_frame: "modal_content" },
                   class: "flex items-center justify-between px-4 py-3 text-sm text-gray-900 hover:bg-gray-50 block #{index < subs.size - 1 ? 'border-b border-gray-100' : ''}" do %>
                 <span class="font-medium"><%= sub.name %></span>
                 <span class="text-gray-500">$<%= sub.amount.to_i %> <span class="text-xs"><%= sub.billing_cycle %></span></span>
@@ -132,8 +132,8 @@
     <% else %>
       <div class="mx-6 rounded-md bg-white shadow-[4px_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 overflow-y-scroll" style="max-height: 650px">
         <% subscriptions.each do |sub| %>
-          <%= link_to subscription_path(sub), data: { turbo_frame: "_top", search_target: "item", name: sub.name },
-              class: "flex items-center justify-between px-4 py-3 text-sm text-gray-900 hover:bg-gray-50 border-b border-gray-100 last:border-0" do %>
+          <%= link_to subscription_path(sub), data: { turbo_frame: "modal_content", search_target: "item", name: sub.name },
+              class: "flex items-center justify-between px-4 py-3 text-sm text-gray-900 hover:bg-gray-100 border-b border-gray-100 last:border-0" do %>
             <div class="flex items-center gap-3">
               <% if (logo = subscription_logo_url(sub)) %>
                 <img src="<%= logo %>" alt="<%= sub.name %>" class="size-10 rounded border border-gray-200 object-contain">

@@ -50,7 +50,7 @@
       <% if custom_categories.any? %>
         <div class="border-t border-gray-100 pt-3">
           <p class="text-xs font-medium text-gray-400 uppercase tracking-wide px-1 mb-2">Your categories</p>
-          <%= form_with url: bulk_destroy_categories_path, method: :delete, data: { turbo_frame: "_top" } do |f| %>
+          <%= form_with url: bulk_destroy_categories_path, method: :delete do |f| %>
             <div class="flex flex-col gap-2">
               <% custom_categories.each do |category| %>
                 <div id="category_<%= category.id %>" class="relative flex items-center gap-3 rounded-xl bg-white outline outline-1 outline-gray-200 px-4 py-3 hover:shadow-[0_4px_20px_#85B7EB] transition-shadow">
