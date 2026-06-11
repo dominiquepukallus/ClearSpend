@@ -1,6 +1,7 @@
 .insights-page {
   min-height: 100vh;
   padding: 32px;
+  margin-top: 10px;
   background: #f4f5f7;
 }
 
@@ -31,6 +32,7 @@
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 12px;
   margin-bottom: 24px;
+  border-radius: 6px;
 }
 
 .insights-category-card {
@@ -92,8 +94,9 @@
   gap: 16px;
   padding: 22px;
   background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 8px 22px rgba(33, 37, 41, 0.08);
+  border-radius: 6px;
+  box-shadow: 4px 2px 16px #B5D4F4;
+  outline: 1px solid #9ca3af;
 }
 
 .insights-action-button {
@@ -111,6 +114,11 @@
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.insights-action-button:hover {
+  background: #85B7EB;
 }
 
 .insights-action-button.is-loading {
@@ -157,10 +165,10 @@
   gap: 16px;
   padding: 22px;
   background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 8px 22px rgba(33, 37, 41, 0.08);
+  border-radius: 6px;
+  box-shadow: 4px 2px 16px #B5D4F4;
+  outline: 1px solid #9ca3af;
 }
-
 
 .insights-ai-card p {
   margin: 0;
@@ -176,8 +184,9 @@
 .insights-subscriptions {
   padding: 22px;
   background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 8px 22px rgba(33, 37, 41, 0.08);
+  border-radius: 6px;
+  box-shadow: 4px 2px 16px #B5D4F4;
+  outline: 1px solid #9ca3af;
 }
 
 .insights-subscriptions h3 {

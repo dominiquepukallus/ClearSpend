@@ -1,7 +1,9 @@
 <nav class="bg-[#1B2B4B] px-8 py-2 flex items-center fixed top-0 left-0 right-0 z-50 shadow-md">
   <!-- Logo -->
   <div class="flex-1">
-    <%= image_tag "logo_dark.svg", class: "h-8" %>
+    <%= link_to authenticated_root_path do %>
+      <%= image_tag "logo_dark.svg", class: "h-8" %>
+    <% end %>
   </div>
 
   <!-- Nav links -->
@@ -9,12 +11,13 @@
     <div class="flex items-center gap-6">
       <%# <%= link_to "Home", "", class: "text-white hover:text-[#85B7EB] transition-colors no-underline" %>
       <%= link_to "Subscriptions", subscriptions_path, class: "text-white hover:text-[#85B7EB] transition-colors no-underline" %>
-      <%= link_to "Dashboard", dashboard_path, class: "text-white hover:text-[#85B7EB] transition-colors no-underline" %>
+      <%= link_to "Insights", insights_path, class: "text-white hover:text-[#85B7EB] transition-colors no-underline" %>
+      <%= link_to "Add Subscription", new_subscription_path, class: "text-white hover:text-[#85B7EB] transition-colors no-underline" %>
     </div>
 
     <div class="flex-1 flex items-center justify-end gap-2">
       <!-- New Chat Button -->
-      <%= link_to chats_path, class: "inline-flex items-center gap-1.5 rounded-md bg-[#b5d4f4] px-3 py-2 text-sm font-semibold text-[#1B2B4B] hover:bg-white transition-colors" do %>
+      <%= button_to chats_path, method: :post, class: "inline-flex items-center gap-1.5 rounded-md bg-[#b5d4f4] px-3 py-2 text-sm font-semibold text-[#1B2B4B] hover:bg-white transition-colors" do %>
         <svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
           <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
         </svg>
@@ -43,7 +46,7 @@
       </div>
 
       <el-dropdown class="inline-block">
-        <button class="w-10 h-10 rounded-full bg-[#b5d4f4] flex items-center justify-center text-[#1B2B4B] text-sm font-semibold hover:bg-[#75B7EB] transition-colors">
+        <button class="w-10 h-10 rounded-full bg-[#b5d4f4] flex items-center justify-center text-[#1B2B4B] text-sm font-semibold hover:bg-white transition-colors">
           <%= current_user.initials %>
         </button>
         <el-menu anchor="bottom end" popover class="w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 transition [--anchor-gap:theme(spacing.2)] data-closed:scale-95 data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in">
