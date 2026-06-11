@@ -1,45 +1,35 @@
-<%= turbo_frame_tag "dashboard-ai-insights", class: "grid gap-4" do %>
-  <% if insights.any? %>
-    <% insight = insights.max_by { |i| i.subscription&.amount || 0 } %>
-    <div class="bg-white rounded-lg shadow-[4px_2px_16px_#B5D4F4] p-6 min-h-[280px] grid gap-4 content-start">
-      <div class="flex items-center justify-between">
-        <h2 class="m-0 text-[#1f2328] text-base font-extrabold">AI Insight</h2>
+<% card_class = "bg-white rounded-lg shadow-[4px_2px_16px_#B5D4F4] px-6 pb-2 pt-4 min-h-[280px] flex flex-col gap-4" %>
+<% btn_class = "inline-flex items-center gap-2 w-fit px-3 py-2 rounded-md text-white bg-[#1b2b4b] text-xs cursor-pointer hover:bg-[#2a3f6f] transition-colors" %>
+
+<%= turbo_frame_tag "dashboard-ai-insights" do %>
+  <div class="<%= card_class %>">
+    <h2 class="m-0 text-[#1B2B4B] text-xl font-bold">AI Insight<%= insights.any? ? "" : "s" %></h2>
+
+    <% if insights.any? %>
+      <% insight = insights.max_by { |i| i.subscription&.amount || 0 } %>
+      <span class="inline-block w-fit px-3 py-1.5 rounded-full text-white text-xs" style="background: <%= insight.category.hex_color %>">
+        <%= insight.category.name %>
+      </span>
+      <p class="m-0 text-[#7d83a6] text-sm leading-relaxed"><%= insight.insight_text %></p>
+      <%= link_to "View all insights →", insights_path(category_id: insight.category_id),
+          class: "text-[#229be8] text-xs no-underline hover:underline w-fit",
+          data: { turbo_frame: "_top" } %>
+      <div class="mt-auto flex justify-end">
+        <%= button_to "Regenerate insights", generate_insights_path, method: :post,
+            params: { return_to: return_to }, class: btn_class,
+            data: { loading_text: "Regenerating..." },
+            form: { data: { controller: "loading-button", action: "turbo:submit-start->loading-button#start turbo:submit-end->loading-button#stop" } } %>
       </div>
-      <div class="grid gap-3 mt-2">
-        <span class="inline-block w-fit px-3 py-1.5 rounded-full text-white text-[13px] font-extrabold leading-tight"
-          style="background: <%= insight.category.hex_color %>">
-          <%= insight.category.name %>
-        </span>
-        <p class="m-0 text-[#7d83a6] text-sm leading-relaxed"><%= insight.insight_text %></p>
-        <%= link_to "View all insights →", insights_path(category_id: insight.category_id),
-            class: "text-[#229be8] text-xs font-bold no-underline hover:underline w-fit",
-            data: { turbo_frame: "_top" } %>
+    <% else %>
+      <div class="flex-1 border border-dashed border-[#d8deea] rounded-lg bg-[#fafbfc] flex items-center justify-center">
+        <p class="m-0 text-[#7d83a6] text-sm">No insights yet.</p>
       </div>
-      <%= button_to "Regenerate insights",
-          generate_insights_path,
-          method: :post,
-          params: { return_to: return_to },
-          class: "mt-4 inline-flex items-center justify-center gap-2 w-fit min-h-9 px-3 py-2 border-0 rounded-md text-white bg-[#1b2b4b] text-xs font-extrabold cursor-pointer hover:bg-[#2a3f6f] transition-colors",
-          data: { loading_text: "Regenerating..." },
-          form: { data: { controller: "loading-button", action: "turbo:submit-start->loading-button#start turbo:submit-end->loading-button#stop" } } %>
-    </div>
-  <% else %>
-    <div class="bg-white rounded-lg shadow-[4px_2px_16px_#B5D4F4] p-6 min-h-[280px] grid gap-4 content-start">
-      <div class="flex items-center justify-between">
-        <h2 class="m-0 text-[#1f2328] text-base font-extrabold">AI Insights</h2>
-      </div>
-      <div class="grid gap-3 mt-2">
-        <div class="min-h-[178px] border border-dashed border-[#d8deea] rounded-lg bg-[#fafbfc] flex items-center justify-center">
-          <p class="m-0 text-[#7d83a6] text-sm">No insights yet.</p>
-        </div>
-        <%= button_to "Generate insights",
-            generate_insights_path,
-            method: :post,
-            params: { return_to: return_to },
-            class: "inline-flex items-center justify-center gap-2 w-fit min-h-9 px-3 py-2 border-0 rounded-md text-white bg-[#1b2b4b] text-xs font-extrabold cursor-pointer hover:bg-[#2a3f6f] transition-colors",
+      <div class="mt-auto flex justify-end">
+        <%= button_to "Generate insights", generate_insights_path, method: :post,
+            params: { return_to: return_to }, class: btn_class,
             data: { loading_text: "Generating..." },
             form: { data: { controller: "loading-button", action: "turbo:submit-start->loading-button#start turbo:submit-end->loading-button#stop" } } %>
       </div>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 <% end %>

@@ -3,7 +3,7 @@
   <%= image_tag "logo_revert.svg", class: "w-[800px] max-w-full h-auto object-contain hidden", id: "logo-dark" %>
 </div>
 
-<main class="min-h-screen p-8"
+<main class="min-h-screen px-8 pb-8"
   data-controller="dashboard-activity-modal"
   data-action="keydown.esc@window->dashboard-activity-modal#closeWithKeyboard"
   data-dashboard-scroll-target="main">
@@ -14,19 +14,18 @@
       <!-- Header -->
       <header class="flex items-center justify-between gap-6 w-full mb-6">
         <p id="greeting" class="text-lg text-[#6c7285]">
-          <strong class="font-bold">Hi, <%= current_user.first_name.presence || current_user.alias %></strong>. Have a look at your <strong class="font-bold">monthly</strong> analytics:
+          <strong class="font-bold">Hi, <%= current_user.first_name.presence || current_user.alias %></strong>. Have a look at your <strong class="font-bold">monthly</strong> analytics
         </p>
 
         <!-- Filter by month -->
         <div class="relative" data-controller="custom-select">
           <%= form_with url: dashboard_path, method: :get, data: { turbo_frame: "dashboard-main" } do |f| %>
-            <input type="hidden" name="month" data-custom-select-target="input" value="<%= @selected_month.strftime("%Y-%m") %>">
             <% month_labels = (Date.new(2025,1)..Date.current).map { |d| [d.strftime("%B %Y"), d.strftime("%Y-%m")] }.uniq %>
 
             <button type="button"
-                data-custom-select-target="button"
-                data-action="click->custom-select#toggle"
-                class="flex items-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-medium shadow-lg whitespace-nowrap w-fit">
+              data-custom-select-target="button"
+              data-action="click->custom-select#toggle dblclick->custom-select#resetToToday"
+              class="flex items-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-medium shadow-lg whitespace-nowrap w-fit">
               <i class="fa-solid fa-calendar text-[#229be8]"></i>
               <span class="text-[#1f2328] text-sm font-semibold"><%= @selected_month.strftime("%B %Y") %></span>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 text-gray-400">
@@ -39,7 +38,7 @@
                 <button type="submit"
                     name="month"
                     value="<%= value %>"
-                    class="block w-full text-left my-2 px-4 text-sm text-gray-700 hover:bg-gray-50 whitespace-nowrap <%= @selected_month.strftime("%Y-%m") == value ? 'font-semibold text-[#1B2B4B]' : '' %>">
+                    class="block w-full text-left my-2 px-4 text-sm text-gray-700 hover:bg-gray-100 whitespace-nowrap <%= @selected_month.strftime("%Y-%m") == value ? 'font-semibold text-[#1B2B4B]' : '' %>">
                   <%= label %>
                 </button>
               <% end %>
@@ -61,8 +60,7 @@
       </div>
 
     </div>
+    <%= render "dashboard/modal" %>
   <% end %>
-
-  <%= render "dashboard/modal" %>
 
 </main>

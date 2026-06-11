@@ -1,8 +1,14 @@
 <section class="grid grid-cols-2 gap-4">
+
+
   <!-- MONTHLY SPEND -->
   <article class="bg-white rounded-lg shadow-[4px_2px_16px_#B5D4F4] px-6 pt-4 pb-6 grid gap-2 min-h-[100px] content-start">
     <div class="flex items-center justify-between gap-3 min-h-7">
       <span class="text-[#7d83a6] text-base">Monthly spend</span>
+      <button type="button" data-action="dashboard-activity-modal#open"
+        class="px-3 py-1.5 border border-[#d8deea] rounded-full text-[#1f2328] bg-white text-xs whitespace-nowrap cursor-pointer hover:bg-[#1b2b4b] hover:text-white transition-colors">
+        View
+      </button>
     </div>
     <div class="flex items-center gap-3">
       <strong class="text-[#1f2328] text-3xl font-extrabold leading-none"><%= number_to_currency(@monthly_spend, precision: 0) %></strong>
