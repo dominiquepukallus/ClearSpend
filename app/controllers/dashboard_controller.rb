@@ -73,8 +73,9 @@ class DashboardController < ApplicationController
   end
 
   def monthly_spend_trend(subscriptions, months: 12)
+    end_month = [@selected_month, Date.current.beginning_of_month].max
     (months - 1).downto(0).map do |month_offset|
-      month = @selected_month.advance(months: -month_offset).beginning_of_month
+      month = end_month.advance(months: -month_offset).beginning_of_month
 
       {
         label: month.strftime("%b"),

@@ -42,7 +42,10 @@
       <div class="dashboard-main">
         <section class="dashboard-stats" aria-label="Subscription summary">
           <article class="dashboard-stat-card">
-            <span>Monthly spend</span>
+            <div class="dashboard-stat-card__header">
+              <span>Monthly spend</span>
+              <span></span>
+            </div>
             <strong><%= number_to_currency(@monthly_spend, precision: 0) %></strong>
           </article>
 

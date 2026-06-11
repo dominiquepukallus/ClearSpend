@@ -1,14 +1,24 @@
 <%= turbo_frame_tag "dashboard-ai-insights", class: "dashboard-ai-frame" do %>
   <% if insights.any? %>
-    <% insight = insights.sample %>
+    <% insight = insights.max_by { |i| i.subscription&.amount || 0 } %>
     <div class="dashboard-ai-card">
       <div class="dashboard-ai-card__header">
         <h2>AI Insight</h2>
       </div>
       <div class="dashboard-ai-card__content">
-        <span class="dashboard-ai-card__badge"><%= insight.category.name %></span>
-        <p class="dashboard-ai-card__text"><%= truncate(insight.insight_text, length: 200, separator: ' ') %></p>
-        <%= link_to "View all insights →", insights_path(category_id: insight.category_id), class: "dashboard-ai-card__cta", data: { turbo_frame: "_top" } %>
+      <% category_colors = {
+        "Entertainment" => "#7C3AED",
+        "Well-being" => "#4CAF7D",
+        "News & Information" => "#1E3A5F",
+        "Food & Delivery / Meal kits" => "#F97316",
+        "Software & Productivity" => "#2563EB",
+        "Shopping & Retail" => "#EC4899",
+        "Customized" => "#4B5563"
+      } %>
+      <span class="dashboard-ai-card__badge" style="background: <%= category_colors[insight.category.name] || '#1b2b4b' %>">
+        <%= insight.category.name %>
+      </span>        <p class="dashboard-ai-card__text"><%= insight.insight_text %></p>
+        <%= link_to "View all insights →", insights_path(category_id: insight.category_id), class: "dashboard-ai-card__view-link", data: { turbo_frame: "_top" } %>
       </div>
       <%= button_to "Regenerate insights",
           generate_insights_path,
