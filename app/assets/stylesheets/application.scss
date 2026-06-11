@@ -4,7 +4,7 @@
 
 // Your CSS partials
 @import "components/index";
-@import "pages/index";
+@import "components/index";
 
 body {
   font-family: $body-font;
@@ -47,6 +47,10 @@ h1, h2, h3, h4, h5, h6 {
 body.dashboard-scrolled {
   background-color: #1B2B4B !important;
   transition: background-color 0.3s ease;
+}
+
+body.dashboard-scrolled nav a:hover {
+  font-weight: bold;
 }
 
 body.dashboard-scrolled #logo-light {

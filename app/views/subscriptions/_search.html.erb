@@ -55,9 +55,9 @@
           <% sort_labels = { "a_to_z" => "A → Z", "most_expensive" => "Most expensive $$$", "least_expensive" => "Least expensive $", "categories" => "Categories" } %>
 
           <button type="button"
-              data-custom-select-target="button"
-              data-action="click->custom-select#toggle"
-              class="flex items-center gap-2 rounded-md bg-[#1B2B4B] text-white px-4 py-3 text-sm font-medium outline outline-1 outline-gray-400 whitespace-nowrap w-fit">
+            data-custom-select-target="button"
+            data-action="click->custom-select#toggle dblclick->custom-select#resetSort"
+            class="flex items-center gap-2 rounded-md bg-[#1B2B4B] text-white px-4 py-3 text-sm font-medium outline outline-1 outline-gray-400 whitespace-nowrap w-fit">
             <span data-custom-select-target="label"><%= sort_labels[params[:sort]] || "Sort by" %></span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
@@ -65,7 +65,7 @@
           </button>
 
           <div data-custom-select-target="menu" class="hidden absolute top-full left-0 mt-1 bg-white rounded-md shadow-lg outline outline-1 outline-gray-200 z-50 min-w-full">
-            <% [["Sort by", ""], ["A → Z", "a_to_z"], ["Most expensive $$$", "most_expensive"], ["Least expensive $", "least_expensive"], ["Categories", "categories"]].each do |label, value| %>
+            <% [["A → Z", "a_to_z"], ["Most expensive $$$", "most_expensive"], ["Least expensive $", "least_expensive"], ["Categories", "categories"]].each do |label, value| %>
               <button type="button"
                   data-action="click->custom-select#select"
                   data-value="<%= value %>"

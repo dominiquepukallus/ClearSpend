@@ -1,0 +1,15 @@
+<% monthly_spend_labels, monthly_spend_full_labels, monthly_spend_values = @monthly_spend_trend.map { |m| [m[:label], m[:full_label], m[:value]] }.transpose %>
+
+<section class="bg-white rounded-lg shadow-[4px_2px_16px_#B5D4F4] px-6 pb-6 pt-4">
+  <div class="flex items-center justify-between gap-3 mb-4">
+    <h2 class="m-0 text-[#1B2B4B] text-xl font-bold">Year overview</h2>
+  </div>
+  <div class="w-full h-24"
+    data-controller="monthly-spend-chart"
+    data-monthly-spend-chart-labels-value="<%= json_escape(monthly_spend_labels.to_json) %>"
+    data-monthly-spend-chart-full-labels-value="<%= json_escape(monthly_spend_full_labels.to_json) %>"
+    data-monthly-spend-chart-values-value="<%= json_escape(monthly_spend_values.to_json) %>"
+  >
+    <canvas data-monthly-spend-chart-target="canvas" class="w-full h-full"></canvas>
+  </div>
+</section>

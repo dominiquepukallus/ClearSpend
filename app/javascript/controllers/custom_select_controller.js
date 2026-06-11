@@ -33,4 +33,24 @@ export default class extends Controller {
       this.open = false
     }
   }
+
+  resetToToday() {
+    const today = new Date()
+    const value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`
+    const form = this.element.querySelector('form')
+    const input = document.createElement('input')
+    input.type = 'hidden'
+    input.name = 'month'
+    input.value = value
+    form.appendChild(input)
+    form.requestSubmit()
+  }
+
+  resetSort() {
+  const input = this.inputTarget
+  input.value = ""
+  const label = this.labelTarget
+  if (label) label.textContent = "Sort by"
+  input.closest('form').requestSubmit()
+  }
 }

@@ -1,214 +1,66 @@
-<% category_hex = Category.all.each_with_object({}) { |c, h| h[c.name] = c.hex_color } %>
-<% breakdown_rows = @subscription_breakdown.sort_by { |name, _| Category::SEEDED_NAMES.index(name) || Category::SEEDED_NAMES.length } %>
-<% breakdown_labels = breakdown_rows.map(&:first) %>
-<% breakdown_values = breakdown_rows.map { |_, amount| amount.to_f } %>
-<% breakdown_colors = breakdown_labels.map { |name| category_hex[name] || "#9CA3AF" } %>
-<% monthly_spend_labels, monthly_spend_full_labels, monthly_spend_values = @monthly_spend_trend.map { |m| [m[:label], m[:full_label], m[:value]] }.transpose %>
-
-<div class="flex flex-col items-center pt-1 px-10 w-full">
-  <div class="flex flex-col items-center">
-    <%= image_tag "ClearSpend.svg", class: "w-[800px] mr-190", id: "logo-light" %>
-    <%= image_tag "logo_revert.svg", class: "w-[800px] mr-190 hidden", id: "logo-dark" %>
-  </div>
+<div class="flex flex-col items-start pt-1 px-10 w-full">
+  <%= image_tag "ClearSpend.svg", class: "w-[800px] max-w-full h-auto object-contain", id: "logo-light" %>
+  <%= image_tag "logo_revert.svg", class: "w-[800px] max-w-full h-auto object-contain hidden", id: "logo-dark" %>
 </div>
 
-<!-- DASHBOARD -->
-<main class="min-h-screen p-8 mr-100"
+<main class="min-h-screen px-8 pb-8"
   data-controller="dashboard-activity-modal"
   data-action="keydown.esc@window->dashboard-activity-modal#closeWithKeyboard"
   data-dashboard-scroll-target="main">
-  <div class="w-full max-w-[1060px] mx-auto">
 
-    <!-- Header -->
-    <header class="flex items-center justify-between gap-6 w-full mb-6">
-      <p id="greeting" class="text-base text-[#6c7285]">Hi, <%= current_user.first_name.presence || current_user.alias %>. Have a look at your main analytics:</p>
+  <%= turbo_frame_tag "dashboard-main", data: { turbo_action: "replace" } do %>
+    <div class="w-full max-w-[1060px] mx-auto">
 
-      <%= form_with url: dashboard_path, method: :get, class: "grid grid-cols-[auto_1fr_auto_auto] items-center gap-3 w-full max-w-[520px] p-3 bg-white rounded-lg shadow-lg" do |form| %>
-        <span class="inline-grid place-items-center w-9 h-9 text-[#229be8] bg-[#e8f5ff] rounded-lg text-lg">
-          <i class="fa-regular fa-calendar"></i>
-        </span>
-        <label for="month" class="grid min-w-0">
-          <strong class="text-[#1f2328] text-[13px] leading-tight">Filter month</strong>
-          <small class="text-[#7d83a6] text-[10px] truncate"><%= @month_range.first.strftime("%d %B %Y") %> - <%= @month_range.last.strftime("%d %B %Y") %></small>
-        </label>
-        <%= form.select :month, (Date.new(2025,1)..Date.current).map { |d| [d.strftime("%B %Y"), d.strftime("%Y-%m")] }.uniq, { selected: @selected_month.strftime("%Y-%m") }, { class: "w-32 px-2 py-1.5 border border-[#d8deea] rounded-md text-[#1f2328] text-xs" } %>
-        <%= form.submit "Apply", class: "px-3 py-2 bg-[#1b2b4b] text-white text-xs font-bold rounded-md cursor-pointer border-0" %>
-      <% end %>
-    </header>
+      <!-- Header -->
+      <header class="flex items-center justify-between gap-6 w-full mb-6">
+        <p id="greeting" class="text-lg text-[#6c7285]">
+          <strong class="font-bold">Hi, <%= current_user.first_name.presence || current_user.alias %></strong>. Have a look at your <strong class="font-bold">monthly</strong> analytics
+        </p>
 
-    <!-- Grid -->
-    <div class="grid grid-cols-[1fr_340px] gap-6 items-start">
+        <!-- Filter by month -->
+        <div class="relative" data-controller="custom-select">
+          <%= form_with url: dashboard_path, method: :get, data: { turbo_frame: "dashboard-main" } do |f| %>
+            <% month_labels = (Date.new(2025,1)..Date.current).map { |d| [d.strftime("%B %Y"), d.strftime("%Y-%m")] }.uniq %>
 
-      <!-- Main column -->
-      <div class="grid gap-4">
-
-        <!-- MONTHLY SPEND -->
-        <section class="grid grid-cols-2 gap-4">
-          <article class="bg-white rounded-lg shadow-[4px_2px_16px_#B5D4F4] px-6 pt-4 pb-6 grid gap-2 min-h-[100px] content-start">
-            <div class="flex items-center justify-between gap-3 min-h-7">
-              <span class="text-[#7d83a6] text-base">Monthly spend</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <strong class="text-[#1f2328] text-3xl font-extrabold leading-none"><%= number_to_currency(@monthly_spend, precision: 0) %></strong>
-              <% if @previous_monthly_spend > 0 %>
-                <% if @spend_difference > 0 %>
-                  <div class="flex flex-col items-center gap-0.5 ml-8">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-9 text-red-500">
-                      <path fill-rule="evenodd" d="M10 17a.75.75 0 0 1-.75-.75V5.612L5.29 9.77a.75.75 0 0 1-1.08-1.04l5.25-5.5a.75.75 0 0 1 1.08 0l5.25 5.5a.75.75 0 1 1-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0 1 10 17Z" clip-rule="evenodd" />
-                    </svg>
-                    <span class="text-red-500 text-sm font-semibold">+ <%= number_to_currency(@spend_difference, precision: 0) %></span>
-                  </div>
-                <% elsif @spend_difference < 0 %>
-                  <div class="flex flex-col items-center gap-0.5 ml-8">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-9 text-green-500">
-                      <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .75.75v10.638l3.96-4.158a.75.75 0 1 1 1.08 1.04l-5.25 5.5a.75.75 0 0 1-1.08 0l-5.25-5.5a.75.75 0 1 1 1.08-1.04l3.96 4.158V3.75A.75.75 0 0 1 10 3Z" clip-rule="evenodd" />
-                    </svg>
-                    <span class="text-green-500 text-sm font-semibold"><%= number_to_currency(@spend_difference, precision: 0) %></span>
-                  </div>
-                <% else %>
-                  <span class="text-gray-400 text-xs">No change</span>
-                <% end %>
-              <% end %>
-            </div>
-          </article>
-
-          <!-- CANCELLED THIS MONTH -->
-          <article class="bg-white rounded-lg shadow-[4px_2px_16px_#B5D4F4] px-6 pt-4 pb-6 grid gap-2 min-h-[100px] content-start">
-            <div class="flex items-center justify-between gap-3 min-h-7">
-              <span class="text-[#7d83a6] text-base">Cancelled this month</span>
-              <button type="button" data-dashboard-activity-modal-view-param="cancelled" data-action="dashboard-activity-modal#open"
-                class="px-3 py-1.5 border border-[#d8deea] rounded-full text-[#1f2328] bg-white text-xs whitespace-nowrap cursor-pointer hover:bg-[#1b2b4b] hover:text-white transition-colors">
-                View
-              </button>
-            </div>
-            <strong class="text-[#1b2b4b] text-3xl font-extrabold leading-none"><%= number_to_currency(@canceled_subscriptions, precision: 0) %></strong>
-          </article>
-        </section>
-
-
-
-
-        <!-- BREAKDOWN -->
-        <section class="bg-white rounded-lg shadow-[4px_2px_16px_#B5D4F4] px-6 pb-6 pt-4">
-          <div class="flex items-center justify-between gap-4">
-            <h1 class="m-0 text-[#1B2B4B] text-xl font-bold">Breakdown</h1>
-          </div>
-
-          <div class="w-60 h-[206px] mx-auto mt-2 mb-12"
-            data-controller="subscriptions-breakdown-chart"
-            data-subscriptions-breakdown-chart-labels-value="<%= json_escape(breakdown_labels.to_json) %>"
-            data-subscriptions-breakdown-chart-values-value="<%= json_escape(breakdown_values.to_json) %>"
-            data-subscriptions-breakdown-chart-colors-value="<%= json_escape(breakdown_colors.to_json) %>"
-            data-subscriptions-breakdown-chart-total-value="<%= @subscription_breakdown_total.to_f %>"
-          >
-            <canvas data-subscriptions-breakdown-chart-target="canvas" aria-label="Subscriptions breakdown by category"></canvas>
-          </div>
-
-          <div class="grid grid-cols-2 gap-x-8 gap-y-3">
-            <% if @subscription_breakdown.any? %>
-              <% breakdown_rows.each_with_index do |(category_name, amount), index| %>
-                <div class="grid grid-cols-[auto_1fr_auto] items-center gap-2 min-w-0 text-[#222833] text-[11px]">
-                  <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: <%= breakdown_colors[index] %>"></span>
-                  <span class="truncate"><%= category_name %></span>
-                  <strong class="text-[#1d2129] text-[11px] font-bold"><%= number_to_currency(amount, precision: 0) %></strong>
-                </div>
-              <% end %>
-            <% else %>
-              <div class="col-span-2 grid grid-cols-[auto_1fr_auto] items-center gap-2 text-[11px] text-[#222833]">
-                <span class="w-2 h-2 rounded-full border-2 border-[#cfd6e3]"></span>
-                <span>No subscriptions yet</span>
-                <strong class="text-[11px] font-bold"><%= number_to_currency(0, precision: 0) %></strong>
-              </div>
-            <% end %>
-          </div>
-        </section>
-
-
-
-
-        <!-- ANALYTICS-->
-        <section class="bg-white rounded-lg shadow-[4px_2px_16px_#B5D4F4] px-6 pb-6 pt-4">
-          <div class="flex items-center justify-between gap-3 mb-4">
-            <h2 class="m-0 text-[#1B2B4B] text-xl font-bold">Analytics</h2>
-            <button type="button" data-action="dashboard-activity-modal#open"
-              class="px-3 py-1.5 border border-[#d8deea] rounded-full text-[#1f2328] bg-white text-xs whitespace-nowrap cursor-pointer hover:bg-[#1b2b4b] hover:text-white transition-colors">
-              View
+            <button type="button"
+              data-custom-select-target="button"
+              data-action="click->custom-select#toggle dblclick->custom-select#resetToToday"
+              class="flex items-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-medium shadow-lg whitespace-nowrap w-fit">
+              <i class="fa-solid fa-calendar text-[#229be8]"></i>
+              <span class="text-[#1f2328] text-sm font-semibold"><%= @selected_month.strftime("%B %Y") %></span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 text-gray-400">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+              </svg>
             </button>
-          </div>
-          <div class="w-full h-24"
-            data-controller="monthly-spend-chart"
-            data-monthly-spend-chart-labels-value="<%= json_escape(monthly_spend_labels.to_json) %>"
-            data-monthly-spend-chart-full-labels-value="<%= json_escape(monthly_spend_full_labels.to_json) %>"
-            data-monthly-spend-chart-values-value="<%= json_escape(monthly_spend_values.to_json) %>"
-          >
-            <canvas data-monthly-spend-chart-target="canvas" class="w-full h-full"></canvas>
-          </div>
-        </section>
 
-
-
-      </div>
-    </div>
-  </div>
-
-  <!-- CANCELLED SUBS MODAL -->
-  <div id="monthly-activity-modal"
-      class="fixed inset-0 z-[100] hidden items-center justify-center"
-      data-dashboard-activity-modal-target="modal"
-  >
-    <div class="fixed inset-0 bg-black/50 cursor-pointer" data-action="click->dashboard-activity-modal#close"></div>
-
-    <div class="relative z-10 w-full max-w-[760px] max-h-[82vh] p-6 overflow-y-auto bg-white rounded-lg shadow-2xl">
-      <div class="flex items-start justify-between gap-4 mb-2">
-        <h2 class="m-0 text-[#1B2B4B] text-xl font-extrabold" data-dashboard-activity-modal-target="title">Monthly activity</h2>
-        <button type="button" data-action="dashboard-activity-modal#close" class="text-gray-400 hover:text-[#1b2b4b] transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-
-      <div class="grid grid-cols-2 gap-4" data-dashboard-activity-modal-target="activityGrid">
-        <div data-dashboard-activity-modal-target="addedSection">
-          <% if @added_subscriptions.any? %>
-            <div class="grid gap-2.5">
-              <% @added_subscriptions.each do |subscription| %>
-                <article class="flex items-center justify-between gap-3 min-w-0 p-3 border border-[#eceff4] rounded-lg bg-[#fafbfc]">
-                  <div class="grid min-w-0">
-                    <strong class="text-[#1f2328] text-[13px] font-extrabold truncate"><%= subscription.name %></strong>
-                    <span class="text-[#7d83a6] text-[11px] truncate"><%= subscription.date_recurrence.strftime("%d %b") %> · <%= subscription.category.name %> · <%= subscription.billing_cycle.titleize %></span>
-                  </div>
-                  <span class="text-[#1f2328] font-extrabold whitespace-nowrap"><%= number_to_currency(subscription.amount, precision: 0) %></span>
-                </article>
+            <div data-custom-select-target="menu" class="hidden absolute top-full left-0 mt-1 bg-white rounded-md shadow-lg outline outline-1 outline-gray-200 z-50 min-w-full" style="max-height: 280px; overflow-y: scroll;">
+              <% month_labels.reverse.each do |label, value| %>
+                <button type="submit"
+                    name="month"
+                    value="<%= value %>"
+                    class="block w-full text-left my-2 px-4 text-sm text-gray-700 hover:bg-gray-100 whitespace-nowrap <%= @selected_month.strftime("%Y-%m") == value ? 'font-semibold text-[#1B2B4B]' : '' %>">
+                  <%= label %>
+                </button>
               <% end %>
             </div>
-          <% else %>
-            <p class="m-0 p-4 border border-dashed border-[#d8deea] rounded-lg text-[#7d83a6] bg-[#fafbfc] text-sm">No subscriptions added this month.</p>
           <% end %>
         </div>
+      </header>
 
-        <!-- CANCELLED POP_UP -->
-        <div>
-          <% if @canceled_subscription_details.any? %>
-            <div class="grid gap-2.5">
-              <% @canceled_subscription_details.each do |subscription| %>
-                <article class="flex flex-col justify-between gap-3 min-w-0 p-3 border border-red-300 rounded-lg bg-rose-50 w-full min-h-[80px]">
-                  <div class="grid min-w-0">
-                    <strong class="text-[#1B2B4B] text-sm truncate"><%= subscription.name %></strong>
-                    <span class="text-[#1B2B4B] text-xs truncate">Cancelled <%= subscription.cancelled_at.strftime("%d %b") %> · <%= subscription.category.name %></span>
-                  </div>
-                  <span class="text-[#E24B4A] font-bold whitespace-nowrap text-right"><%= subscription_billing_amount_label(subscription) %></span>
-                </article>
-              <% end %>
-            </div>
-          <% else %>
-            <p class="m-0 p-4 border border-dashed border-[#d8deea] rounded-lg text-[#7d83a6] bg-[#fafbfc] text-sm">No subscriptions cancelled this month.</p>
-          <% end %>
+      <!-- Grid -->
+      <div class="grid grid-cols-[1fr_340px] gap-6 items-start">
+        <div class="grid gap-4">
+          <%= render "dashboard/stats" %>
+          <%= render "dashboard/breakdown" %>
+          <%= render "dashboard/analytics" %>
         </div>
+        <aside>
+          <%= render "ai_insights_card", insights: @insights, return_to: request.fullpath %>
+        </aside>
       </div>
+
     </div>
+    <%= render "dashboard/modal" %>
+  <% end %>
 
-      </div>
-    </section>
-  </div>
 </main>
