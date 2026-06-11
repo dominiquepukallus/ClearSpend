@@ -15,8 +15,8 @@
 
 <div class="lg:flex lg:h-full lg:flex-col"
   data-controller="calendar-scroll"
-  data-calendar-scroll-prev-value="<%= subscriptions_path(month: prev_month.strftime('%Y-%m-%d')) %>"
-  data-calendar-scroll-next-value="<%= subscriptions_path(month: next_month.strftime('%Y-%m-%d')) %>">
+  data-calendar-scroll-prev-value="<%= subscriptions_path(month: prev_month.strftime('%Y-%m-%d'), status_filter: params[:status_filter]) %>"
+  data-calendar-scroll-next-value="<%= subscriptions_path(month: next_month.strftime('%Y-%m-%d'), status_filter: params[:status_filter]) %>">
 
   <header class="flex items-center gap-4 border-b border-gray-200 py-4 lg:flex-none dark:border-white/10 dark:bg-gray-800/50">
     <h1 class="min-w-0 text-base !text-3xl font-semibold text-gray-900 dark:text-white">
@@ -27,13 +27,13 @@
     </h1>
 
 
-    <!-- Top container -->
+    <!-- TOP CONTAINER -->
     <div class="flex items-center ml-auto">
 
 
       <!-- Previous Month/ Today/ Next Month selection -->
       <div class="relative flex items-center rounded-md bg-white shadow-xs outline -outline-offset-1 outline-gray-300 md:items-stretch dark:bg-white/10 dark:shadow-none dark:outline-white/5">
-        <%= link_to subscriptions_path(month: prev_month.strftime('%Y-%m-%d')), data: { turbo_frame: "calendar" }, class: "self-center h-7 w-8 flex items-center justify-center rounded-l-md pr-1 text-gray-400 hover:text-gray-500 focus:relative md:w-8 md:pr-0 md:hover:bg-gray-50" do %>
+        <%= link_to subscriptions_path(month: prev_month.strftime('%Y-%m-%d'), status_filter: params[:status_filter]), data: { turbo_frame: "calendar" }, class: "self-center h-7 w-8 flex items-center justify-center rounded-l-md pr-1 text-gray-400 hover:text-gray-500 focus:relative md:w-8 md:pr-0 md:hover:bg-gray-50" do %>
           <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-4">
             <path d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" fill-rule="evenodd" />
           </svg>
@@ -49,7 +49,7 @@
           <span class="flex-1 text-center items-center justify-center py-2 text-sm font-semibold text-gray-900 dark:text-white"><%= current_month.strftime("%B") %></span>
         <% end %>
 
-        <%= link_to subscriptions_path(month: next_month.strftime('%Y-%m-%d')), data: { turbo_frame: "calendar" }, class: "self-center h-7 w-8 flex items-center justify-center rounded-r-md pl-1 text-gray-400 hover:text-gray-500 focus:relative md:w-8 md:pl-0 md:hover:bg-gray-50" do %>
+        <%= link_to subscriptions_path(month: next_month.strftime('%Y-%m-%d'), status_filter: params[:status_filter]), data: { turbo_frame: "calendar" }, class: "self-center h-7 w-8 flex items-center justify-center rounded-r-md pl-1 text-gray-400 hover:text-gray-500 focus:relative md:w-8 md:pl-0 md:hover:bg-gray-50" do %>
           <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-4">
             <path d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
           </svg>
@@ -66,7 +66,7 @@
 
 
 <!-- Inside of calendar -->
-  <div class="shadow-[4px_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 rounded-md overflow-hidden lg:flex lg:flex-col max-h-[480px]">
+  <div class="shadow-[4px_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 rounded-md overflow-hidden lg:flex lg:flex-col h-[510px]">
     <div class="grid grid-cols-7 gap-px border-b border-gray-300 bg-gray-200 text-center text-sm/6 font-semibold text-gray-700 lg:flex-none dark:border-white/5 dark:bg-white/15 dark:text-gray-300">
       <div class="flex justify-center bg-white py-2 dark:bg-gray-900"><span>M</span><span class="sr-only sm:not-sr-only">on</span></div>
       <div class="flex justify-center bg-white py-2 dark:bg-gray-900"><span>T</span><span class="sr-only sm:not-sr-only">ue</span></div>
@@ -77,10 +77,10 @@
       <div class="flex justify-center bg-white py-2 dark:bg-gray-900"><span>S</span><span class="sr-only sm:not-sr-only">un</span></div>
     </div>
 
-    <div class="flex bg-gray-200 text-xs/6 text-gray-700 dark:bg-white/10 dark:text-gray-300">
+    <div class="flex bg-gray-200 text-xs/6 text-gray-700 dark:bg-white/10 dark:text-gray-300 h-full">
 
       <%# Desktop grid %>
-      <div class="hidden w-full lg:grid lg:grid-cols-7 lg:grid-rows-none lg:gap-px">
+      <div class="hidden w-full lg:grid lg:grid-cols-7 lg:grid-rows-5 h-full lg:gap-px">
         <% days.each do |day| %>
           <div
             <%= 'data-is-current-month' if day.month == today.month %>
@@ -106,50 +106,5 @@
         <% end %>
       </div>
     </div>
-  </div>
-
-  <!-- Category filter -->
-  <div class="mt-3 flex-1 shadow-[4px_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 rounded-md overflow-hidden flex flex-col">
-    <div class="flex items-center justify-between bg-[#85B7EB]">
-      <%= link_to categories_path,
-          data: { turbo_frame: "drawer_content" },
-          class: "flex-1 flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-white" do %>
-        All categories
-      <% end %>
-
-      <% if params[:category_id].present? %>
-        <%= link_to subscriptions_path(month: params[:month], query: params[:query], sort: params[:sort], upcoming_week: params[:upcoming_week]),
-            data: { turbo_frame: "calendar" },
-            class: "px-3 py-1.5 text-white hover:text-gray-200" do %>
-          <svg class="size-4" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-          </svg>
-        <% end %>
-      <% end %>
-    </div>
-
-      <div class="grid grid-cols-2 mt-2">
-        <% Category.where.not(name: "Customized").each do |category| %>
-          <%= link_to subscriptions_path(month: params[:month], query: params[:query], sort: params[:sort], upcoming_week: params[:upcoming_week], category_id: category.id),
-              data: { turbo_frame: "calendar" },
-              class: "flex items-center gap-2 px-3 py-1.5 text-sm font-medium transition-colors #{params[:category_id].to_s == category.id.to_s ? 'text-white rounded-md mx-1 my-0.5' : 'text-gray-600 hover:bg-gray-100'}",
-              style: params[:category_id].to_s == category.id.to_s ? "background-color: #{category.hex_color}90;" : "" do %>
-            <span class="inline-block size-2 rounded-full" style="background-color: <%= category.hex_color %>;"></span>
-            <%= category.name %>
-          <% end %>
-        <% end %>
-      </div>
-
-    <!-- ADD A CATEGORY BUTTON -->
-      <div class="flex items-center justify-end mb-2">
-        <%= link_to new_category_path,
-            data: { turbo_frame: "drawer_content", action: "click->drawer#open" },
-            class: "flex items-center gap-1 px-5 py-1.5 text-sm text-gray-500 hover:text-[#1B2B4B] transition-colors" do %>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-3">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-          </svg>
-          Add
-        <% end %>
-      </div>
   </div>
 </div>

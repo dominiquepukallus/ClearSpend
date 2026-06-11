@@ -1,0 +1,11 @@
+<%= turbo_stream.remove "category_#{@category.id}" %>
+<%= turbo_stream.replace "category_filter" do %>
+  <%= render "subscriptions/category_filter" %>
+<% end %>
+<%= turbo_stream.prepend "drawer" do %>
+  <div id="notice-flash" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 max-w-md bg-red-50 px-4 py-3 rounded-lg shadow-lg flex items-center gap-3">
+    <span class="text-sm font-medium text-red-800">Category deleted!</span>
+    <button onclick="document.getElementById('notice-flash').remove()" class="text-red-600 hover:text-red-800 ml-2">✕</button>
+  </div>
+  <script>setTimeout(() => { const f = document.getElementById('notice-flash'); if (f) f.remove(); }, 3000);</script>
+<% end %>

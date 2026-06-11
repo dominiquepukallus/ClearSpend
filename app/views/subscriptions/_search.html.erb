@@ -1,5 +1,20 @@
 <div data-controller="search" class="flex flex-col h-full">
 
+  <!-- Active / Cancelled filter -->
+  <div class="flex mx-6 mb-4 gap-6">
+    <%= link_to subscriptions_path(query: params[:query], sort: params[:sort], category_ids: params[:category_ids]),
+        class: "flex items-center gap-2 pb-2 text-sm font-medium transition-colors #{params[:status_filter] != 'cancelled' ? 'text-[#1B2B4B] border-b-2 border-[#1B2B4B]' : 'text-gray-400 hover:text-gray-600'}" do %>
+      <span class="inline-block size-2.5 rounded-full bg-[#22C55E]"></span>
+      Active
+    <% end %>
+
+    <%= link_to subscriptions_path(query: params[:query], sort: params[:sort], status_filter: 'cancelled', category_ids: params[:category_ids]),
+        class: "flex items-center gap-2 pb-2 text-sm font-medium transition-colors #{params[:status_filter] == 'cancelled' ? 'text-[#1B2B4B] border-b-2 border-[#1B2B4B]' : 'text-gray-400 hover:text-gray-600'}" do %>
+      <span class="inline-block size-2.5 rounded-full bg-[#E24B4A]"></span>
+      Cancelled
+    <% end %>
+  </div>
+
   <!-- Search and filter -->
   <div class="flex mb-4 px-6 gap-3 w-full">
     <%= form_with url: subscriptions_path, method: :get, data: { turbo_frame: "_top" }, class: "flex-1" do |f| %>
@@ -42,7 +57,7 @@
           <button type="button"
               data-custom-select-target="button"
               data-action="click->custom-select#toggle"
-              class="flex items-center gap-2 rounded-md bg-[#1B2B4B] text-white px-4 py-3 text-sm font-medium shadow-[0_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 whitespace-nowrap w-fit">
+              class="flex items-center gap-2 rounded-md bg-[#1B2B4B] text-white px-4 py-3 text-sm font-medium outline outline-1 outline-gray-400 whitespace-nowrap w-fit">
             <span data-custom-select-target="label"><%= sort_labels[params[:sort]] || "Sort by" %></span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
@@ -65,25 +80,27 @@
 
 
       <!-- UPCOMING -->
-      <div class="relative">
-        <%= link_to subscriptions_path(query: params[:query], category_id: params[:category_id], upcoming_week: true, sort: params[:sort]),
-          class: "flex items-center gap-2 rounded-md px-4 py-3 text-sm font-semibold outline outline-1 outline-[#F9E9E9] #{params[:upcoming_week].present? ? 'bg-[#E24B4A] text-white' : 'bg-[#F8C8C8] text-gray-900'}" do %>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-          </svg>
-          Upcoming
-        <% end %>
-
-        <!-- Clear week filter if active -->
-        <% if params[:upcoming_week].present? %>
-          <%= link_to subscriptions_path(query: params[:query], category_id: params[:category_id], sort: params[:sort]),
-              class: "absolute -top-2 -right-2 flex items-center justify-center size-4 rounded-full bg-[#F9E9E9] text-gray-900 hover:bg-red-600 hover:text-white" do %>
-            <svg class="size-3" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+      <% unless params[:status_filter] == 'cancelled' %>
+        <div class="relative">
+          <%= link_to subscriptions_path(query: params[:query], category_ids: params[:category_ids], upcoming_week: true, sort: params[:sort], status_filter: params[:status_filter], month: params[:month]),
+            class: "flex items-center gap-2 rounded-md px-4 py-3 text-sm font-semibold outline outline-1 outline-[#F9E9E9] #{params[:upcoming_week].present? ? 'bg-[#E24B4A] text-white' : 'bg-[#F8C8C8] text-gray-900'}" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
             </svg>
+            Upcoming
           <% end %>
-        <% end %>
-      </div>
+
+          <% if params[:upcoming_week].present? %>
+            <%= link_to subscriptions_path(query: params[:query], category_ids: params[:category_ids], sort: params[:sort], status_filter: params[:status_filter], month: params[:month]),
+                class: "absolute -top-2 -right-2 flex items-center justify-center size-4 rounded-full bg-[#F9E9E9] text-gray-900 hover:bg-red-600 hover:text-white" do %>
+              <svg class="size-3" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+              </svg>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+
     </div>
 
     <!-- SUBSCRIPTIONS LISTS -->
