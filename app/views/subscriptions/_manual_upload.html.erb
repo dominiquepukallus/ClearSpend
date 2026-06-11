@@ -1,17 +1,18 @@
-<div class="flex items-center grid grid-cols gap-8">
-  <div class="space-y-8">
-    <div class="bg-white rounded-lg shadow-md p-6" data-controller="bulk-subscriptions">
-      <h3 class="text-2xl font-bold mb-4 text-gray-800">Manual Entry</h3>
+<div class="bg-[#f4f5f7] min-h-screen">
+  <div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-lg shadow-[4px_2px_16px_#B5D4F4] outline outline-1 outline-gray-300 p-6" data-controller="bulk-subscriptions">
+      <h3 class="text-[#1B2B4B] font-semibold mb-2" style="font-family: 'Londrina Solid', sans-serif; font-size: 1.8rem;">
+        Manual Entry
+      </h3>
       <p class="text-gray-600 mb-6">Add one or multiple subscriptions</p>
 
       <%= form_with url: bulk_create_subscriptions_path, method: :post, data: { turbo_frame: "_top" } do |f| %>
 
         <div data-bulk-subscriptions-target="container" class="space-y-4">
 
-
-          <div data-bulk-subscription-row class="border border-gray-200 rounded-lg p-5 bg-gray-50">
+          <div data-bulk-subscription-row class="bg-gray-50 rounded-lg p-5 outline outline-1 outline-gray-200">
             <div class="flex justify-between items-center mb-4">
-              <h4 class="font-semibold text-gray-700 text-lg">Subscription #1</h4>
+              <h4 class="font-semibold text-gray-900 text-lg">Subscription #1</h4>
               <button type="button"
                       data-action="bulk-subscriptions#removeRow"
                       class="text-red-500 hover:text-red-700 font-medium text-sm transition-colors">
@@ -21,28 +22,28 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <label class="block text-sm font-medium text-gray-900 mb-1">Name</label>
                 <input type="text"
                         name="subscriptions[0][name]"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#85B7EB] focus:border-transparent"
                         placeholder="Netflix"
                         required>
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Amount</label>
+                <label class="block text-sm font-medium text-gray-900 mb-1">Amount</label>
                 <input type="number"
                         name="subscriptions[0][amount]"
                         step="0.01"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#85B7EB] focus:border-transparent"
                         placeholder="19.99"
                         required>
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Billing Cycle</label>
+                <label class="block text-sm font-medium text-gray-900 mb-1">Billing Cycle</label>
                 <select name="subscriptions[0][billing_cycle]"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#85B7EB] focus:border-transparent"
                         required>
                   <option value="">Select...</option>
                   <option value="weekly">Weekly</option>
@@ -52,17 +53,17 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Next Billing Date</label>
+                <label class="block text-sm font-medium text-gray-900 mb-1">Next Billing Date</label>
                 <input type="date"
                         name="subscriptions[0][date_recurrence]"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#85B7EB] focus:border-transparent"
                         required>
               </div>
 
               <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                <label class="block text-sm font-medium text-gray-900 mb-1">Category</label>
                 <select name="subscriptions[0][category_id]"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#85B7EB] focus:border-transparent"
                         required>
                   <option value="">Select...</option>
                   <% Category.all.each do |category| %>
@@ -70,23 +71,24 @@
                   <% end %>
                 </select>
               </div>
+
               <div class="md:col-span-2 mt-4 border-t border-gray-200 pt-4">
                 <div class="flex items-center mb-3">
                   <input type="checkbox"
                         id="share_subscription_0"
                         data-action="change->bulk-subscriptions#toggleSharing"
                         data-index="0"
-                        class="h-4 w-4 text-blue-600 border-gray-300 rounded">
-                  <label for="share_subscription_0" class="ml-2 text-sm font-medium text-gray-700">
+                        class="h-4 w-4 text-[#1B2B4B] border-gray-300 rounded focus:ring-[#85B7EB]">
+                  <label for="share_subscription_0" class="ml-2 text-sm font-medium text-gray-900">
                     Share this subscription
                   </label>
                 </div>
 
                 <div id="sharing_fields_0" class="hidden space-y-3 pl-6">
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Share with User</label>
+                    <label class="block text-sm font-medium text-gray-900 mb-1">Share with User</label>
                     <select name="subscriptions[0][shared_with_user_id]"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#85B7EB] focus:border-transparent">
                       <option value="">Select user...</option>
                       <% User.where.not(id: current_user.id).each do |user| %>
                         <option value="<%= user.id %>"><%= user.email %></option>
@@ -95,12 +97,12 @@
                   </div>
 
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Their share (%)</label>
+                    <label class="block text-sm font-medium text-gray-900 mb-1">Their share (%)</label>
                     <input type="number"
                           name="subscriptions[0][share_percentage]"
                           min="1"
                           max="100"
-                          class="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#85B7EB] focus:border-transparent"
                           placeholder="50">
                   </div>
                 </div>
@@ -113,20 +115,20 @@
         <div class="mt-6 space-y-3">
           <button type="button"
                   data-action="bulk-subscriptions#addRow"
-                  class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-3 rounded-lg transition-colors">
-            Add Another Subscription
+                  class="w-full bg-white border-2 border-[#1B2B4B] text-[#1B2B4B] hover:bg-[#1B2B4B] hover:text-white font-semibold px-4 py-3 rounded-lg transition-colors">
+            + Add Another Subscription
           </button>
 
           <%= f.submit "Create All Subscriptions",
-              class: "w-full bg-[#1B2B4B] hover:bg-[#85B7EB] text-white font-semibold px-4 py-3 rounded-lg transition-colors" %>
+              class: "w-full bg-[#1B2B4B] hover:bg-[#85B7EB] text-white font-semibold px-4 py-3 rounded-lg transition-colors cursor-pointer" %>
         </div>
 
       <% end %>
 
       <template data-bulk-subscriptions-target="template">
-        <div data-bulk-subscription-row class="border border-gray-200 rounded-lg p-5 bg-gray-50">
+        <div data-bulk-subscription-row class="bg-gray-50 rounded-lg p-5 outline outline-1 outline-gray-200">
           <div class="flex justify-between items-center mb-4">
-            <h4 class="font-semibold text-gray-700 text-lg">Subscription #NEW</h4>
+            <h4 class="font-semibold text-gray-900 text-lg">Subscription #NEW</h4>
             <button type="button"
                     data-action="bulk-subscriptions#removeRow"
                     class="text-red-500 hover:text-red-700 font-medium text-sm transition-colors">
@@ -136,28 +138,28 @@
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              <label class="block text-sm font-medium text-gray-900 mb-1">Name</label>
               <input type="text"
                       name="subscriptions[INDEX][name]"
-                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#85B7EB] focus:border-transparent"
                       placeholder="Netflix"
                       required>
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Amount</label>
+              <label class="block text-sm font-medium text-gray-900 mb-1">Amount</label>
               <input type="number"
                       name="subscriptions[INDEX][amount]"
                       step="0.01"
-                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#85B7EB] focus:border-transparent"
                       placeholder="19.99"
                       required>
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Billing Cycle</label>
+              <label class="block text-sm font-medium text-gray-900 mb-1">Billing Cycle</label>
               <select name="subscriptions[INDEX][billing_cycle]"
-                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#85B7EB] focus:border-transparent"
                       required>
                 <option value="">Select...</option>
                 <option value="weekly">Weekly</option>
@@ -167,17 +169,17 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Next Billing Date</label>
+              <label class="block text-sm font-medium text-gray-900 mb-1">Next Billing Date</label>
               <input type="date"
                       name="subscriptions[INDEX][date_recurrence]"
-                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#85B7EB] focus:border-transparent"
                       required>
             </div>
 
             <div class="md:col-span-2">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+              <label class="block text-sm font-medium text-gray-900 mb-1">Category</label>
               <select name="subscriptions[INDEX][category_id]"
-                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#85B7EB] focus:border-transparent"
                       required>
                 <option value="">Select...</option>
                 <% Category.all.each do |category| %>
@@ -185,23 +187,24 @@
                 <% end %>
               </select>
             </div>
+
             <div class="md:col-span-2 mt-4 border-t border-gray-200 pt-4">
               <div class="flex items-center mb-3">
                 <input type="checkbox"
                       id="share_subscription_INDEX"
                       data-action="change->bulk-subscriptions#toggleSharing"
                       data-index="INDEX"
-                      class="h-4 w-4 text-blue-600 border-gray-300 rounded">
-                <label for="share_subscription_INDEX" class="ml-2 text-sm font-medium text-gray-700">
+                      class="h-4 w-4 text-[#1B2B4B] border-gray-300 rounded focus:ring-[#85B7EB]">
+                <label for="share_subscription_INDEX" class="ml-2 text-sm font-medium text-gray-900">
                   Share this subscription
                 </label>
               </div>
 
               <div id="sharing_fields_INDEX" class="hidden space-y-3 pl-6">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Share with User</label>
+                  <label class="block text-sm font-medium text-gray-900 mb-1">Share with User</label>
                   <select name="subscriptions[INDEX][shared_with_user_id]"
-                          class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#85B7EB] focus:border-transparent">
                     <option value="">Select user...</option>
                     <% User.where.not(id: current_user.id).each do |user| %>
                       <option value="<%= user.id %>"><%= user.email %></option>
@@ -210,12 +213,12 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Their share (%)</label>
+                  <label class="block text-sm font-medium text-gray-900 mb-1">Their share (%)</label>
                   <input type="number"
                         name="subscriptions[INDEX][share_percentage]"
                         min="1"
                         max="100"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#85B7EB] focus:border-transparent"
                         placeholder="50">
                 </div>
               </div>

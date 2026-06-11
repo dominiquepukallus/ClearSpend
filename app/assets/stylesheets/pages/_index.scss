@@ -1,3 +1,4 @@
 // Import page-specific CSS files here.
-@import "home";
-@import "insight";
+@use "home";
+@use "dashboard";
+@use "insight";
