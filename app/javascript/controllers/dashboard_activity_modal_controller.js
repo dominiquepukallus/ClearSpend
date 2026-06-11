@@ -3,17 +3,32 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["modal", "title", "activityGrid", "addedSection"]
 
+  connect() {
+    this.handleScroll = this.onScroll.bind(this)
+    window.addEventListener("scroll", this.handleScroll)
+  }
+
+  disconnect() {
+    window.removeEventListener("scroll", this.handleScroll)
+  }
+
+  onScroll() {
+    document.body.classList.toggle("dashboard-scrolled", window.scrollY > 10)
+  }
+
   open(event) {
     this.setMode(event.params.view || "activity")
-    this.modalTarget.classList.add("dashboard-modal--open")
+    this.modalTarget.classList.remove("hidden")
+    this.modalTarget.classList.add("flex")
     this.modalTarget.removeAttribute("aria-hidden")
-    document.body.classList.add("dashboard-modal-open")
+    document.body.classList.add("overflow-hidden")
   }
 
   close() {
-    this.modalTarget.classList.remove("dashboard-modal--open")
+    this.modalTarget.classList.add("hidden")
+    this.modalTarget.classList.remove("flex")
     this.modalTarget.setAttribute("aria-hidden", "true")
-    document.body.classList.remove("dashboard-modal-open")
+    document.body.classList.remove("overflow-hidden")
   }
 
   closeWithKeyboard(event) {
@@ -24,7 +39,6 @@ export default class extends Controller {
 
   setMode(view) {
     const cancelledOnly = view === "cancelled"
-
     this.titleTarget.textContent = cancelledOnly ? "Cancelled subscriptions" : "Monthly activity"
     this.activityGridTarget.classList.toggle("dashboard-activity-grid--cancelled", cancelledOnly)
     this.addedSectionTarget.hidden = cancelledOnly
