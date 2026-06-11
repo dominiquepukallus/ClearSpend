@@ -1,0 +1,42 @@
+<section class="grid grid-cols-2 gap-4">
+  <!-- MONTHLY SPEND -->
+  <article class="bg-white rounded-lg shadow-[4px_2px_16px_#B5D4F4] px-6 pt-4 pb-6 grid gap-2 min-h-[100px] content-start">
+    <div class="flex items-center justify-between gap-3 min-h-7">
+      <span class="text-[#7d83a6] text-base">Monthly spend</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <strong class="text-[#1f2328] text-3xl font-extrabold leading-none"><%= number_to_currency(@monthly_spend, precision: 0) %></strong>
+      <% if @previous_monthly_spend > 0 %>
+        <% if @spend_difference > 0 %>
+          <div class="flex items-center gap-2 ml-8">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-16 text-red-500 flex-shrink-0">
+              <path d="M13 22h-2V9l-4 4L5.6 11.6 12 5.2l6.4 6.4L17 13l-4-4v13z"/>
+            </svg>
+            <span class="text-red-500 text-xl font-bold whitespace-nowrap">+ <%= number_to_currency(@spend_difference, precision: 0) %></span>
+          </div>
+        <% elsif @spend_difference < 0 %>
+          <div class="flex items-center gap-2 ml-8">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-16 text-green-500 flex-shrink-0">
+              <path d="M11 2h2v13l4-4 1.4 1.4L12 18.8 5.6 12.4 7 11l4 4V2z"/>
+            </svg>
+            <span class="text-green-500 text-xl font-bold whitespace-nowrap"><%= number_to_currency(@spend_difference, precision: 0) %></span>
+          </div>
+        <% else %>
+          <span class="text-gray-400 text-xs ml-auto">No change</span>
+        <% end %>
+      <% end %>
+    </div>
+  </article>
+
+  <!-- CANCELLED THIS MONTH -->
+  <article class="bg-white rounded-lg shadow-[4px_2px_16px_#B5D4F4] px-6 pt-4 pb-6 grid gap-2 min-h-[100px] content-start">
+    <div class="flex items-center justify-between gap-3 min-h-7">
+      <span class="text-[#7d83a6] text-base">Cancelled this month</span>
+      <button type="button" data-dashboard-activity-modal-view-param="cancelled" data-action="dashboard-activity-modal#open"
+        class="px-3 py-1.5 border border-[#d8deea] rounded-full text-[#1f2328] bg-white text-xs whitespace-nowrap cursor-pointer hover:bg-[#1b2b4b] hover:text-white transition-colors">
+        View
+      </button>
+    </div>
+    <strong class="text-[#1b2b4b] text-3xl font-extrabold leading-none"><%= number_to_currency(@canceled_subscriptions, precision: 0) %></strong>
+  </article>
+</section>
