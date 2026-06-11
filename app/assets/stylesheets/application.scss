@@ -1,10 +1,8 @@
-// Graphical variables
-@import "config/fonts";
-@import "config/colors";
+@use "config/fonts" as *;
+@use "config/colors" as *;
 
-// Your CSS partials
-@import "components/index";
-@import "components/index";
+@use "components/index" as *;
+@use "pages/index" as *;
 
 body {
   font-family: $body-font;
