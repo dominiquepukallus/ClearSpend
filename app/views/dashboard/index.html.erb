@@ -1,183 +1,66 @@
-<% category_colors = {
-  "Entertainment" => "#7C3AED",
-  "Well-being" => "#4CAF7D",
-  "News & Information" => "#1E3A5F",
-  "Food & Delivery / Meal kits" => "#F97316",
-  "Software & Productivity" => "#2563EB",
-  "Shopping & Retail" => "#EC4899",
-  "Customized" => "#4B5563"
-} %>
-<% fallback_colors = ["#5b7cf6", "#7be3a6", "#ffc45c", "#ff7888", "#9b8cff", "#4fd1c5"] %>
-<% breakdown_rows = @subscription_breakdown.sort_by { |category, _amount| category_colors.keys.index(category) || category_colors.length } %>
-<% breakdown_labels = breakdown_rows.map(&:first) %>
-<% breakdown_values = breakdown_rows.map { |_category, amount| amount.to_f } %>
-<% breakdown_colors = breakdown_labels.each_with_index.map { |category, index| category_colors.fetch(category, fallback_colors[index % fallback_colors.length]) } %>
-<% monthly_spend_labels = @monthly_spend_trend.map { |month| month[:label] } %>
-<% monthly_spend_full_labels = @monthly_spend_trend.map { |month| month[:full_label] } %>
-<% monthly_spend_values = @monthly_spend_trend.map { |month| month[:value] } %>
+<div class="flex flex-col items-start pt-1 px-10 w-full">
+  <%= image_tag "ClearSpend.svg", class: "w-[800px] max-w-full h-auto object-contain", id: "logo-light" %>
+  <%= image_tag "logo_revert.svg", class: "w-[800px] max-w-full h-auto object-contain hidden", id: "logo-dark" %>
+</div>
 
+<main class="min-h-screen px-8 pb-8"
+  data-controller="dashboard-activity-modal"
+  data-action="keydown.esc@window->dashboard-activity-modal#closeWithKeyboard"
+  data-dashboard-scroll-target="main">
 
-<main class="dashboard-page" data-controller="dashboard-activity-modal" data-action="keydown.esc@window->dashboard-activity-modal#closeWithKeyboard">
-  <div class="dashboard-shell">
-    <header class="dashboard-header">
-      <div>
-        <h1>Dashboard</h1>
-        <p>Hi, <%= current_user.first_name.presence || current_user.alias %>. Welcome back to ClearSpend!</p>
-      </div>
+  <%= turbo_frame_tag "dashboard-main", data: { turbo_action: "replace" } do %>
+    <div class="w-full max-w-[1060px] mx-auto">
 
-      <%= form_with url: dashboard_path, method: :get, class: "dashboard-month-filter" do |form| %>
-        <span class="dashboard-month-filter__icon">
-          <i class="fa-regular fa-calendar"></i>
-        </span>
-        <label for="month">
-          <strong>Filter month</strong>
-          <small><%= @month_range.first.strftime("%d %B %Y") %> - <%= @month_range.last.strftime("%d %B %Y") %></small>
-        </label>
-        <%= form.select :month, (Date.new(2025,1)..Date.current).map { |d| [d.strftime("%B %Y"), d.strftime("%Y-%m")] }.uniq, { selected: @selected_month.strftime("%Y-%m") } %>
-        <%= form.submit "Apply", class: "dashboard-month-filter__submit" %>
-      <% end %>
-    </header>
-
-    <div class="dashboard-grid">
-      <div class="dashboard-main">
-        <section class="dashboard-stats" aria-label="Subscription summary">
-          <article class="dashboard-stat-card">
-            <div class="dashboard-stat-card__header">
-              <span>Monthly spend</span>
-              <span></span>
-            </div>
-            <strong><%= number_to_currency(@monthly_spend, precision: 0) %></strong>
-          </article>
-
-          <article class="dashboard-stat-card dashboard-stat-card--cancelled">
-            <div class="dashboard-stat-card__header">
-              <span>Cancelled this month</span>
-                <button type="button" data-dashboard-activity-modal-view-param="cancelled" data-action="dashboard-activity-modal#open">View Cancelled</button>
-            </div>
-            <strong><%= number_to_currency(@canceled_subscriptions, precision: 0) %></strong>
-          </article>
-        </section>
-
-        <section class="subscriptions-breakdown-card">
-          <div class="subscriptions-breakdown-card__header">
-            <h1>Subscriptions breakdown</h1>
-          </div>
-
-          <div
-            class="subscriptions-chart"
-            data-controller="subscriptions-breakdown-chart"
-            data-subscriptions-breakdown-chart-labels-value="<%= json_escape(breakdown_labels.to_json) %>"
-            data-subscriptions-breakdown-chart-values-value="<%= json_escape(breakdown_values.to_json) %>"
-            data-subscriptions-breakdown-chart-colors-value="<%= json_escape(breakdown_colors.to_json) %>"
-            data-subscriptions-breakdown-chart-total-value="<%= @subscription_breakdown_total.to_f %>"
-          >
-            <canvas data-subscriptions-breakdown-chart-target="canvas" aria-label="Subscriptions breakdown by category"></canvas>
-          </div>
-
-          <div class="subscriptions-breakdown-legend">
-            <% if @subscription_breakdown.any? %>
-              <% breakdown_rows.each_with_index do |(category, amount), index| %>
-                <div class="legend-item">
-                  <span class="legend-dot" style="--legend-color: <%= breakdown_colors[index] %>"></span>
-                  <span class="legend-label"><%= category %></span>
-                  <strong><%= number_to_currency(amount, precision: 0) %></strong>
-                </div>
-              <% end %>
-            <% else %>
-              <div class="legend-item legend-item--empty">
-                <span class="legend-dot"></span>
-                <span class="legend-label">No subscriptions yet</span>
-                <strong><%= number_to_currency(0, precision: 0) %></strong>
-              </div>
-            <% end %>
-          </div>
-        </section>
-
-      </div>
-
-      <aside class="dashboard-side">
-        <%= render "ai_insights_card", insights: @insights, return_to: request.fullpath %>
-      </aside>
-
-      <section class="dashboard-analytics-card">
-        <div class="dashboard-analytics-card__header">
-          <h2>Analytics</h2>
-          <button type="button" data-action="dashboard-activity-modal#open">View Analytics</button>
-        </div>
-        <p>
-          <%= @added_subscriptions.count %> added
-          <span><%= @canceled_subscription_details.count %> cancelled</span>
+      <!-- Header -->
+      <header class="flex items-center justify-between gap-6 w-full mb-6">
+        <p id="greeting" class="text-lg text-[#6c7285]">
+          <strong class="font-bold">Hi, <%= current_user.first_name.presence || current_user.alias %></strong>. Have a look at your <strong class="font-bold">monthly</strong> analytics
         </p>
-        <div
-          class="dashboard-monthly-spend-chart"
-          data-controller="monthly-spend-chart"
-          data-monthly-spend-chart-labels-value="<%= json_escape(monthly_spend_labels.to_json) %>"
-          data-monthly-spend-chart-full-labels-value="<%= json_escape(monthly_spend_full_labels.to_json) %>"
-          data-monthly-spend-chart-values-value="<%= json_escape(monthly_spend_values.to_json) %>"
-        >
-          <canvas data-monthly-spend-chart-target="canvas" aria-label="Monthly spend trend"></canvas>
-        </div>
-      </section>
-    </div>
-  </div>
 
-  <div
-    id="monthly-activity-modal"
-    class="dashboard-modal"
-    aria-hidden="true"
-    aria-labelledby="monthly-activity-title"
-    role="dialog"
-    data-dashboard-activity-modal-target="modal"
-  >
-    <button type="button" class="dashboard-modal__backdrop" aria-label="Close monthly activity" data-action="dashboard-activity-modal#close"></button>
-    <section class="dashboard-modal__panel">
-      <header class="dashboard-modal__header">
-        <div>
-          <h2 id="monthly-activity-title" data-dashboard-activity-modal-target="title">Monthly activity</h2>
-          <p><%= @selected_month.strftime("%B %Y") %></p>
+        <!-- Filter by month -->
+        <div class="relative" data-controller="custom-select">
+          <%= form_with url: dashboard_path, method: :get, data: { turbo_frame: "dashboard-main" } do |f| %>
+            <% month_labels = (Date.new(2025,1)..Date.current).map { |d| [d.strftime("%B %Y"), d.strftime("%Y-%m")] }.uniq %>
+
+            <button type="button"
+              data-custom-select-target="button"
+              data-action="click->custom-select#toggle dblclick->custom-select#resetToToday"
+              class="flex items-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-medium shadow-lg whitespace-nowrap w-fit">
+              <i class="fa-solid fa-calendar text-[#229be8]"></i>
+              <span class="text-[#1f2328] text-sm font-semibold"><%= @selected_month.strftime("%B %Y") %></span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 text-gray-400">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+              </svg>
+            </button>
+
+            <div data-custom-select-target="menu" class="hidden absolute top-full left-0 mt-1 bg-white rounded-md shadow-lg outline outline-1 outline-gray-200 z-50 min-w-full" style="max-height: 280px; overflow-y: scroll;">
+              <% month_labels.reverse.each do |label, value| %>
+                <button type="submit"
+                    name="month"
+                    value="<%= value %>"
+                    class="block w-full text-left my-2 px-4 text-sm text-gray-700 hover:bg-gray-100 whitespace-nowrap <%= @selected_month.strftime("%Y-%m") == value ? 'font-semibold text-[#1B2B4B]' : '' %>">
+                  <%= label %>
+                </button>
+              <% end %>
+            </div>
+          <% end %>
         </div>
-        <button type="button" aria-label="Close monthly activity" data-action="dashboard-activity-modal#close">Close</button>
       </header>
 
-      <div class="dashboard-activity-grid" data-dashboard-activity-modal-target="activityGrid">
-        <section data-dashboard-activity-modal-target="addedSection">
-          <h3>Added subscriptions</h3>
-          <% if @added_subscriptions.any? %>
-            <div class="dashboard-activity-list">
-              <% @added_subscriptions.each do |subscription| %>
-                <article class="dashboard-activity-item">
-                  <div>
-                    <strong><%= subscription.name %></strong>
-                    <span><%= subscription.date_recurrence.strftime("%d %b") %> · <%= subscription.category.name %> · <%= subscription.billing_cycle.titleize %></span>
-                  </div>
-                  <span><%= number_to_currency(subscription.amount, precision: 0) %></span>
-                </article>
-              <% end %>
-            </div>
-          <% else %>
-            <p class="dashboard-activity-empty">No subscriptions added this month.</p>
-          <% end %>
-        </section>
-
-        <section>
-          <h3>Cancelled subscriptions</h3>
-          <% if @canceled_subscription_details.any? %>
-            <div class="dashboard-activity-list">
-              <% @canceled_subscription_details.each do |subscription| %>
-                <article class="dashboard-activity-item">
-                  <div>
-                    <strong><%= subscription.name %></strong>
-                    <span>Cancelled <%= subscription.cancelled_at.strftime("%d %b") %> · <%= subscription.category.name %></span>
-                  </div>
-                  <span class="dashboard-activity-item__price"><%= subscription_billing_amount_label(subscription) %></span>
-                </article>
-              <% end %>
-            </div>
-          <% else %>
-            <p class="dashboard-activity-empty">No subscriptions cancelled this month.</p>
-          <% end %>
-        </section>
+      <!-- Grid -->
+      <div class="grid grid-cols-[1fr_340px] gap-6 items-start">
+        <div class="grid gap-4">
+          <%= render "dashboard/stats" %>
+          <%= render "dashboard/breakdown" %>
+          <%= render "dashboard/analytics" %>
+        </div>
+        <aside>
+          <%= render "ai_insights_card", insights: @insights, return_to: request.fullpath %>
+        </aside>
       </div>
-    </section>
-  </div>
+
+    </div>
+    <%= render "dashboard/modal" %>
+  <% end %>
+
 </main>

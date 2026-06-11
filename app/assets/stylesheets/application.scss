@@ -1,8 +1,14 @@
 @use "config/fonts" as *;
 @use "config/colors" as *;
 
+<<<<<<< HEAD
 @use "components/index" as *;
 @use "pages/index" as *;
+=======
+// Your CSS partials
+@import "components/index";
+@import "components/index";
+>>>>>>> 9253f0e5d551c7e4f09f3389429a1183e9773b55
 
 body {
   font-family: $body-font;
@@ -20,4 +26,49 @@ h1, h2, h3, h4, h5, h6 {
   background-position: right 0.5rem center;
   background-size: 1.25rem;
   font-weight: 600;
+}
+
+.dashboard-scrolled nav {
+  background-color: #f4f5f7 !important;
+  transition: background-color 0.3s ease;
+}
+
+.dashboard-scrolled nav a,
+.dashboard-scrolled nav span {
+  color: #1B2B4B !important;
+  transition: color 0.3s ease;
+}
+
+.dashboard-scrolled nav svg {
+  stroke: #1B2B4B !important;
+}
+
+.dashboard-scrolled nav .bg-\[\#b5d4f4\] {
+  background-color: #1B2B4B !important;
+  color: white !important;
+}
+
+body.dashboard-scrolled {
+  background-color: #1B2B4B !important;
+  transition: background-color 0.3s ease;
+}
+
+body.dashboard-scrolled nav a:hover {
+  font-weight: bold;
+}
+
+body.dashboard-scrolled #logo-light {
+  display: none;
+}
+
+body.dashboard-scrolled #logo-dark {
+  display: block !important;
+}
+
+body.dashboard-scrolled #greeting {
+  color: white !important;
+}
+
+.dashboard-activity-grid--cancelled {
+  grid-template-columns: 1fr;
 }
