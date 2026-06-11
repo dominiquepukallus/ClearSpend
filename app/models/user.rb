@@ -10,6 +10,7 @@ class User < ApplicationRecord
   has_many :subscriptions, dependent: :destroy
   has_many :insights, dependent: :destroy
   has_many :notifications, as: :recipient, dependent: :destroy, class_name: "Noticed::Notification"
+  has_many :chats
 
   def initials
     "#{first_name.first.upcase}#{last_name.first.upcase}"

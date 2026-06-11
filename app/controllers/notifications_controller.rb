@@ -15,14 +15,14 @@ class NotificationsController < ApplicationController
     new_subscription.save!
 
     redirect_back(
-      fallback_location: root_path,
+      fallback_location: authenticated_root_path,
       flash: {
         notice: "Subscription accepted and added to your account!",
         subscription_id: new_subscription.id
       }
     )
   else
-    redirect_back(fallback_location: root_path, alert: "Unable to accept, please try again")
+    redirect_back(fallback_location: authenticated_root_path, alert: "Unable to accept, please try again")
   end
 end
 
@@ -34,9 +34,9 @@ end
     if @shared_subscription.user_id == current_user.id && @shared_subscription.status == 'pending'
       @shared_subscription.update(status: 'rejected')
       @notification.update(read_at: Time.current)
-      redirect_back(fallback_location: root_path, notice: "Subscription rejected!")
+      redirect_back(fallback_location: authenticated_root_path, notice: "Subscription rejected!")
     else
-      redirect_back(fallback_location: root_path, alert: "Unable to reject, please try again")
+      redirect_back(fallback_location: authenticated_root_path, alert: "Unable to reject, please try again")
     end
   end
 end

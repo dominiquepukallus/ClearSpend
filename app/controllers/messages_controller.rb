@@ -93,7 +93,7 @@ class MessagesController < ApplicationController
 
       When you have data:
       - Be specific with amounts and dates
-      - Always include markdown links like [View Netflix](/subscriptions/123), [Add subscription](/subscriptions/new) or [View Insights](/insights)
+      - Always include markdown links like [View Netflix](/subscriptions/123), [Add subscription](/subscriptions/new) or [View Insights]()
       - Format numbers with dollar signs
       - Be clear and concise
 
