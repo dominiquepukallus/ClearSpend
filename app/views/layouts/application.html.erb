@@ -37,6 +37,15 @@
       </div>
     </div>
 
+    <div data-controller="modal">
+      <div data-modal-target="container" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/50" data-action="click->modal#close"></div>
+        <div class="relative bg-white rounded-xl shadow-xl z-10 w-full max-w-3xl max-h-[90vh] overflow-y-auto mx-4">
+          <%= turbo_frame_tag "modal_content" %>
+        </div>
+      </div>
+    </div>
+
     <header>
       <%= render "shared/navbar" %>
     </header>
