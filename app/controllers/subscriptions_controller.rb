@@ -3,9 +3,18 @@ class SubscriptionsController < ApplicationController
     current_month = params[:month] ? Date.parse(params[:month]).beginning_of_month : Date.current.beginning_of_month
     @current_month = current_month
 
-    base_subscriptions = current_user.subscriptions.where.not(status: "cancelled")
+    if params[:status_filter] == 'cancelled'
+      base_subscriptions = current_user.subscriptions.where(status: 'cancelled')
+    else
+      base_subscriptions = current_user.subscriptions.where.not(status: 'cancelled')
+    end
+
     base_subscriptions = base_subscriptions.where("name ILIKE ?", "%#{params[:query]}%") if params[:query].present?
-    base_subscriptions = base_subscriptions.where(category_id: params[:category_id]) if params[:category_id].present?
+
+    if params[:category_ids].present?
+      ids = params[:category_ids].split(",")
+      base_subscriptions = base_subscriptions.where(category_id: ids)
+    end
 
     @calendar_subscriptions = base_subscriptions
     if params[:upcoming_week].present?

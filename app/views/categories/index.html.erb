@@ -12,49 +12,71 @@
     </div>
 
     <% seeded_names = ["Entertainment", "Well-being", "News & Information", "Food & Delivery / Meal kits", "Software & Productivity", "Shopping & Retail", "Customized"] %>
+    <% seeded_categories = @categories.select { |c| seeded_names.include?(c.name) } %>
+    <% custom_categories = @categories.reject { |c| seeded_names.include?(c.name) } %>
 
-    <!-- Categories list -->
     <div class="flex flex-col gap-3">
-      <% @categories.each do |category| %>
-        <div id="category_<%= category.id %>" class="relative">
-          <%= link_to category_path(category), data: { turbo_frame: "_top" }, class: "flex items-center gap-3 rounded-xl bg-white outline outline-1 outline-gray-200 px-4 py-3 hover:shadow-[0_4px_20px_#85B7EB] transition-shadow" do %>
-            <div class="flex items-center justify-center size-8 rounded-lg flex-shrink-0 <%= category.color %>">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                <% case category.name %>
-                  <% when "Entertainment" %>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 0 1-1.125-1.125M3.375 19.5h1.5C5.496 19.5 6 18.996 6 18.375m-3.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-1.5A1.125 1.125 0 0 1 18 18.375M20.625 4.5H3.375m17.25 0c.621 0 1.125.504 1.125 1.125M20.625 4.5h-1.5C18.504 4.5 18 5.004 18 5.625m3.75 0v1.5c0 .621-.504 1.125-1.125 1.125M3.375 4.5c-.621 0-1.125.504-1.125 1.125M3.375 4.5h1.5C5.496 4.5 6 5.004 6 5.625m-3.75 0v1.5c0 .621.504 1.125 1.125 1.125m0 0h1.5m-1.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m1.5-3.75C5.496 8.25 6 8.754 6 9.375v1.5m0-5.25v5.25m0-5.25C6 5.004 6.504 4.5 7.125 4.5h9.75c.621 0 1.125.504 1.125 1.125m1.125 2.625h1.5m-1.5 0A1.125 1.125 0 0 1 18 9.375v1.5m1.5-3.75C19.496 8.25 19 8.754 19 9.375v1.5m0-5.25v5.25m0-5.25C19 5.004 18.496 4.5 17.875 4.5M18 9.375v1.5m0 0h-1.5m1.5 0c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125M6 10.875v1.5m0 0h1.5m-1.5 0C5.504 12.375 5 12.879 5 13.5v1.5c0 .621.504 1.125 1.125 1.125m1.5-3.75C7.496 12.375 8 12.879 8 13.5v1.5m6-10.875h1.5m-1.5 0A1.125 1.125 0 0 0 13.5 5.625v1.5c0 .621.504 1.125 1.125 1.125m-1.5-2.625C13.004 4.5 12.5 5.004 12.5 5.625v1.5m1.5-3.75h-1.5" />
-                  <% when "Well-being" %>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
-                  <% when "News & Information" %>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z" />
-                  <% when "Food & Delivery / Meal kits" %>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                  <% when "Software & Productivity" %>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
-                  <% when "Shopping & Retail" %>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                  <% else %>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                <% end %>
-              </svg>
-            </div>
-            <div class="min-w-0">
-              <p class="font-semibold text-[#1B2B4B] text-sm"><%= category.name %></p>
-              <p class="text-xs text-gray-400"><%= category.subscriptions.where(user: current_user).count %> subscriptions</p>
-            </div>
-          <% end %>
 
-          <% unless seeded_names.include?(category.name) %>
-            <%= button_to category_path(category),
-                method: :delete,
-                data: { turbo_confirm: "Delete #{category.name}?" },
-                class: "absolute -top-1.5 -right-1.5 flex items-center justify-center size-4 rounded-full bg-[#E24B4A] text-white hover:bg-red-600",
-                form: { data: { turbo_frame: "drawer_content" } } do %>
-              <svg class="size-2.5" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+      <!-- Default categories -->
+      <div class="flex flex-col gap-3">
+        <% seeded_categories.each do |category| %>
+          <details class="group rounded-xl outline outline-1 outline-gray-200 overflow-hidden">
+            <summary class="flex items-center gap-3 bg-white px-4 py-3 cursor-pointer list-none">
+              <div class="flex items-center justify-center size-8 rounded-lg flex-shrink-0 <%= category.color %>">
+                <!-- icon -->
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="font-semibold text-[#1B2B4B] text-sm"><%= category.name %></p>
+                <p class="text-xs text-gray-400"><%= category.subscriptions.where(user: current_user).count %> subscriptions</p>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 text-gray-400 transition-transform group-open:rotate-180 flex-shrink-0">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
               </svg>
-            <% end %>
+            </summary>
+            <div class="border-t border-gray-100">
+              <% category.subscriptions.where(user: current_user).each do |sub| %>
+                <%= link_to subscription_path(sub), data: { turbo_frame: "_top" },
+                    class: "flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-100 last:border-0" do %>
+                  <span><%= sub.name %></span>
+                  <span class="text-xs text-gray-400">$<%= sub.amount.to_i %> <%= sub.billing_cycle %></span>
+                <% end %>
+              <% end %>
+            </div>
+          </details>
+        <% end %>
+      </div>
+
+      <!-- Custom categories with bulk delete -->
+      <% if custom_categories.any? %>
+        <div class="border-t border-gray-100 pt-3">
+          <p class="text-xs font-medium text-gray-400 uppercase tracking-wide px-1 mb-2">Your categories</p>
+          <%= form_with url: bulk_destroy_categories_path, method: :delete, data: { turbo_frame: "_top" } do |f| %>
+            <div class="flex flex-col gap-2">
+              <% custom_categories.each do |category| %>
+                <div id="category_<%= category.id %>" class="relative flex items-center gap-3 rounded-xl bg-white outline outline-1 outline-gray-200 px-4 py-3 hover:shadow-[0_4px_20px_#85B7EB] transition-shadow">
+                  <%= check_box_tag "category_ids[]", category.id, false,
+                      class: "size-4 rounded border-gray-300 text-[#1B2B4B] focus:ring-[#1B2B4B] bulk-delete-checkbox" %>
+                  <div class="flex items-center gap-3 flex-1 min-w-0">
+                    <div class="flex items-center justify-center size-8 rounded-lg flex-shrink-0" style="background-color: <%= category.hex_color %>; color: white;">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                      </svg>
+                    </div>
+                    <div class="min-w-0">
+                      <p class="font-semibold text-[#1B2B4B] text-sm"><%= category.name %></p>
+                      <p class="text-xs text-gray-400"><%= category.subscriptions.where(user: current_user).count %> subscriptions</p>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+
+            <button type="submit" id="bulk-delete-btn"
+                data-confirm="Delete selected categories?"
+                class="hidden mt-3 w-full rounded-md bg-[#E24B4A] text-white px-4 py-2 text-sm font-medium hover:bg-red-600 transition-colors">
+              Delete selected
+            </button>
           <% end %>
         </div>
       <% end %>
@@ -68,4 +90,25 @@
       <% end %>
     </div>
   </div>
+
+  <script>
+    document.querySelectorAll('.bulk-delete-checkbox').forEach(cb => {
+      cb.addEventListener('change', () => {
+        const checked = document.querySelectorAll('.bulk-delete-checkbox:checked').length
+        document.getElementById('bulk-delete-btn').classList.toggle('hidden', checked === 0)
+      })
+    })
+  </script>
+
+  <script>
+  document.querySelectorAll('details').forEach(detail => {
+    detail.addEventListener('toggle', () => {
+      if (detail.open) {
+        document.querySelectorAll('details').forEach(other => {
+          if (other !== detail) other.removeAttribute('open')
+        })
+      }
+    })
+  })
+</script>
 <% end %>

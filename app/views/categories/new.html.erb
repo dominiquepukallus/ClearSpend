@@ -12,7 +12,7 @@
     </div>
 
     <!-- Form -->
-    <%= form_with model: @category, class: "flex flex-col gap-4" do |f| %>
+    <%= form_with model: @category, class: "flex flex-col gap-4", data: { turbo_frame: "_top" } do |f| %>
       <% if @category.errors.any? %>
         <div class="rounded-md bg-red-50 px-4 py-3 text-sm text-red-600">
           <% @category.errors.full_messages.each do |msg| %>
@@ -55,7 +55,7 @@
       </div>
 
       <div class="flex gap-3 pt-2">
-        <%= f.submit "Create category", class: "cursor-pointer rounded-md bg-[#1B2B4B] px-5 py-3 text-sm font-medium text-white hover:bg-[#2a3f6e] transition-colors" %>
+        <%= f.submit "Create", class: "cursor-pointer rounded-md bg-[#1B2B4B] px-5 py-3 text-sm font-medium text-white hover:bg-[#2a3f6e] transition-colors" %>
         <button type="button" onclick="document.querySelector('[data-drawer-target=panel]').classList.add('translate-x-full'); document.querySelector('[data-drawer-target=overlay]').classList.add('hidden'); document.body.classList.remove('overflow-hidden')" class="rounded-md px-5 py-3 text-sm font-medium text-gray-500 hover:text-[#1B2B4B] transition-colors">
           Cancel
         </button>
