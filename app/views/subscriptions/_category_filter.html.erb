@@ -79,7 +79,7 @@
   <% end %>
 
   <!-- ADD A CATEGORY BUTTON -->
-  <div class="flex items-center justify-end mb-2 border-t border-gray-100">
+  <div class="flex items-center justify-end mb-1 border-gray-100">
     <%= link_to new_category_path,
         data: { turbo_frame: "drawer_content", action: "click->drawer#open" },
         class: "flex items-center gap-1 px-5 py-1.5 text-sm text-gray-500 hover:text-[#1B2B4B] transition-colors" do %>

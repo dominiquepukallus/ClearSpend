@@ -11,3 +11,7 @@
   </div>
   <script>setTimeout(() => { const f = document.getElementById('notice-flash'); if (f) f.remove(); }, 3000);</script>
 <% end %>
+
+<% if Category.where.not(name: ["Entertainment", "Well-being", "News & Information", "Food & Delivery / Meal kits", "Software & Productivity", "Shopping & Retail", "Customized"]).none? %>
+  <%= turbo_stream.remove "custom-categories-section" %>
+<% end %>

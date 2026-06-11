@@ -1,15 +1,15 @@
 <div data-controller="search" class="flex flex-col h-full">
 
   <!-- Active / Cancelled filter -->
-  <div class="flex mx-6 mb-4 gap-6">
+  <div class="flex mx-6 mb-2 gap-6">
     <%= link_to subscriptions_path(query: params[:query], sort: params[:sort], category_ids: params[:category_ids]),
-        class: "flex items-center gap-2 pb-2 text-sm font-medium transition-colors #{params[:status_filter] != 'cancelled' ? 'text-[#1B2B4B] border-b-2 border-[#1B2B4B]' : 'text-gray-400 hover:text-gray-600'}" do %>
+        class: "flex items-center gap-2 pb-0.5 text-sm font-medium transition-colors #{params[:status_filter] != 'cancelled' ? 'text-[#1B2B4B] border-b-2 border-[#1B2B4B]' : 'text-gray-400 hover:text-gray-600'}" do %>
       <span class="inline-block size-2.5 rounded-full bg-[#22C55E]"></span>
       Active
     <% end %>
 
     <%= link_to subscriptions_path(query: params[:query], sort: params[:sort], status_filter: 'cancelled', category_ids: params[:category_ids]),
-        class: "flex items-center gap-2 pb-2 text-sm font-medium transition-colors #{params[:status_filter] == 'cancelled' ? 'text-[#1B2B4B] border-b-2 border-[#1B2B4B]' : 'text-gray-400 hover:text-gray-600'}" do %>
+        class: "flex items-center gap-2 pb-0.5 text-sm font-medium transition-colors #{params[:status_filter] == 'cancelled' ? 'text-[#1B2B4B] border-b-2 border-[#1B2B4B]' : 'text-gray-400 hover:text-gray-600'}" do %>
       <span class="inline-block size-2.5 rounded-full bg-[#E24B4A]"></span>
       Cancelled
     <% end %>
