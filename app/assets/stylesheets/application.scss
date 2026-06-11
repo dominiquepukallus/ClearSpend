@@ -1,14 +1,8 @@
 @use "config/fonts" as *;
 @use "config/colors" as *;
 
-<<<<<<< HEAD
 @use "components/index" as *;
 @use "pages/index" as *;
-=======
-// Your CSS partials
-@import "components/index";
-@import "components/index";
->>>>>>> 9253f0e5d551c7e4f09f3389429a1183e9773b55
 
 body {
   font-family: $body-font;
