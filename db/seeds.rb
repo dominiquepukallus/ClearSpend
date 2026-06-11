@@ -1,4 +1,5 @@
 Subscription.destroy_all
+Chat.destroy_all
 User.destroy_all
 Category.destroy_all
 

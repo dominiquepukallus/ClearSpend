@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_10_005308) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_11_001803) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -241,10 +241,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_10_005308) do
     t.date "date_recurrence"
     t.string "domain_name"
     t.string "name"
+    t.integer "shared_subscription_id"
     t.string "status"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["category_id"], name: "index_subscriptions_on_category_id"
+    t.index ["shared_subscription_id"], name: "index_subscriptions_on_shared_subscription_id"
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
 
@@ -277,5 +279,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_10_005308) do
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "subscriptions", "categories"
+  add_foreign_key "subscriptions", "shared_subscriptions"
   add_foreign_key "subscriptions", "users"
 end
