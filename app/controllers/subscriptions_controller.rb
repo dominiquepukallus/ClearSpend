@@ -103,7 +103,13 @@ class SubscriptionsController < ApplicationController
     parsed_data.each do |sub_data|
       if sub_data["category"].present?
         category = Category.find_by_name_case_insensitive(sub_data["category"])
-        sub_data["category_id"] = category.id
+
+        if category.present?
+          sub_data["category_id"] = category.id
+        else
+          category = Category.create!(name: sub_data["category"])
+          sub_data["category_id"] = category.id
+        end
         sub_data.delete("category")
       end
       sub_data["status"] = "active"
