@@ -77,7 +77,7 @@ export default class extends Controller {
               color: "#7d83a6",
               font: {
                 size: 10,
-                weight: "700"
+                weight: "normal"
               }
             }
           },

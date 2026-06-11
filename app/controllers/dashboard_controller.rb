@@ -1,12 +1,10 @@
 class DashboardController < ApplicationController
-  # skip_before_action :authenticate_user!, only: :home
-
   def index
-    # Get the data of subscriptions from database
     @subscriptions = current_user.subscriptions.includes(:category)
     @selected_month = selected_month
     @month_range = @selected_month.all_month
     @month_time_range = @month_range.first.beginning_of_day..@month_range.last.end_of_day
+
     active_subscriptions = active_in_period(@subscriptions)
     canceled_subscriptions = canceled_in_period(@subscriptions)
 
@@ -18,6 +16,11 @@ class DashboardController < ApplicationController
     @subscription_breakdown_total = @subscription_breakdown.values.sum
     @monthly_spend_trend = monthly_spend_trend(@subscriptions)
     @insights = current_user.insights.order(created_at: :desc)
+
+    previous_month = @selected_month - 1.month
+    previous_active = active_in_month(@subscriptions, previous_month)
+    @previous_monthly_spend = normalized_monthly_spend(previous_active)
+    @spend_difference = @monthly_spend - @previous_monthly_spend
   end
 
   private
@@ -64,7 +67,6 @@ class DashboardController < ApplicationController
     monthly_spend = subscriptions.where(billing_cycle: "monthly").sum(:amount)
     yearly_spend = subscriptions.where(billing_cycle: "yearly").sum(:amount) / 12
     weekly_spend = subscriptions.where(billing_cycle: "weekly").sum(:amount) * 52 / 12
-
     monthly_spend + yearly_spend + weekly_spend
   end
 
@@ -76,7 +78,6 @@ class DashboardController < ApplicationController
     end_month = [@selected_month, Date.current.beginning_of_month].max
     (months - 1).downto(0).map do |month_offset|
       month = end_month.advance(months: -month_offset).beginning_of_month
-
       {
         label: month.strftime("%b"),
         full_label: month.strftime("%B %Y"),
@@ -97,12 +98,9 @@ class DashboardController < ApplicationController
 
   def normalize_monthly_amount(amount, billing_cycle)
     case billing_cycle
-    when "yearly"
-      amount / 12
-    when "weekly"
-      amount * 52 / 12
-    else
-      amount
+    when "yearly" then amount / 12
+    when "weekly" then amount * 52 / 12
+    else amount
     end
   end
 end
