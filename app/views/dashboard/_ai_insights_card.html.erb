@@ -1,48 +1,35 @@
-<%= turbo_frame_tag "dashboard-ai-insights", class: "dashboard-ai-frame" do %>
-  <% if insights.any? %>
-    <% insight = insights.max_by { |i| i.subscription&.amount || 0 } %>
-    <div class="dashboard-ai-card">
-      <div class="dashboard-ai-card__header">
-        <h2>AI Insight</h2>
-      </div>
-      <div class="dashboard-ai-card__content">
-      <% category_colors = {
-        "Entertainment" => "#7C3AED",
-        "Well-being" => "#4CAF7D",
-        "News & Information" => "#1E3A5F",
-        "Food & Delivery / Meal kits" => "#F97316",
-        "Software & Productivity" => "#2563EB",
-        "Shopping & Retail" => "#EC4899",
-        "Customized" => "#4B5563"
-      } %>
-      <span class="dashboard-ai-card__badge" style="background: <%= category_colors[insight.category.name] || '#1b2b4b' %>">
+<% card_class = "bg-white rounded-lg shadow-[4px_2px_16px_#B5D4F4] px-6 pb-2 pt-4 min-h-[280px] flex flex-col gap-4" %>
+<% btn_class = "inline-flex items-center gap-2 w-fit px-3 py-2 rounded-md text-white bg-[#1b2b4b] text-xs cursor-pointer hover:bg-[#2a3f6f] transition-colors" %>
+
+<%= turbo_frame_tag "dashboard-ai-insights" do %>
+  <div class="<%= card_class %>">
+    <h2 class="m-0 text-[#1B2B4B] text-xl font-bold">AI Insight<%= insights.any? ? "" : "s" %></h2>
+
+    <% if insights.any? %>
+      <% insight = insights.max_by { |i| i.subscription&.amount || 0 } %>
+      <span class="inline-block w-fit px-3 py-1.5 rounded-full text-white text-xs" style="background: <%= insight.category.hex_color %>">
         <%= insight.category.name %>
-      </span>        <p class="dashboard-ai-card__text"><%= insight.insight_text %></p>
-        <%= link_to "View all insights →", insights_path(category_id: insight.category_id), class: "dashboard-ai-card__view-link", data: { turbo_frame: "_top" } %>
+      </span>
+      <p class="m-0 text-[#7d83a6] text-sm leading-relaxed"><%= insight.insight_text %></p>
+      <%= link_to "View all insights →", insights_path(category_id: insight.category_id),
+          class: "text-[#229be8] text-xs no-underline hover:underline w-fit",
+          data: { turbo_frame: "_top" } %>
+      <div class="mt-auto flex justify-end">
+        <%= button_to "Regenerate insights", generate_insights_path, method: :post,
+            params: { return_to: return_to }, class: btn_class,
+            data: { loading_text: "Regenerating..." },
+            form: { data: { controller: "loading-button", action: "turbo:submit-start->loading-button#start turbo:submit-end->loading-button#stop" } } %>
       </div>
-      <%= button_to "Regenerate insights",
-          generate_insights_path,
-          method: :post,
-          params: { return_to: return_to },
-          class: "dashboard-ai-card__button",
-          data: { loading_text: "Regenerating..." },
-          form: { data: { controller: "loading-button", action: "turbo:submit-start->loading-button#start turbo:submit-end->loading-button#stop" } } %>
-    </div>
-  <% else %>
-    <section class="dashboard-ai-card">
-      <div class="dashboard-ai-card__header">
-        <h2>AI Insights</h2>
+    <% else %>
+      <div class="flex-1 border border-dashed border-[#d8deea] rounded-lg bg-[#fafbfc] flex items-center justify-center">
+        <p class="m-0 text-[#7d83a6] text-sm">No insights yet.</p>
       </div>
-      <div class="dashboard-ai-card__content">
-        <p>No insights yet.</p>
-        <%= button_to "Generate insights",
-            generate_insights_path,
-            method: :post,
-            params: { return_to: return_to },
-            class: "dashboard-ai-card__button",
+      <div class="mt-auto flex justify-end">
+        <%= button_to "Generate insights", generate_insights_path, method: :post,
+            params: { return_to: return_to }, class: btn_class,
             data: { loading_text: "Generating..." },
             form: { data: { controller: "loading-button", action: "turbo:submit-start->loading-button#start turbo:submit-end->loading-button#stop" } } %>
       </div>
-    </section>
-  <% end %>
+    <% end %>
+  </div>
 <% end %>

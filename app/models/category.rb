@@ -9,6 +9,12 @@ class Category < ApplicationRecord
     find_by("LOWER(name) = ?", name.downcase)
   end
 
+  SEEDED_NAMES = [
+    "Entertainment", "Well-being", "News & Information",
+    "Food & Delivery / Meal kits", "Software & Productivity",
+    "Shopping & Retail", "Customized"
+  ].freeze
+
   def color
     case name
     when "Entertainment" then "bg-[#7C3AED] text-white"

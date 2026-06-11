@@ -1,0 +1,35 @@
+<% category_hex = Category.all.each_with_object({}) { |c, h| h[c.name] = c.hex_color } %>
+<% breakdown_rows = @subscription_breakdown.sort_by { |name, _| Category::SEEDED_NAMES.index(name) || Category::SEEDED_NAMES.length } %>
+<% breakdown_labels = breakdown_rows.map(&:first) %>
+<% breakdown_values = breakdown_rows.map { |_, amount| amount.to_f } %>
+<% breakdown_colors = breakdown_labels.map { |name| category_hex[name] || "#9CA3AF" } %>
+
+<section class="bg-white rounded-lg shadow-[4px_2px_16px_#B5D4F4] px-6 pb-6 pt-4">
+  <h1 class="m-0 text-[#1B2B4B] text-xl font-bold mb-2">Breakdown</h1>
+  <div class="w-60 h-[206px] mx-auto mt-2 mb-12"
+    data-controller="subscriptions-breakdown-chart"
+    data-subscriptions-breakdown-chart-labels-value="<%= json_escape(breakdown_labels.to_json) %>"
+    data-subscriptions-breakdown-chart-values-value="<%= json_escape(breakdown_values.to_json) %>"
+    data-subscriptions-breakdown-chart-colors-value="<%= json_escape(breakdown_colors.to_json) %>"
+    data-subscriptions-breakdown-chart-total-value="<%= @subscription_breakdown_total.to_f %>"
+  >
+    <canvas data-subscriptions-breakdown-chart-target="canvas"></canvas>
+  </div>
+  <div class="grid grid-cols-2 gap-x-8 gap-y-3">
+    <% if @subscription_breakdown.any? %>
+      <% breakdown_rows.each_with_index do |(category_name, amount), index| %>
+        <div class="grid grid-cols-[auto_1fr_auto] items-center gap-2 min-w-0 text-[#222833] text-[11px]">
+          <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: <%= breakdown_colors[index] %>"></span>
+          <span class="truncate"><%= category_name %></span>
+          <strong class="text-[#1d2129] text-[11px] font-bold"><%= number_to_currency(amount, precision: 0) %></strong>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="col-span-2 grid grid-cols-[auto_1fr_auto] items-center gap-2 text-[11px] text-[#222833]">
+        <span class="w-2 h-2 rounded-full border-2 border-[#cfd6e3]"></span>
+        <span>No subscriptions yet</span>
+        <strong class="text-[11px] font-bold"><%= number_to_currency(0, precision: 0) %></strong>
+      </div>
+    <% end %>
+  </div>
+</section>
