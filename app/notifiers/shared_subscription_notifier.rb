@@ -8,9 +8,6 @@ class SharedSubscriptionNotifier < ApplicationNotifier
   required_param :shared_subscription
   required_param :sender
 
-  # def message
-  #   "#{params[:sender].name} has shared #{params[:shared_subscription]} with you."
-  # end
   notification_methods do
     def message
 

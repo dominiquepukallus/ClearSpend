@@ -1,6 +1,7 @@
 class Subscription < ApplicationRecord
   belongs_to :user
   belongs_to :category
+  belongs_to :shared_subscription, optional: true
 
   has_many :shared_subscriptions, dependent: :destroy
   has_many :insights, dependent: :destroy
@@ -17,7 +18,10 @@ class Subscription < ApplicationRecord
   def shared?
     shared_subscriptions.exists?
   end
-  # app/models/subscription.rb
+
+  def received_via_share?
+    shared_subscription_id.present?
+  end
 
   def billing_dates_up_to(end_date = Date.current)
     return [] if date_recurrence.nil?

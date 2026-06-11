@@ -12,7 +12,10 @@
       <div class="<%= @subscription.category.color %> px-8 py-6 flex items-center justify-between">
         <div>
           <h1 class="text-2xl font-bold text-white"><%= @subscription.name %></h1>
-          <%= link_to @subscription.category.name, categories_path, style: "text-decoration: none;", class: "mt-1 inline-block text-sm text-white underline hover:opacity-75" %>
+          <%= link_to @subscription.category.name, categories_path,
+              data: { turbo_frame: "drawer_content" },
+              style: "text-decoration: none;",
+              class: "mt-1 inline-block text-sm text-white underline hover:opacity-75" %>
         </div>
         <div class="flex items-center gap-2">
           <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold <%= @subscription.status == 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600' %>">
@@ -26,7 +29,14 @@
 
         <div>
           <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Amount</p>
-          <p class="text-2xl font-bold text-[#1B2B4B]">$<%= @subscription.amount.to_i %></p>
+          <p class="text-2xl font-bold text-[#1B2B4B]">
+            $<%= @subscription.amount.to_i %>
+            <% if @subscription.received_via_share? %>
+              <span class="text-sm font-normal text-gray-500">
+                (You pay: $<%= (@subscription.amount * @subscription.shared_subscription.share_percentage / 100).round(2) %>)
+              </span>
+            <% end %>
+          </p>
         </div>
 
         <div>
@@ -45,8 +55,30 @@
           <p class="text-lg font-semibold text-gray-700"><%= next_date ? next_date.strftime("%d %B %Y") : "—" %></p>
         </div>
 
+        <% if @subscription.received_via_share? %>
+          <div class="col-span-2">
+            <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Shared subscription</p>
+            <div class="flex items-center gap-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+              <svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+              </svg>
+              <div class="flex-1">
+                <p class="text-sm font-medium text-gray-900">
+                  Shared by <%= @subscription.shared_subscription.subscription.user.email %>
+                </p>
+                <p class="text-xs text-gray-600">
+                  Your share: <%= @subscription.shared_subscription.share_percentage.to_i %>%
+                </p>
+              </div>
+              <span class="px-2 py-1 rounded text-xs font-semibold bg-green-100 text-green-700">
+                Accepted
+              </span>
+            </div>
+          </div>
+        <% end %>
+
         <% if @subscription.shared? %>
-          <div>
+          <div class="col-span-2">
             <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Shared with..</p>
             <% @subscription.shared_subscriptions.each do |shared_sub| %>
               <div class="flex items-center justify-between mb-2">
@@ -86,8 +118,13 @@
       <!-- Total paid -->
       <div class="px-8 py-4 border-t border-gray-100">
         <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Total paid since start</p>
-        <% total = @subscription.billing_dates_up_to(Date.current).count * @subscription.amount.to_i %>
-        <p class="text-2xl font-bold text-[#1B2B4B]">$<%= total %></p>
+        <%
+          amount = @subscription.received_via_share? ?
+            (@subscription.amount * @subscription.shared_subscription.share_percentage / 100) :
+            @subscription.amount.to_i
+          total = @subscription.billing_dates_up_to(Date.current).count * amount
+        %>
+        <p class="text-2xl font-bold text-[#1B2B4B]">$<%= total.round(2) %></p>
       </div>
 
       <!-- Actions -->
@@ -108,7 +145,11 @@
           <% past_dates.each do |date| %>
             <div class="flex items-center justify-between px-6 py-3 border-b border-gray-100 last:border-0">
               <span class="text-sm text-gray-700"><%= date.strftime("%d %B %Y") %></span>
-              <span class="text-sm font-semibold text-[#1B2B4B]">$<%= @subscription.amount.to_i %></span>
+              <span class="text-sm font-semibold text-[#1B2B4B]">
+                $<%= @subscription.received_via_share? ?
+                  (@subscription.amount * @subscription.shared_subscription.share_percentage / 100).round(2) :
+                  @subscription.amount.to_i %>
+              </span>
             </div>
           <% end %>
         <% else %>
