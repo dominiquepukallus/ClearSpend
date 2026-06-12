@@ -46,9 +46,11 @@
 
             <div class="flex gap-3 pt-3 border-t border-gray-100">
               <%= f.submit "Save changes", class: "bg-[#1B2B4B] text-white font-semibold px-5 py-2.5 rounded-xl shadow-[0_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 hover:bg-[#B5D4F4] transition-all cursor-pointer text-sm" %>
-              <%= link_to "Cancel", subscription_path(@subscription), data: { action: "click->modal#close" }, style: "text-decoration: none;", class: "bg-white text-gray-500 font-semibold px-5 py-2.5 rounded-xl shadow-[0_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 hover:bg-gray-50 transition-all text-sm" %>
-            </div>
-
+             <button type="button"
+                data-action="click->modal#close"
+                class="bg-white text-gray-500 font-semibold px-5 py-2.5 rounded-xl shadow-[0_2px_16px_#B5D4F4] outline outline-1 outline-gray-400 hover:bg-gray-50 transition-all text-sm">
+                Cancel
+            </button>
           <% end %>
         </div>
 
