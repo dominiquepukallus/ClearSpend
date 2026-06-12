@@ -85,7 +85,7 @@ export default class extends Controller {
           },
           y: {
             display: false,
-            beginAtZero: true
+            beginAtZero: false,
           }
         }
       }
