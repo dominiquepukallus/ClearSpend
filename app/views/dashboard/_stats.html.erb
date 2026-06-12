@@ -1,8 +1,7 @@
-<section class="grid grid-cols-2 gap-4">
-
+<div class="grid gap-4" style="grid-template-columns: repeat(4, 1fr);">
 
   <!-- MONTHLY SPEND -->
-  <article class="bg-white rounded-lg shadow-[4px_2px_16px_#B5D4F4] px-6 pt-4 pb-6 grid gap-2 min-h-[100px] content-start">
+  <article class="col-span-2 bg-white rounded-lg shadow-[4px_2px_16px_#B5D4F4] px-6 pt-4 pb-6 grid gap-2 min-h-[100px] content-start">
     <div class="flex items-center justify-between gap-3 min-h-7">
       <span class="text-[#7d83a6] text-base">Monthly spend</span>
       <button type="button" data-action="dashboard-activity-modal#open"
@@ -34,15 +33,28 @@
     </div>
   </article>
 
-  <!-- CANCELLED THIS MONTH -->
-  <article class="bg-white rounded-lg shadow-[4px_2px_16px_#B5D4F4] px-6 pt-4 pb-6 grid gap-2 min-h-[100px] content-start">
-    <div class="flex items-center justify-between gap-3 min-h-7">
-      <span class="text-[#7d83a6] text-base">Cancelled this month</span>
-      <button type="button" data-dashboard-activity-modal-view-param="cancelled" data-action="dashboard-activity-modal#open"
-        class="px-3 py-1.5 border border-[#d8deea] rounded-full text-[#1f2328] bg-white text-xs whitespace-nowrap cursor-pointer hover:bg-[#1b2b4b] hover:text-white transition-colors">
-        View
-      </button>
+
+    <!-- SUBSCRIBED -->
+  <div
+    class="bg-white rounded-lg shadow-[4px_2px_16px_#B5D4F4] px-6 pt-4 pb-6 grid gap-2 min-h-[100px] content-start text-left transition-all hover:-translate-y-0.5"
+    onmouseover="this.style.backgroundColor='#f0fdf4'; this.style.boxShadow='4px 2px 20px #86efac'; this.querySelectorAll('[data-color-target]').forEach(el => el.style.color='#166534'); this.querySelector('[data-bold-target]').style.fontWeight='700';"
+    onmouseout="this.style.backgroundColor='#ffffff'; this.style.boxShadow='4px 2px 16px #B5D4F4'; this.querySelectorAll('[data-color-target]').forEach(el => el.style.color=''); this.querySelector('[data-bold-target]').style.fontWeight='';">
+    <span data-color-target data-bold-target class="text-[#7d83a6] text-base transition-colors">Subscribed</span>
+    <div class="flex items-baseline pt-4 gap-2">
+      <strong data-color-target class="text-[#22A06B] text-3xl font-extrabold leading-none transition-colors"><%= @added_subscriptions.count %></strong>
+      <span data-color-target class="text-[#7d83a6] text-xs transition-colors"><%= @added_subscriptions.count == 1 ? "subscription" : "subscriptions" %></span>
     </div>
-    <strong class="text-[#1b2b4b] text-3xl font-extrabold leading-none"><%= number_to_currency(@canceled_subscriptions, precision: 0) %></strong>
-  </article>
-</section>
+  </div>
+
+  <!-- CANCELLED -->
+  <div
+    class="bg-white rounded-lg shadow-[4px_2px_16px_#B5D4F4] px-6 pt-4 pb-6 grid gap-2 min-h-[100px] content-start text-left transition-all hover:-translate-y-0.5"
+    onmouseover="this.style.backgroundColor='#fff1f2'; this.style.boxShadow='4px 2px 20px #fca5a5'; this.querySelectorAll('[data-color-target]').forEach(el => el.style.color='#991b1b'); this.querySelector('[data-bold-target]').style.fontWeight='700';"
+    onmouseout="this.style.backgroundColor='#ffffff'; this.style.boxShadow='4px 2px 16px #B5D4F4'; this.querySelectorAll('[data-color-target]').forEach(el => el.style.color=''); this.querySelector('[data-bold-target]').style.fontWeight='';">
+    <span data-color-target data-bold-target class="text-[#7d83a6] text-base transition-colors">Cancelled</span>
+    <div class="flex items-baseline pt-4 gap-2">
+      <strong data-color-target class="text-[#E24B4A] text-3xl font-extrabold leading-none transition-colors"><%= @canceled_subscription_details.count %></strong>
+      <span data-color-target class="text-[#7d83a6] text-xs transition-colors"><%= @canceled_subscription_details.count == 1 ? "subscription" : "subscriptions" %></span>
+    </div>
+  </div>
+</div>

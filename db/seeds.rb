@@ -1,6 +1,6 @@
-
-Subscription.destroy_all
+SubscriptionPriceChange.destroy_all
 SharedSubscription.destroy_all
+Subscription.destroy_all
 Chat.destroy_all
 User.destroy_all
 Category.destroy_all
@@ -97,7 +97,7 @@ subscriptions = [
   { name: "Chewy Autoship", domain_name: "chewy.com", category: "Shopping & Retail", amount: 45, billing_cycle: "monthly", date_recurrence: Date.new(2026, 1, 8), status: "active", cancelled_at: nil },
 ]
 
-subscriptions.each do |attrs|
+subscription_records = subscriptions.index_with do |attrs|
   subscription = demo_user.subscriptions.find_or_initialize_by(name: attrs[:name])
   subscription.assign_attributes(
     amount: attrs[:amount],
@@ -109,6 +109,56 @@ subscriptions.each do |attrs|
     domain_name: attrs[:domain_name]
   )
   subscription.save!
+  subscription
 end
 
+subscription_records = subscription_records.transform_keys { |attrs| attrs[:name] }
 puts "Subscriptions saved (#{subscriptions.length} total)"
+
+# PRICE CHANGES
+price_changes = [
+  { subscription_name: "Netflix", old_amount: 20, new_amount: 22, changed_at: Date.new(2026, 3, 5) },
+  { subscription_name: "Notion", old_amount: 15, new_amount: 12, changed_at: Date.new(2026, 3, 12) },
+  { subscription_name: "Spotify", old_amount: 11, new_amount: 13, changed_at: Date.new(2026, 2, 18) },
+]
+
+price_changes.each do |pc|
+  subscription = subscription_records[pc[:subscription_name]]
+  next unless subscription
+
+  SubscriptionPriceChange.find_or_create_by!(
+    subscription: subscription,
+    changed_at: pc[:changed_at]
+  ) do |record|
+    record.old_amount = pc[:old_amount]
+    record.new_amount = pc[:new_amount]
+  end
+end
+puts "Price changes saved"
+
+# SHARED SUBSCRIPTIONS
+shared_subscriptions = [
+  { subscription_name: "Netflix", share_percentage: 50, status: "accepted", permission: "read" },
+  { subscription_name: "Disney Plus", share_percentage: 33.33, status: "accepted", permission: "edit" },
+]
+
+shared_subscriptions.each do |sh|
+  subscription = subscription_records[sh[:subscription_name]]
+  next unless subscription
+
+  shared_subscription = SharedSubscription.find_or_initialize_by(
+    subscription: subscription,
+    user: demo_user
+  )
+  shared_subscription.assign_attributes(
+    shared_with: demo_shared_user.email,
+    shared_with_user_id: demo_shared_user.id,
+    share_percentage: sh[:share_percentage],
+    status: sh[:status],
+    permission: sh[:permission]
+  )
+  shared_subscription.save!
+
+  subscription.update!(shared_subscription_id: shared_subscription.id)
+end
+puts "Shared subscriptions saved"

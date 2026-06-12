@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_11_001803) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_12_005454) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -232,6 +232,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_11_001803) do
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
   end
 
+  create_table "subscription_price_changes", force: :cascade do |t|
+    t.date "changed_at"
+    t.datetime "created_at", null: false
+    t.decimal "new_amount"
+    t.decimal "old_amount"
+    t.bigint "subscription_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["subscription_id"], name: "index_subscription_price_changes_on_subscription_id"
+  end
+
   create_table "subscriptions", force: :cascade do |t|
     t.decimal "amount"
     t.string "billing_cycle"
@@ -278,6 +288,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_11_001803) do
   add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "subscription_price_changes", "subscriptions"
   add_foreign_key "subscriptions", "categories"
   add_foreign_key "subscriptions", "shared_subscriptions"
   add_foreign_key "subscriptions", "users"

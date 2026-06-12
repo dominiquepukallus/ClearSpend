@@ -4,42 +4,47 @@
 >
   <div class="fixed inset-0 bg-black/50 cursor-pointer" data-action="click->dashboard-activity-modal#close"></div>
   <div class="relative z-10 w-full max-w-[760px] max-h-[82vh] p-6 overflow-y-auto bg-white rounded-lg shadow-2xl">
-    <div class="flex items-start justify-between gap-4 mb-2">
-      <h2 class="m-0 text-[#1B2B4B] text-xl font-extrabold" data-dashboard-activity-modal-target="title">Monthly activity</h2>
-      <button type="button" data-action="dashboard-activity-modal#close" class="text-gray-400 hover:text-[#1b2b4b] transition-colors">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-        </svg>
-      </button>
-    </div>
+
+    <!-- CLOSE BUTTON -->
+    <button type="button" data-action="dashboard-activity-modal#close" class="absolute text-gray-400 hover:text-[#1b2b4b] transition-colors" style="top: 1rem; right: 1rem; left: auto;">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <!-- NEW SUBS MODAL -->
     <div class="grid grid-cols-2 gap-4" data-dashboard-activity-modal-target="activityGrid">
       <div data-dashboard-activity-modal-target="addedSection">
+        <p class="m-0 mb-4 text-base text-[#1B2B4B]">You <span class="text-[#22A06B] font-bold">subscribed</span></p>
         <% if @added_subscriptions.any? %>
           <div class="grid gap-2.5">
             <% @added_subscriptions.each do |subscription| %>
-              <article class="flex items-center justify-between gap-3 min-w-0 p-3 border border-[#eceff4] rounded-lg bg-[#fafbfc]">
+              <article class="flex flex-col justify-between gap-3 min-w-0 p-3 rounded-lg bg-green-50 w-full min-h-[80px]" style="border: 1px solid #bbf7d0;">
                 <div class="grid min-w-0">
-                  <strong class="text-[#1f2328] text-[13px] font-extrabold truncate"><%= subscription.name %></strong>
-                  <span class="text-[#7d83a6] text-[11px] truncate"><%= subscription.date_recurrence.strftime("%d %b") %> · <%= subscription.category.name %> · <%= subscription.billing_cycle.titleize %></span>
+                  <strong class="text-[#1B2B4B] text-sm truncate"><%= subscription.name %></strong>
+                  <span class="text-[#1B2B4B] text-xs truncate">Added <%= subscription.date_recurrence.strftime("%d %b") %> · <%= subscription.category.name %></span>
                 </div>
-                <span class="text-[#1f2328] font-extrabold whitespace-nowrap"><%= number_to_currency(subscription.amount, precision: 0) %></span>
+                <span class="text-[#1B2B4B] text-sm font-medium whitespace-nowrap text-right"><%= number_to_currency(subscription.amount, precision: 0) %>/<%= subscription.billing_cycle %></span>
               </article>
             <% end %>
           </div>
         <% else %>
-          <p class="m-0 p-4 border border-dashed border-[#d8deea] rounded-lg text-[#7d83a6] bg-[#fafbfc] text-sm">No subscriptions added this month.</p>
+          <p class="m-0 p-4 border border-dashed border-[#6B7280] rounded-lg text-[#7d83a6] bg-[#fafbfc] text-sm">No subscriptions added this month.</p>
         <% end %>
       </div>
-      <div>
+
+      <!-- CANCELLED -->
+      <div data-dashboard-activity-modal-target="canceledSection">
+        <p class="m-0 mb-4 text-base text-[#1B2B4B]">You <span class="text-[#E24B4A] font-bold">cancelled</span></p>
         <% if @canceled_subscription_details.any? %>
           <div class="grid gap-2.5">
             <% @canceled_subscription_details.each do |subscription| %>
-              <article class="flex flex-col justify-between gap-3 min-w-0 p-3 border border-red-300 rounded-lg bg-rose-50 w-full min-h-[80px]">
+              <article class="flex flex-col justify-between gap-3 min-w-0 p-3 rounded-lg bg-rose-50 w-full min-h-[80px]" style="border: 1px solid #fecaca;">
                 <div class="grid min-w-0">
                   <strong class="text-[#1B2B4B] text-sm truncate"><%= subscription.name %></strong>
                   <span class="text-[#1B2B4B] text-xs truncate">Cancelled <%= subscription.cancelled_at.strftime("%d %b") %> · <%= subscription.category.name %></span>
                 </div>
-                <span class="text-[#E24B4A] font-bold whitespace-nowrap text-right"><%= subscription_billing_amount_label(subscription) %></span>
+                <span class="text-[#E24B4A] text-sm font-medium whitespace-nowrap text-right"><%= subscription_billing_amount_label(subscription) %></span>
               </article>
             <% end %>
           </div>
@@ -48,5 +53,30 @@
         <% end %>
       </div>
     </div>
+
+    <% if @price_changes.any? %>
+      <div class="mt-4">
+        <p class="m-0 mb-2 text-base text-[#1B2B4B]">Price <span class="font-bold">changes</span></p>
+        <div class="grid gap-1.5">
+          <% @price_changes.each do |pc| %>
+            <% increased = pc.difference > 0 %>
+            <div class="flex items-center justify-between gap-3 min-w-0 py-1.5 border-b border-gray-100 last:border-0">
+              <span class="text-sm text-[#1B2B4B] truncate"><%= pc.subscription.name %></span>
+              <div class="flex items-center gap-1.5 whitespace-nowrap">
+                <span class="text-sm text-[#7d83a6]"><%= number_to_currency(pc.old_amount, precision: 0) %> → <%= number_to_currency(pc.new_amount, precision: 0) %></span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-4" style="color: <%= increased ? "#E24B4A" : "#22A06B" %>;">
+                  <% if increased %>
+                    <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .75.75v10.638l3.96-4.158a.75.75 0 1 1 1.08 1.04l-5.25 5.5a.75.75 0 0 1-1.08 0l-5.25-5.5a.75.75 0 1 1 1.08-1.04l3.96 4.158V3.75A.75.75 0 0 1 10 3Z" clip-rule="evenodd" transform="rotate(180 10 10)" />
+                  <% else %>
+                    <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .75.75v10.638l3.96-4.158a.75.75 0 1 1 1.08 1.04l-5.25 5.5a.75.75 0 0 1-1.08 0l-5.25-5.5a.75.75 0 1 1 1.08-1.04l3.96 4.158V3.75A.75.75 0 0 1 10 3Z" clip-rule="evenodd" />
+                  <% end %>
+                </svg>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
   </div>
 </div>

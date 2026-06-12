@@ -25,7 +25,7 @@
         <p class="m-0 text-[#7d83a6] text-sm">No insights yet.</p>
       </div>
       <div class="mt-auto flex justify-end">
-        <%= button_to "Generate insights", generate_insights_path, method: :post,
+        <%= button_to "Generate", generate_insights_path, method: :post,
             params: { return_to: return_to }, class: btn_class,
             data: { loading_text: "Generating..." },
             form: { data: { controller: "loading-button", action: "turbo:submit-start->loading-button#start turbo:submit-end->loading-button#stop" } } %>

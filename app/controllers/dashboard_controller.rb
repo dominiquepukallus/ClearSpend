@@ -21,6 +21,19 @@ class DashboardController < ApplicationController
     previous_active = active_in_month(@subscriptions, previous_month)
     @previous_monthly_spend = normalized_monthly_spend(previous_active)
     @spend_difference = @monthly_spend - @previous_monthly_spend
+
+    @price_changes = SubscriptionPriceChange
+                     .joins(:subscription)
+                     .where(subscriptions: { user: current_user })
+                     .where(changed_at: @month_range)
+                     .includes(subscription: :category)
+                     .order(:changed_at)
+
+    @price_change_total = @price_changes.sum do |pc|
+      normalize_monthly_amount(pc.difference, pc.subscription.billing_cycle)
+    end
+
+    @spend_difference += @price_change_total
   end
 
   private
