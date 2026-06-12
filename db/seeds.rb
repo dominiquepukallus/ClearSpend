@@ -1,3 +1,4 @@
+Subscription.update_all(shared_subscription_id: nil)
 SubscriptionPriceChange.destroy_all
 SharedSubscription.destroy_all
 Subscription.destroy_all
