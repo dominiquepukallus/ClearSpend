@@ -66,3 +66,17 @@ body.dashboard-scrolled #greeting {
 .dashboard-activity-grid--cancelled {
   grid-template-columns: 1fr;
 }
+
+.dashboard-scrolled nav .notification-badge,
+.dashboard-scrolled nav [class*="bg-red"] {
+  color: #ffffff !important;
+}
+
+nav svg {
+  fill: #ffffff;
+  transition: fill 0.3s ease;
+}
+
+.dashboard-scrolled nav svg {
+  fill: #1B2B4B !important;
+}
