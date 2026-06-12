@@ -34,7 +34,7 @@ export default class extends Controller {
           data: values,
           backgroundColor: colors,
           borderWidth: 0,
-          hoverOffset: 6,
+          hoverOffset: 20,
           spacing: 0
         }]
       },
@@ -50,6 +50,9 @@ export default class extends Controller {
             display: false
           },
           tooltip: {
+            position: 'nearest',
+            xAlign: 'center',
+            yAlign: 'bottom',
             callbacks: {
               label: (context) => {
                 const value = Number(context.parsed || 0)

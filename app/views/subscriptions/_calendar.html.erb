@@ -13,7 +13,7 @@
   next_month = first_day + 1.month
 %>
 
-<div class="lg:flex lg:h-full lg:flex-col"
+<div class="lg:flex lg:flex-col"
   data-controller="calendar-scroll"
   data-calendar-scroll-prev-value="<%= subscriptions_path(month: prev_month.strftime('%Y-%m-%d'), status_filter: params[:status_filter]) %>"
   data-calendar-scroll-next-value="<%= subscriptions_path(month: next_month.strftime('%Y-%m-%d'), status_filter: params[:status_filter]) %>">

@@ -50,6 +50,8 @@ export default class extends Controller {
             display: false
           },
           tooltip: {
+            yAlign: "top",
+            displayColors: false,
             callbacks: {
               title: (items) => {
                 const index = items[0]?.dataIndex
@@ -57,7 +59,7 @@ export default class extends Controller {
               },
               label: (context) => {
                 const value = Number(context.parsed.y || 0)
-                return `Monthly spend: ${this.formatCurrency(value)}`
+                return this.formatCurrency(value)
               }
             }
           }

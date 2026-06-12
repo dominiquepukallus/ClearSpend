@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["modal", "title", "activityGrid", "addedSection"]
+  static targets = ["modal", "activityGrid", "addedSection", "canceledSection"]
 
   connect() {
     this.handleScroll = this.onScroll.bind(this)
@@ -39,8 +39,9 @@ export default class extends Controller {
 
   setMode(view) {
     const cancelledOnly = view === "cancelled"
-    this.titleTarget.textContent = cancelledOnly ? "Cancelled subscriptions" : "Monthly activity"
-    this.activityGridTarget.classList.toggle("dashboard-activity-grid--cancelled", cancelledOnly)
+    const subscribedOnly = view === "subscribed"
+    this.activityGridTarget.classList.toggle("dashboard-activity-grid--cancelled", cancelledOnly || subscribedOnly)
     this.addedSectionTarget.hidden = cancelledOnly
+    this.canceledSectionTarget.hidden = subscribedOnly
   }
 }
